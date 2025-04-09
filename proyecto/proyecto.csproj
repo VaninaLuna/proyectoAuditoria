@@ -2716,7 +2716,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\EstadoPlanAccion\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
