@@ -10,7 +10,7 @@ using System.Web;
 
 namespace proyecto.Bussines
 {
-    public class Auditoria : IEntityDao, IName, ICode, IOrder
+    public class Auditoria : IEntityDao, IName
     {
         public override long Id { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
@@ -54,12 +54,6 @@ namespace proyecto.Bussines
         public bool activo { get; set; }
 
 
-
-
-
-
-        public string Code { get; set; }
-        public int Order { get; set; }
 
         public override void Delete()
         {

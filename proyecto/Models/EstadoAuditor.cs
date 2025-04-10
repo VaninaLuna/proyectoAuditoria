@@ -9,7 +9,7 @@ using System.Web;
 
 namespace proyecto.Bussines
 {
-    public partial class EstadoAuditor : IEntityDao, IName, ICode, IOrder
+    public partial class EstadoAuditor : IEntityDao, IName
     {
         public override long Id { get; set; }
 
@@ -21,14 +21,9 @@ namespace proyecto.Bussines
 
 
         //-----------RELACIONES-------------
-        public int idAuditor { get; set; }
-       
-        public Auditor auditor { get; set; }
+        //public int idAuditor { get; set; }       
+        //public Auditor auditor { get; set; }
         //-----------RELACIONES-------------
-
-
-        public string Code { get; set; }
-        public int Order { get; set; }
 
         public override void Delete()
         {

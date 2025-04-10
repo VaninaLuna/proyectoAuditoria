@@ -8,24 +8,15 @@ using System.Web;
 
 namespace proyecto.Bussines
 {
-    public partial class AuditorAuditoria : IEntityDao, IName, ICode, IOrder
+    public partial class AuditorAuditoria : IEntityDao
     {
         public override long Id { get; set; }
 
         //-----------RELACIONES-------------
-        public int idAuditor {  get; set; }
-        public Auditor auditor { get; set; }
-
-        public int auditoria { get; set; }
-        public Auditoria auditorias { get; set; }
+        public Auditor Auditor { get; set; }
+        public Auditoria Auditoria { get; set; }
         //-----------RELACIONES-------------
 
-
-
-
-        public string Name { get ; set ; }
-        public string Code { get ; set ; }
-        public int Order { get ; set ; }
 
         public override void Delete()
         {

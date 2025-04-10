@@ -1,4 +1,5 @@
 ﻿using DNF.Entity;
+using DNF.Security.Bussines;
 using proyecto.Bussines;
 using proyecto.Dao;
 using System;
@@ -17,23 +18,17 @@ namespace proyecto.Bussines
         [Display(Name = "Legajo")]
         [Required(ErrorMessage = "Debe ingresar un legajo")]
         [StringLength(10, ErrorMessage = "No debe superar los 10 caracteres")]
-        public string legajo { get; set; }
+        public string Legajo { get; set; }
 
         [Display(Name = "Fecha Alta")]
         [Required]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "0:yyyy-MM-dd", ApplyFormatInEditMode = true)]
-        public DateTime fecha_alta { get; set; }
-
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime FechaAlta { get; set; }
 
         //-----------RELACIONES-------------
-        public int idUsuario { get; set; }
-        public Usuario usuario { get; set; }
-
-        //---------------------------------------
-        public int idEstado { get; set; }       
-
-        public List<EstadoEmpleado> estandoEmpleado{ get; set; }
+        public User User { get; set; }
+        public EstadoEmpleado EstadoEmpleado { get; set; }
         //---------------------------------------
 
         public int idPlanAccion {  get; set; }

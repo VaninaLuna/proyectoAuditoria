@@ -18,24 +18,17 @@ namespace proyecto.Bussines
         [Display(Name ="Nombre")]
         public string Name { get; set; }
 
-        [Display(Name = "Fecha Creacion")]
-        [Required]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "0:yyyy-MM-dd", ApplyFormatInEditMode = true)]
-        public DateTime fecha_creacion { get; set; }
 
         [Display(Name="Descripcion")]
         [Required(ErrorMessage ="Debe ingresar una descripcion")]
         [StringLength(50, ErrorMessage ="Longitud maxima 50 caracteres")]
-        public string descripcion { get; set; }
+        public string Descripcion { get; set; }
 
 
         //-----------RELACIONES-------------
-        public int idAuditoria { get; set; }
-        public List<Auditoria> auditorias { get; set; }
         //-----------RELACIONES-------------
 
-        public bool activo { get; set; }
+        public bool Activo { get; set; }
 
 
 

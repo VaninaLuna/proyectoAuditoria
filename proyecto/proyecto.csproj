@@ -510,6 +510,7 @@
     <Compile Include="Areas\Bcri\Utility\SecurityUtility.cs" />
     <Compile Include="Areas\Bcri\Utility\SettingSiteUtility.cs" />
     <Compile Include="Areas\Bcri\Utility\XlsEntityReaderResult.cs" />
+    <Compile Include="Controllers\AuditorController.cs" />
     <Compile Include="Controllers\CriticidadController.cs" />
     <Compile Include="Controllers\EstadoAuditorController.cs" />
     <Compile Include="Controllers\EstadoAuditoriaController.cs" />
@@ -518,6 +519,7 @@
     <Compile Include="Controllers\EstadoPlanController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RolController.cs" />
+    <Compile Include="DTOs\AuditorEditDTO.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -619,6 +621,7 @@
     <Content Include="Content\images\logo-abs.png" />
     <Content Include="Content\images\logo-bcri-core.jpg" />
     <Content Include="Content\images\logo-bcri-core.svg" />
+    <Content Include="Content\images\logo-cliente-top.png" />
     <Content Include="Content\images\Logo-Superior.png" />
     <Content Include="Content\images\Logo.svg" />
     <Content Include="Content\images\plus-icon.png" />
@@ -2713,6 +2716,7 @@
     <Content Include="Views\EstadoHallazgo\Index.cshtml" />
     <Content Include="Views\EstadoPlan\Index.cshtml" />
     <Content Include="Views\Criticidad\Index.cshtml" />
+    <Content Include="Views\Auditor\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
