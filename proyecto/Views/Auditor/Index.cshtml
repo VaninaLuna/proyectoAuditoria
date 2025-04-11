@@ -177,10 +177,10 @@
 
             const auditor = {
                 id: auditorId,
-                legajo: $('#txtLegajo').val(),
-                fechaAlta: $('#txtFechaAlta').val(),
-                estadoId: $('#ddlEstado').val(),
-                usuarioId: $('#ddlUsuario').val()
+                FileNumber: $('#txtLegajo').val(),
+                StartDate: $('#txtFechaAlta').val(),
+                StatusId: $('#ddlEstado').val(),
+                UserId: $('#ddlUsuario').val()
             };
             $('#spinnerCrear').show();
 
@@ -246,15 +246,15 @@
                 type: 'GET',
                 success: function (data) {
                     if (data.auditorDTO) {
-                        $('#txtLegajo').val(data.auditorDTO.Legajo);
+                        $('#txtLegajo').val(data.auditorDTO.FileNumber);
 
                         // Convertimos la fecha al formato yyyy-MM-dd
-                        const fechaAlta = new Date(data.auditorDTO.FechaAltaString);
+                        const fechaAlta = new Date(data.auditorDTO.StartDateString);
                         const fechaFormateada = fechaAlta.toISOString().split('T')[0];
                         $('#txtFechaAlta').val(fechaFormateada);
 
-                        $('#ddlEstado').val(data.auditorDTO.EstadoId);
-                        $('#ddlUsuario').val(data.auditorDTO.UsuarioId);
+                        $('#ddlEstado').val(data.auditorDTO.StatusId);
+                        $('#ddlUsuario').val(data.auditorDTO.UserId);
 
                         // Cambiamos título del modal si estás editando
                         $('#titleModalLabel').text('Editar Auditor');
