@@ -10,7 +10,7 @@ using System.Web;
 
 namespace proyecto.Models
 {
-    public partial class EstadoAuditoria : IEntityDao, IName, ICode, IOrder
+    public partial class AuditStatus : IEntityDao, IName, ICode, IOrder
     {
         public override long Id { get; set; }
 
@@ -20,10 +20,8 @@ namespace proyecto.Models
         public string Name { get; set; }
 
         //-----------RELACIONES-------------
-
-        public int idAuditoria { get; set; }
-       
-        public Auditoria auditoria { get; set; }
+               
+        public Audit Audit { get; set; }
         //-----------RELACIONES-------------
 
 
@@ -40,14 +38,14 @@ namespace proyecto.Models
             Dao.Save(this);
         }
 
-        private static EstadoAuditoriaDao _dao;
-        public static EstadoAuditoriaDao Dao => _dao ?? (_dao = new EstadoAuditoriaDao());
+        private static AuditStatusDao _dao;
+        public static AuditStatusDao Dao => _dao ?? (_dao = new AuditStatusDao());
     }
 }
 
 namespace proyecto.Dao
 {
-    public partial class EstadoAuditoriaDao : DaoDb<EstadoAuditoria>
+    public partial class AuditStatusDao : DaoDb<AuditStatus>
     {
 
     }

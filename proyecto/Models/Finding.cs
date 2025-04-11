@@ -10,7 +10,7 @@ using System.Web;
 
 namespace proyecto.Bussines
 {
-    public partial class Hallazgo : IEntityDao, IName, ICode, IOrder
+    public partial class Finding : IEntityDao, IName, ICode, IOrder
     {
         public override long Id { get ; set ; }
 
@@ -24,27 +24,22 @@ namespace proyecto.Bussines
         [Required]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "0:yyyy-MM-dd", ApplyFormatInEditMode = true)]
-        public DateTime fecha_creacion { get; set; }
+        public DateTime CreateDate { get; set; }
+
+        public string FindingImage {  get; set; } 
+        public string ImageType { get; set; }
+
 
         //-----------RELACIONES-------------
-        public int criticidad { get; set; }
-        public Criticidad criticidades { get; set; }
+        public FindingType FindingType { get; set; }
 
         //---------------------------------------
-        public int auditoria { get; set; }
-        public Auditoria auditorias { get; set; }
+        public Audit Audit { get; set; }
         //---------------------------------------
-        public int idEstadoHallazgo { get; set; }
-
-        public EstadoHallazgo estadoHallazgo { get; set; }
+        public FindingStatus FindingStatus { get; set; }
         //---------------------------------------
-        public List<PlanAccion> planes { get; set; }
-        public int idPlanAccion { get; set; }
 
-        //-----------RELACIONES-------------
-
-
-        public bool activo { get; set; }
+        public bool IsActive { get; set; }
 
 
 
@@ -61,14 +56,14 @@ namespace proyecto.Bussines
             Dao.Save(this);
         }
 
-        private static HallazgoDao _dao;
-        public static HallazgoDao Dao => _dao ?? (_dao = new HallazgoDao());
+        private static FindingDao _dao;
+        public static FindingDao Dao => _dao ?? (_dao = new FindingDao());
     }
 }
 
 namespace proyecto.Dao
 {
-    public partial class HallazgoDao : DaoDb<Hallazgo>
+    public partial class FindingDao : DaoDb<Finding>
     {
 
     }

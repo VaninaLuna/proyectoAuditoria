@@ -9,13 +9,13 @@ namespace proyecto.DTOs
     public class AuditorEditDTO
     {
         public int Id { get; set; }
-        public string Legajo { get; set; }
+        public string FileNumber { get; set; }
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime FechaAlta { get; set; }
-        public string FechaAltaString { get; set; }
-        public int EstadoId { get; set; }
-        public int UsuarioId { get; set; }
-        public bool Activo {  get; set; }
+        public DateTime StartDate { get; set; }
+        public string StartDateString { get; set; }
+        public int StatusId { get; set; }
+        public int UserId { get; set; }
+        public bool Active {  get; set; }
     }
 }

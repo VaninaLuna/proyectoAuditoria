@@ -40,10 +40,10 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Legajo)
+            @Html.DisplayNameFor(model => model.FileNumber)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FechaAlta)
+            @Html.DisplayNameFor(model => model.StartDate)
         </th>
         <th>
             Usuario
@@ -58,16 +58,16 @@
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Legajo)
+                @Html.DisplayFor(modelItem => item.FileNumber)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.FechaAlta)
+                @Html.DisplayFor(modelItem => item.StartDate)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.User.FullName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.EstadoAuditor.Name)
+                @Html.DisplayFor(modelItem => item.AuditorStatus.Name)
             </td>
             <td>
                 <button type="button" onclick="CrearAuditor(@item.Id)" class="fa fa-edit text-info">

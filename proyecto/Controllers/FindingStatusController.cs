@@ -8,22 +8,22 @@ using System.Web.Mvc;
 
 namespace proyecto.Controllers
 {
-    public class EstadoHallazgoController : Controller
+    public class FindingStatusController : Controller
     {
         public ActionResult Index()
         {
-            List<EstadoHallazgo> lista = EstadoHallazgo.Dao.GetAll();
-            return View(lista);
+            List<FindingStatus> list = FindingStatus.Dao.GetAll();
+            return View(list);
         }
 
         [HttpPost]
-        public ActionResult Crear(EstadoHallazgo oEstadoHallazgo)
+        public ActionResult Crear(FindingStatus oFindingStatus)
         {
-            EstadoHallazgo estado = new EstadoHallazgo
+            FindingStatus status = new FindingStatus
             {
-                Name = oEstadoHallazgo.Name
+                Name = oFindingStatus.Name
             };
-            estado.Save();
+            status.Save();
 
             return RedirectToAction("Index");
         }
@@ -32,8 +32,8 @@ namespace proyecto.Controllers
         public ActionResult Eliminar(int idEstado)
         {
             //hacer sp del get y delete
-            var estado = EstadoHallazgo.Dao.Get(idEstado);
-            EstadoHallazgo.Dao.Delete(estado);
+            var status = FindingStatus.Dao.Get(idEstado);
+            FindingStatus.Dao.Delete(status);
             return RedirectToAction("Index");
         }
     }

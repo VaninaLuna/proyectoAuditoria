@@ -14,20 +14,20 @@ namespace proyecto.Bussines
     {
         public override long Id { get; set; }
 
-        [Display(Name="Legajo")]
-        [Required(ErrorMessage ="Debe ingresar un legajo")]
-        [StringLength(10, ErrorMessage ="No debe superar los 10 caracteres")]
-        public string Legajo { get; set; }
+        [Display(Name = "Legajo")]
+        [Required(ErrorMessage = "Debe ingresar un legajo")]
+        [StringLength(10, ErrorMessage = "No debe superar los 10 caracteres")]
+        public string FileNumber { get; set; }
 
         [Display(Name = "Fecha Alta")]
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime FechaAlta { get; set; }
+        public DateTime StartDate { get; set; }
 
 
         //-----------RELACIONES-------------
         public User User { get; set; }
-        public EstadoAuditor EstadoAuditor { get; set; }
+        public AuditorStatus AuditorStatus { get; set; }
 
 
 
@@ -54,7 +54,7 @@ namespace proyecto.Bussines
 
 
 
-        public bool Activo { get; set; }
+        public bool IsActive { get; set; }
 
         public override void Delete()
         {

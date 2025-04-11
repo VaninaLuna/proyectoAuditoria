@@ -10,9 +10,9 @@ using System.Web;
 
 namespace proyecto.Bussines
 {
-    public class Auditoria : IEntityDao, IName
+    public class Audit : IEntityDao, IName
     {
-        public override long Id { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public override long Id { get; set ; }
 
         [Display(Name = "Nombre")]
         public string Name { get; set; }
@@ -22,36 +22,33 @@ namespace proyecto.Bussines
         [Required]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "0:yyyy-MM-dd", ApplyFormatInEditMode = true)]
-        public DateTime fecha_creacion{ get; set; }
+        public DateTime CreateDate{ get; set; }
 
         [Display(Name = "Fecha Finalizacion")]
         [Required]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "0:yyyy-MM-dd", ApplyFormatInEditMode = true)]
-        public DateTime fecha_finalizacion { get; set; }
+        public DateTime EndDate { get; set; }
 
 
         //-----------RELACIONES-------------
-        public int idDepartamento { get; set; }
-        public Departamento departamento { get; set; }
+        public Department Department{ get; set; }
 
         //--------------------------------------------
 
-        public int idEstadoAuditoria { get; set; }
-        public EstadoAuditoria estadoAuditoria { get; set; }
+        public AuditStatus AuditStatus { get; set; }
 
-        public List<EstadoAuditoria> estadoAuditorias { get; set; }
 
         //--------------------------------------------
         //public List<AuditorAuditoria> auditorias { get; set; }
 
-        //--------------------------------------------
-        public int idHallazgo { get; set; }
-        public List<Hallazgo> hallazgos { get; set; }
+        ////--------------------------------------------
+        //public int idHallazgo { get; set; }
+        //public List<Hallazgo> hallazgos { get; set; }
        
         //-----------RELACIONES-------------
 
-        public bool activo { get; set; }
+        public bool IsActive { get; set; }
 
 
 
@@ -65,14 +62,14 @@ namespace proyecto.Bussines
             Dao.Save(this);
         }
 
-        private static AuditoriaDao _dao;
-        public static AuditoriaDao Dao => _dao ?? (_dao = new AuditoriaDao());
+        private static AuditDao _dao;
+        public static AuditDao Dao => _dao ?? (_dao = new AuditDao());
     }
 }
 
 namespace proyecto.Dao
 {
-    public partial class AuditoriaDao : DaoDb<Auditoria>
+    public partial class AuditDao : DaoDb<Audit>
     {
 
     }

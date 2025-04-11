@@ -8,23 +8,23 @@ using System.Web.Mvc;
 
 namespace proyecto.Controllers
 {
-    public class EstadoAuditoriaController : Controller
+    public class AuditStatusController : Controller
     {
         // GET: EstadoAuditoria
         public ActionResult Index()
         {
-            List<EstadoAuditoria> lista = EstadoAuditoria.Dao.GetAll();
-            return View(lista);
+            List<AuditStatus> list = AuditStatus.Dao.GetAll();
+            return View(list);
         }
 
         [HttpPost]
-        public ActionResult Crear(EstadoAuditoria oEstadoAuditoria)
+        public ActionResult Crear(AuditStatus oAuditStatus)
         {
-            EstadoAuditoria estado = new EstadoAuditoria
+            AuditStatus status = new AuditStatus
             {
-                Name = oEstadoAuditoria.Name
+                Name = oAuditStatus.Name
             };
-            estado.Save();
+            status.Save();
 
             return RedirectToAction("Index");
         }
@@ -33,8 +33,8 @@ namespace proyecto.Controllers
         public ActionResult Eliminar(int idEstado)
         {
             //hacer sp del get y delete
-            var estado = EstadoAuditoria.Dao.Get(idEstado);
-            EstadoAuditoria.Dao.Delete(estado);
+            var status = AuditStatus.Dao.Get(idEstado);
+            AuditStatus.Dao.Delete(status);
             return RedirectToAction("Index");
         }
     }

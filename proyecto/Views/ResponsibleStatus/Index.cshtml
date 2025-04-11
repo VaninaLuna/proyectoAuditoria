@@ -1,8 +1,9 @@
-﻿@model IEnumerable<proyecto.Bussines.Criticidad>
+﻿@model IEnumerable<proyecto.Bussines.ResponsibleStatus>
 
 @{
     ViewBag.Title = "Index";
 }
+
 
 <style>
     .modal-backdrop {
@@ -30,10 +31,10 @@
 <script src="~/Scripts/jquery-2.2.4.min.js"></script>
 <script src="~/Scripts/bootstrap.min.js"></script>
 
-<h2>Criticidad</h2>
+<h2>Estados Responsable</h2>
 
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalCrear" id="btnEstado">
-    Crear Criticidad
+    Crear Estado
 </button>
 <br />
 <br />
@@ -70,7 +71,7 @@
 </table>
 
 
-@using (Html.BeginForm("Eliminar", "Criticidad", FormMethod.Post, new { @id = "frmEliminar" }))
+@using (Html.BeginForm("Eliminar", "ResponsibleStatus", FormMethod.Post, new { @id = "frmEliminar" }))
 {
     @Html.Hidden("idEstado");
 }
@@ -101,10 +102,10 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="exampleModalLabel">Crear Criticidad</h4>
+                <h4 class="modal-title" id="exampleModalLabel">Crear Rol</h4>
             </div>
             <div class="modal-body">
-                @using (Html.BeginForm("Crear", "Criticidad", FormMethod.Post, new { @id = "frmEstado" }))
+                @using (Html.BeginForm("Crear", "ResponsibleStatus", FormMethod.Post, new { @id = "frmEstado" }))
                 {
                     @Html.Label("Nombre")
                     @Html.TextBox("Name", null, new { @class = "form-control", @id = "txtNameEstado" })

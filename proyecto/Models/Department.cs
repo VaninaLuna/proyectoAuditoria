@@ -10,7 +10,7 @@ using System.Web;
 
 namespace proyecto.Bussines
 {
-    public partial class Departamento : IEntityDao, IName, ICode, IOrder
+    public partial class Department : IEntityDao, IName, ICode, IOrder
     {
         public override long Id { get; set; }
 
@@ -22,13 +22,13 @@ namespace proyecto.Bussines
         [Display(Name="Descripcion")]
         [Required(ErrorMessage ="Debe ingresar una descripcion")]
         [StringLength(50, ErrorMessage ="Longitud maxima 50 caracteres")]
-        public string Descripcion { get; set; }
+        public string Description { get; set; }
 
 
         //-----------RELACIONES-------------
         //-----------RELACIONES-------------
 
-        public bool Activo { get; set; }
+        public bool IsActive { get; set; }
 
 
 
@@ -46,14 +46,14 @@ namespace proyecto.Bussines
             Dao.Save(this);
         }
 
-        private static DepartamentoDao _dao;
-        public static DepartamentoDao Dao => _dao ?? (_dao = new DepartamentoDao());
+        private static DepartmentDao _dao;
+        public static DepartmentDao Dao => _dao ?? (_dao = new DepartmentDao());
     }
 }
 
 namespace proyecto.Dao
 {
-    public partial class DepartamentoDao : DaoDb<Departamento>
+    public partial class DepartmentDao : DaoDb<Department>
     {
 
     }

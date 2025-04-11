@@ -7,23 +7,23 @@ using System.Web.Mvc;
 
 namespace proyecto.Controllers
 {
-    public class CriticidadController : Controller
+    public class FindingTypeController : Controller
     {
         // GET: Criticidad
         public ActionResult Index()
         {
-            List<Criticidad> lista = Criticidad.Dao.GetAll();
-            return View(lista);
+            List<FindingType> list = FindingType.Dao.GetAll();
+            return View(list);
         }
 
         [HttpPost]
-        public ActionResult Crear(Criticidad oCriticidad)
+        public ActionResult Crear(FindingType oFindingType)
         {
-            Criticidad estado = new Criticidad
+            FindingType status = new FindingType
             {
-                Name = oCriticidad.Name
+                Name = oFindingType.Name
             };
-            estado.Save();
+            status.Save();
 
             return RedirectToAction("Index");
         }
@@ -32,8 +32,8 @@ namespace proyecto.Controllers
         public ActionResult Eliminar(int idEstado)
         {
             //hacer sp del get y delete
-            var estado = Criticidad.Dao.Get(idEstado);
-            Criticidad.Dao.Delete(estado);
+            var status = FindingType.Dao.Get(idEstado);
+            FindingType.Dao.Delete(status);
             return RedirectToAction("Index");
         }
     }

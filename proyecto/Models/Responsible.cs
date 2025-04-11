@@ -10,7 +10,7 @@ using System.Web;
 
 namespace proyecto.Bussines
 {
-    public partial class Empleado : IEntityDao, IName, ICode, IOrder
+    public partial class Responsible : IEntityDao, IName, ICode, IOrder
     {
         public override long Id { get ; set ; }
 
@@ -18,24 +18,23 @@ namespace proyecto.Bussines
         [Display(Name = "Legajo")]
         [Required(ErrorMessage = "Debe ingresar un legajo")]
         [StringLength(10, ErrorMessage = "No debe superar los 10 caracteres")]
-        public string Legajo { get; set; }
+        public string FileNumber { get; set; }
 
         [Display(Name = "Fecha Alta")]
         [Required]
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime FechaAlta { get; set; }
+        public DateTime StartDate { get; set; }
 
         //-----------RELACIONES-------------
         public User User { get; set; }
-        public EstadoEmpleado EstadoEmpleado { get; set; }
+        public ResponsibleStatus ResponsibleStatus { get; set; }
+
+        public Department Department { get; set; }
         //---------------------------------------
 
-        public int idPlanAccion {  get; set; }
-        public List<PlanAccion> planes { get; set; }
-        //-----------RELACIONES-------------
-
-        public bool activo { get; set; }
+      
+        public bool IsActive { get; set; }
 
 
 
@@ -59,14 +58,14 @@ namespace proyecto.Bussines
             Dao.Save(this);
         }
 
-        private static EmpleadoDao _dao;
-        public static EmpleadoDao Dao => _dao ?? (_dao = new EmpleadoDao());
+        private static ResponsibleDao _dao;
+        public static ResponsibleDao Dao => _dao ?? (_dao = new ResponsibleDao());
     }
 }
 
 namespace proyecto.Dao
 {
-    public partial class EmpleadoDao: DaoDb<Empleado>
+    public partial class ResponsibleDao : DaoDb<Responsible>
     {
 
     }

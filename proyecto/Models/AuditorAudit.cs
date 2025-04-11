@@ -8,13 +8,13 @@ using System.Web;
 
 namespace proyecto.Bussines
 {
-    public partial class AuditorAuditoria : IEntityDao
+    public partial class AuditorAudit : IEntityDao
     {
         public override long Id { get; set; }
 
         //-----------RELACIONES-------------
         public Auditor Auditor { get; set; }
-        public Auditoria Auditoria { get; set; }
+        public Audit Audit { get; set; }
         //-----------RELACIONES-------------
 
 
@@ -28,14 +28,14 @@ namespace proyecto.Bussines
             Dao.Save(this);
         }
 
-        private static AuditorAuditoriaDao _dao;
-        public static AuditorAuditoriaDao Dao => _dao ?? (_dao = new AuditorAuditoriaDao());
+        private static AuditorAuditDao _dao;
+        public static AuditorAuditDao Dao => _dao ?? (_dao = new AuditorAuditDao());
     }
 }
 
 namespace proyecto.Dao
 {
-    public partial class AuditorAuditoriaDao: DaoDb<AuditorAuditoria>
+    public partial class AuditorAuditDao : DaoDb<AuditorAudit>
     {
 
     }

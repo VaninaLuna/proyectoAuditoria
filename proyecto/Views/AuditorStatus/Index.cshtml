@@ -1,4 +1,4 @@
-﻿@model IEnumerable<proyecto.Bussines.EstadoAuditor>
+﻿@model IEnumerable<proyecto.Bussines.AuditorStatus>
 
 @{
     ViewBag.Title = "Index";
@@ -69,7 +69,7 @@
 </table>
 
 
-@using (Html.BeginForm("Eliminar", "EstadoAuditor", FormMethod.Post, new { @id = "frmEliminar" }))
+@using (Html.BeginForm("Eliminar", "AuditorStatus", FormMethod.Post, new { @id = "frmEliminar" }))
 {
     @Html.Hidden("idEstado");
 }
@@ -103,7 +103,7 @@
                 <h4 class="modal-title" id="exampleModalLabel">Crear Rol</h4>
             </div>
             <div class="modal-body">
-                @using (Html.BeginForm("Crear", "EstadoAuditor", FormMethod.Post, new { @id = "frmEstado" }))
+                @using (Html.BeginForm("Crear", "AuditorStatus", FormMethod.Post, new { @id = "frmEstado" }))
                 {
                     @Html.Label("Nombre")
                     @Html.TextBox("Name", null, new { @class = "form-control", @id = "txtNameEstado" })

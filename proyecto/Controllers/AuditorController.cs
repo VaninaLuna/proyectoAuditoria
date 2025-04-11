@@ -23,7 +23,7 @@ namespace proyecto.Controllers
 
             foreach (Auditor auditor in lista) 
             {
-                auditor.EstadoAuditor = EstadoAuditor.Dao.Get(auditor.EstadoAuditor.Id);
+                auditor.AuditorStatus = AuditorStatus.Dao.Get(auditor.AuditorStatus.Id);
                 auditor.User = DNF.Security.Bussines.User.Dao.Get(auditor.User.Id);
             }
 
@@ -32,7 +32,7 @@ namespace proyecto.Controllers
 
         public JsonResult ObtenerDatos()
         {
-            var estadosAuditor = EstadoAuditor.Dao.GetAll();
+            var estadosAuditor = AuditorStatus.Dao.GetAll();
             var estados = estadosAuditor
             .Select(u => new { u.Id, u.Name })
             .ToList();
@@ -53,11 +53,11 @@ namespace proyecto.Controllers
             AuditorEditDTO auditorDTO = new AuditorEditDTO
             {
                 Id = (int)auditor.Id,
-                Legajo = auditor.Legajo,
-                FechaAltaString = auditor.FechaAlta.ToString("yyyy-MM-dd"),
-                EstadoId = (int)auditor.EstadoAuditor.Id,
-                UsuarioId = (int)auditor.User.Id,
-                Activo = auditor.Activo
+                FileNumber = auditor.FileNumber,
+                StartDateString = auditor.StartDate.ToString("yyyy-MM-dd"),
+                StatusId = (int)auditor.AuditorStatus.Id,
+                UserId = (int)auditor.User.Id,
+                Active = auditor.IsActive
             };
 
             return Json(new { auditorDTO }, JsonRequestBehavior.AllowGet);
@@ -66,36 +66,36 @@ namespace proyecto.Controllers
         [HttpPost]
         public ActionResult Crear(AuditorEditDTO auditorDTO) //crear DTO para traer los id desde el index
         {
-            if (auditorDTO == null || string.IsNullOrEmpty(auditorDTO.Legajo) || auditorDTO.EstadoId == 0 || auditorDTO.UsuarioId == 0)
+            if (auditorDTO == null || string.IsNullOrEmpty(auditorDTO.FileNumber) || auditorDTO.StatusId == 0 || auditorDTO.UserId == 0)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Datos inválidos");
             }
 
             try
             {
-                var estadoAuditor = EstadoAuditor.Dao.Get(auditorDTO.EstadoId);
-                var user = DNF.Security.Bussines.User.Dao.Get(auditorDTO.UsuarioId);
+                var estadoAuditor = AuditorStatus.Dao.Get(auditorDTO.StatusId);
+                var user = DNF.Security.Bussines.User.Dao.Get(auditorDTO.UserId);
 
                 if (auditorDTO.Id > 0)
                 {
                     Auditor auditor = Auditor.Dao.Get(auditorDTO.Id);
 
-                    auditor.Legajo = auditorDTO.Legajo;
-                    auditor.FechaAlta = auditorDTO.FechaAlta;
-                    auditor.EstadoAuditor = new EstadoAuditor { Id = estadoAuditor.Id };
+                    auditor.FileNumber = auditorDTO.FileNumber;
+                    auditor.StartDate = auditorDTO.StartDate;
+                    auditor.AuditorStatus = new AuditorStatus { Id = estadoAuditor.Id };
                     auditor.User = new DNF.Security.Bussines.User { Id = user.Id };
-                    auditor.Activo = true;
+                    auditor.IsActive = true;
                     auditor.Save();
                 }
                 else
                 {
                     Auditor nAuditor = new Auditor
                     {
-                        Legajo = auditorDTO.Legajo,
-                        FechaAlta = auditorDTO.FechaAlta,
-                        EstadoAuditor = new EstadoAuditor { Id = estadoAuditor.Id },
+                        FileNumber = auditorDTO.FileNumber,
+                        StartDate = auditorDTO.StartDate,
+                        AuditorStatus = new AuditorStatus { Id = estadoAuditor.Id },
                         User = new DNF.Security.Bussines.User { Id = user.Id },
-                        Activo = true
+                        IsActive = true
                     };
                     nAuditor.Save();
                 }                
@@ -116,7 +116,7 @@ namespace proyecto.Controllers
                 if (id > 0)
                 {
                     Auditor auditor = Auditor.Dao.Get(id);
-                    auditor.Activo = false;
+                    auditor.IsActive = false;
                     auditor.Save();
                 }
 

@@ -9,24 +9,21 @@ using System.Web;
 
 namespace proyecto.Bussines
 {
-    public partial class EstadoHallazgo : IEntityDao, IName, ICode, IOrder
+    public partial class AuditorStatus: IEntityDao, IName
     {
         public override long Id { get; set; }
 
-        [Display(Name = "Nombre")]
+        [Display(Name="Nombre")]
         [Required]
         [StringLength(50, ErrorMessage = "No debe superar los 50 caracteres")]
         public string Name { get; set; }
 
+
+
         //-----------RELACIONES-------------
-        public int hallazgo {  get; set; }
-        public List<Hallazgo> hallazgos { get; set; }
+        //public int idAuditor { get; set; }       
+        //public Auditor auditor { get; set; }
         //-----------RELACIONES-------------
-
-
-
-        public string Code { get; set; }
-        public int Order { get; set; }
 
         public override void Delete()
         {
@@ -38,14 +35,14 @@ namespace proyecto.Bussines
             Dao.Save(this);
         }
 
-        private static EstadoHallazgoDao _dao;
-        public static EstadoHallazgoDao Dao => _dao ?? (_dao = new EstadoHallazgoDao());
+        private static AuditorStatusDao _dao;
+        public static AuditorStatusDao Dao => _dao ?? (_dao = new AuditorStatusDao());
     }
 }
 
 namespace proyecto.Dao
 {
-    public partial class EstadoHallazgoDao: DaoDb<EstadoHallazgo>
+    public partial class AuditorStatusDao : DaoDb<AuditorStatus>
     {
 
     }

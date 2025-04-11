@@ -1,4 +1,4 @@
-﻿@model IEnumerable<proyecto.Bussines.EstadoHallazgo>
+﻿@model IEnumerable<proyecto.Models.AuditStatus>
 
 @{
     ViewBag.Title = "Index";
@@ -30,7 +30,7 @@
 <script src="~/Scripts/jquery-2.2.4.min.js"></script>
 <script src="~/Scripts/bootstrap.min.js"></script>
 
-<h2>Estados Hallazgo</h2>
+<h2>Estados Auditoria</h2>
 
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalCrear" id="btnEstado">
     Crear Estado
@@ -70,7 +70,7 @@
 </table>
 
 
-@using (Html.BeginForm("Eliminar", "EstadoHallazgo", FormMethod.Post, new { @id = "frmEliminar" }))
+@using (Html.BeginForm("Eliminar", "AuditStatus", FormMethod.Post, new { @id = "frmEliminar" }))
 {
     @Html.Hidden("idEstado");
 }
@@ -104,7 +104,7 @@
                 <h4 class="modal-title" id="exampleModalLabel">Crear Rol</h4>
             </div>
             <div class="modal-body">
-                @using (Html.BeginForm("Crear", "EstadoHallazgo", FormMethod.Post, new { @id = "frmEstado" }))
+                @using (Html.BeginForm("Crear", "AuditStatus", FormMethod.Post, new { @id = "frmEstado" }))
                 {
                     @Html.Label("Nombre")
                     @Html.TextBox("Name", null, new { @class = "form-control", @id = "txtNameEstado" })
@@ -142,3 +142,4 @@
         frmEliminar.submit();
     }
 </script>
+

@@ -35,6 +35,19 @@ $(document).ready(function () {
             return "Error: " + data.responseText;
         }
     }
+
+    $("#btnCrearUsuario").click(function () {
+        $(gridTable).jqGrid("editGridRow", "new", {
+            addCaption: res.newUser,
+            closeAfterAdd: true,
+            recreateForm: true,
+            beforeSubmit: EditOptions.beforeSubmit,
+            afterSubmit: EditOptions.afterSubmit,
+            errorTextFormat: function (data) {
+                return res.error + ": " + data.responseText;
+            }
+        });
+    });
     
 
     $(gridTable).jqGrid({
@@ -77,15 +90,15 @@ $(document).ready(function () {
                 formatter: "email",
                 edittype: "text",
                 editable: true,
-                editoptions: { maxlength: 250 },
+                editoptions: { maxlength: 250, autocomplete: "off" },
                 editrules: {
 					custom: true, email: true, required: true,
 					custom_func: function (mail) {
-						for (var letter in mail) {
-							if (mail[letter] === mail[letter].toUpperCase()) {
-								return [false, "the email must not have any uppercase letters"];
-							}
-						}
+						//for (var letter in mail) {
+						//	if (mail[letter] == mail[letter].toUpperCase()) {
+						//		return [false, "the email must not have any uppercase letters"];
+						//	}
+						//}
 						return [true];
 					}
                 }
@@ -135,7 +148,7 @@ $(document).ready(function () {
                 hidden: !Common.password,
                 edittype: "password",
                 editrules: { edithidden: !Common.password, required: false },
-                editoptions: { maxlength: 50 },
+                editoptions: { maxlength: 50, autocomplete: "off" },
                 editable: !Common.password,
                 hidden: true
             },

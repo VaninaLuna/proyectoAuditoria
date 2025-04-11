@@ -32,10 +32,10 @@ namespace proyecto.Bussines
 
         //-----------RELACIONES-------------
         public int idHallazgo { get; set; }
-        public Hallazgo hallazgo { get; set; }
+        public Finding hallazgo { get; set; }
         //---------------------------------------
         public int idEmpleado { get; set; }
-        public Empleado empleado { get; set; }
+        public Responsible empleado { get; set; }
         //---------------------------------------
         public int idEstadoPlan {  get; set; }
         public EstadoPlan estadoPlan { get; set; }

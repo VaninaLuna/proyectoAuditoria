@@ -7,23 +7,23 @@ using System.Web.Mvc;
 
 namespace proyecto.Controllers
 {
-    public class EstadoEmpleadoController : Controller
+    public class ResponsibleStatusController : Controller
     {
         // GET: EstadoEmpleado
         public ActionResult Index()
         {
-            List<EstadoEmpleado> lista = EstadoEmpleado.Dao.GetAll();
-            return View(lista);
+            List<ResponsibleStatus> list = ResponsibleStatus.Dao.GetAll();
+            return View(list);
         }
 
         [HttpPost]
-        public ActionResult Crear(EstadoEmpleado oEstadoEmpleado)
+        public ActionResult Crear(ResponsibleStatus oResponsibleStatus)
         {
-            EstadoEmpleado estado = new EstadoEmpleado
+            ResponsibleStatus status = new ResponsibleStatus
             {
-                Name = oEstadoEmpleado.Name
+                Name = oResponsibleStatus.Name
             };
-            estado.Save();
+            status.Save();
 
             return RedirectToAction("Index");
         }
@@ -32,8 +32,8 @@ namespace proyecto.Controllers
         public ActionResult Eliminar(int idEstado)
         {
             //hacer sp del get y delete
-            var estado = EstadoEmpleado.Dao.Get(idEstado);
-            EstadoEmpleado.Dao.Delete(estado);
+            var status = ResponsibleStatus.Dao.Get(idEstado);
+            ResponsibleStatus.Dao.Delete(status);
             return RedirectToAction("Index");
         }
     }
