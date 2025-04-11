@@ -2,32 +2,127 @@
     ViewBag.Title = "Home Page";
 }
 
-<main>
-    <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
-    </section>
+
+<div class="container">
+    <h1 class="page-header">Dashboard</h1>
+    <p class="text-muted">Bienvenido de nuevo</p>
 
     <div class="row">
-        <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Getting started</h2>
-            <p>
-                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                enables a clean separation of concerns and gives you full control over markup
-                for enjoyable, agile development.
-            </p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="librariesTitle">
-            <h2 id="librariesTitle">Get more libraries</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-        </section>
+        <div class="col-sm-6 col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h5>Total Auditorías</h5>
+                    <h3><strong>24</strong></h3>
+                    <small class="text-success">+2 desde el mes pasado</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h5>En Progreso</h5>
+                    <h3><strong>7</strong></h3>
+                    <small class="text-danger">-1 desde el mes pasado</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h5>Completadas</h5>
+                    <h3><strong>15</strong></h3>
+                    <small class="text-success">+3 desde el mes pasado</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h5>Hallazgos Críticos</h5>
+                    <h3 class="text-danger"><strong>9</strong></h3>
+                    <small class="text-danger">+2 desde el mes pasado</small>
+                </div>
+            </div>
+        </div>
     </div>
-</main>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Auditorías Recientes</strong><br>
+                    <small>Resumen de las actividades de auditoría más recientes</small>
+                </div>
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Auditoría</th>
+                                <th>Estado</th>
+                                <th>Progreso</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Auditoría de Seguridad TI</td>
+                                <td>
+                                    <span class="label" style="background-color: #f1c40f;">En Progreso</span>
+                                </td>
+                                <td>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: 50%; background-color: #000;"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Controles Financieros</td>
+                                <td>
+                                    <span class="label" style="background-color: #2ecc71;">Completada</span>
+                                </td>
+                                <td>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: 100%; background-color: #000;"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Revisión de Cumplimiento</td>
+                                <td>
+                                    <span class="label" style="background-color: #3498db;">Pendiente</span>
+                                </td>
+                                <td>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: 0%; background-color: #000;"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Auditoría Operativa</td>
+                                <td>
+                                    <span class="label" style="background-color: #f1c40f;">En Progreso</span>
+                                </td>
+                                <td>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: 70%; background-color: #000;"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading"><strong>Tendencia de Hallazgos</strong></div>
+                <div class="panel-body text-center">
+                    <p class="text-muted">Número de hallazgos en los últimos 6 meses</p>
+                    <div class="well well-sm">
+                        <p>Gráfico de Tendencia de Hallazgos</p>
+                        <small>Últimos 6 meses</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
