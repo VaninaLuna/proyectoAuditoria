@@ -15,7 +15,9 @@
             <ul class="nav metismenu" id="nav1">
                 <li class="nav-header">
                     <div class="dropdown profile-element">
-                        <div class="logo-client"></div>
+                        <div class="logo-client">
+                            @Html.ActionLink("Proyecto Auditoria", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                        </div>
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#" aria-expanded="false">
                             <span class="block m-t-xs font-bold">@Html.Raw(Current.User.FullName) <b class="caret"></b></span>
                         </a>

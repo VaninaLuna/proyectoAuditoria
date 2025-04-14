@@ -1,0 +1,52 @@
+﻿using proyecto.Bussines;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace proyecto.Controllers
+{
+    public class DepartmentController : Controller
+    {
+        // GET: Department
+        public ActionResult Index()
+        {
+            List<Department> list = Department.Dao.GetAll()
+            .Where(d => d.IsActive) // solo los activos
+            .ToList();
+            return View(list);
+        }
+
+        public ActionResult Inactivos()
+        {
+            var departamentosInactivos = Department.Dao.GetAll()
+                .Where(d => !d.IsActive)
+                .ToList();
+            return View("Index", departamentosInactivos);
+        }
+
+        [HttpPost]
+        public ActionResult Crear(Department oDepartment)
+        {
+            Department department = new Department
+            {
+                Name = oDepartment.Name,
+                Description = oDepartment.Description,
+                IsActive = true
+            };
+            department.Save();
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult Eliminar(int idEstado)
+        {
+            //hacer sp del get y delete
+            var department = Department.Dao.Get(idEstado);
+            Department.Dao.Delete(department);
+            return RedirectToAction("Index");
+        }
+    }
+}
