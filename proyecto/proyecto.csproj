@@ -510,6 +510,7 @@
     <Compile Include="Areas\Bcri\Utility\SecurityUtility.cs" />
     <Compile Include="Areas\Bcri\Utility\SettingSiteUtility.cs" />
     <Compile Include="Areas\Bcri\Utility\XlsEntityReaderResult.cs" />
+    <Compile Include="Controllers\AuditController.cs" />
     <Compile Include="Controllers\AuditorController.cs" />
     <Compile Include="Controllers\DepartmentController.cs" />
     <Compile Include="Controllers\FindingTypeController.cs" />
@@ -521,6 +522,7 @@
     <Compile Include="Controllers\EstadoPlanController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RolController.cs" />
+    <Compile Include="DTOs\AuditEditDTO.cs" />
     <Compile Include="DTOs\AuditorEditDTO.cs" />
     <Compile Include="DTOs\ResponsibleEditDTO.cs" />
     <Compile Include="Global.asax.cs">
@@ -2720,6 +2722,7 @@
     <Content Include="Views\Auditor\Index.cshtml" />
     <Content Include="Views\Department\Index.cshtml" />
     <Content Include="Views\Responsible\Index.cshtml" />
+    <Content Include="Views\Audit\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

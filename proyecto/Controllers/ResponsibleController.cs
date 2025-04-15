@@ -15,9 +15,7 @@ namespace proyecto.Controllers
         public ActionResult Index()
         {
             List<Responsible> lista = Responsible.Dao.GetAll();
-            //lista.LoadRelation(x => x.User);
-            //lista.LoadRelation(x => x.EstadoAuditor);
-
+           
             foreach (Responsible responsible in lista)
             {
                 responsible.ResponsibleStatus = ResponsibleStatus.Dao.Get(responsible.ResponsibleStatus.Id);

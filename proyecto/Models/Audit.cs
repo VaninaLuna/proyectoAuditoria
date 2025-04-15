@@ -1,4 +1,5 @@
 ﻿using DNF.Entity;
+using DNF.Security.Bussines;
 using proyecto.Bussines;
 using proyecto.Dao;
 using proyecto.Models;
@@ -20,15 +21,14 @@ namespace proyecto.Bussines
 
         [Display(Name = "Fecha Creacion")]
         [Required]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "0:yyyy-MM-dd", ApplyFormatInEditMode = true)]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime CreateDate{ get; set; }
 
-        [Display(Name = "Fecha Finalizacion")]
-        [Required]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "0:yyyy-MM-dd", ApplyFormatInEditMode = true)]
-        public DateTime EndDate { get; set; }
+        [Display(Name = "Fecha Finalizacion")]        
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime? EndDate { get; set; }
 
 
         //-----------RELACIONES-------------
@@ -40,12 +40,50 @@ namespace proyecto.Bussines
 
 
         //--------------------------------------------
-        //public List<AuditorAuditoria> auditorias { get; set; }
+        public List<AuditorAudit> _AuditorAudits;
+
+        public List<AuditorAudit> AuditorAudits
+        {
+            get
+            {
+                if (_AuditorAudits == null)
+                {
+                    _AuditorAudits = AuditorAudit.Dao.GetBy(this);
+                }
+
+                return _AuditorAudits;
+            }
+            set
+            {
+                _AuditorAudits = value;
+            }
+        }
+
+
+        private List<Auditor> _Auditors;
+
+        public List<Auditor> Auditors
+        {
+            get
+            {
+                if (_Auditors == null)
+                {
+                    AuditorAudits.LoadRelation((AuditorAudit x) => x.Auditor);
+                    _Auditors = AuditorAudits.Select((AuditorAudit x) => x.Auditor).ToList();
+                }
+
+                return _Auditors;
+            }
+            set
+            {
+                _Auditors = value;
+            }
+        }
 
         ////--------------------------------------------
         //public int idHallazgo { get; set; }
         //public List<Hallazgo> hallazgos { get; set; }
-       
+
         //-----------RELACIONES-------------
 
         public bool IsActive { get; set; }

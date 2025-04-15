@@ -30,26 +30,24 @@ namespace proyecto.Bussines
         public AuditorStatus AuditorStatus { get; set; }
 
 
+        public List<AuditorAudit> _AuditorAudits { get; set; }
 
+        public List<AuditorAudit> AuditorAudits
+        {
+            get
+            {
+                if (_AuditorAudits == null)
+                {
+                    _AuditorAudits = AuditorAudit.Dao.GetBy(this);
+                }
 
-        //public List<AuditorAuditoria> _Auditorias { get; set; }
-
-        //public List<AuditorAuditoria> Auditorias
-        //{
-        //    get
-        //    {
-        //        if (_Auditorias == null)
-        //        {
-        //            _Auditorias = AuditorAuditoria.Dao.GetBy(this);
-        //        }
-
-        //        return _Auditorias;
-        //    }
-        //    set
-        //    {
-        //        _Auditorias = value;
-        //    }
-        //}
+                return _AuditorAudits;
+            }
+            set
+            {
+                _AuditorAudits = value;
+            }
+        }
         //-----------RELACIONES-------------
 
 
