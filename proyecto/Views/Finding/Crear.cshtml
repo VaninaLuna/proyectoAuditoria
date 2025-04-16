@@ -1,0 +1,98 @@
+﻿@model proyecto.Bussines.Finding
+
+@{
+    ViewBag.Title = "Crear";
+    var auditoriaId = ViewBag.AuditoriaId;
+}
+
+<h2>Crear Hallazgo</h2>
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+<div class="form-horizontal">
+
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", style = "width: 50%" } })
+            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.CreateDate, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.CreateDate, new { htmlAttributes = new { @class = "form-control", style = "width: 50%" } })
+            @Html.ValidationMessageFor(model => model.CreateDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextAreaFor(model => model.Description, new { @class = "form-control", style = "height: 80px;width: 50%;" })
+            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.FindingImage, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <!-- Input para la imagen con estilo de ancho al 50% -->
+            <input type="file" id="imageInput" class="form-control input-field" accept="image/*" onchange="previewImage(event)" style="width: 50%;" />
+
+            <!-- Contenedor para la previsualización de la imagen -->
+            <div id="imagePreviewContainer" style="margin-top: 10px;">
+                <img id="imagePreview" src="#" alt="Vista previa" style="max-width: 50%; display: none;" />
+            </div>
+
+            <!-- Campo oculto para almacenar la cadena Base64 -->
+            <input type="hidden" id="imageBase64" name="FindingImage" />
+
+            @Html.ValidationMessageFor(model => model.FindingImage, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Crear Hallazgo" class="btn btn-primary" />
+        </div>
+    </div>
+</div>
+}
+
+@*<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>*@
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script>
+    // Función para previsualizar la imagen y convertirla a Base64
+    function previewImage(event) {
+        var reader = new FileReader();
+
+        reader.onload = function () {
+            // Obtener la URL Base64 de la imagen
+            var base64String = reader.result;
+
+            // Mostrar la imagen en el contenedor de previsualización
+            var preview = document.getElementById('imagePreview');
+            preview.src = base64String;
+            preview.style.display = 'block'; // Mostrar la imagen
+
+            // Asignar la cadena Base64 al campo oculto
+            document.getElementById('imageBase64').value = base64String;
+        }
+
+        // Leer la imagen como URL base64
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>

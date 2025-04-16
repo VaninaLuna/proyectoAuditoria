@@ -10,7 +10,7 @@ using System.Web;
 
 namespace proyecto.Bussines
 {
-    public partial class Finding : IEntityDao, IName, ICode, IOrder
+    public partial class Finding : IEntityDao, IName
     {
         public override long Id { get ; set ; }
 
@@ -26,7 +26,13 @@ namespace proyecto.Bussines
         [DisplayFormat(DataFormatString = "0:yyyy-MM-dd", ApplyFormatInEditMode = true)]
         public DateTime CreateDate { get; set; }
 
-        public string FindingImage {  get; set; } 
+        [Display(Name = "Descripcion")]
+        [StringLength(1000, ErrorMessage = "No debe superar los 1000 caracteres")]
+        public string Description { get; set; }
+
+        [Display(Name = "Imagen")]
+        public string FindingImage {  get; set; }
+        [Display(Name = "Tipo de Imagen")]
         public string ImageType { get; set; }
 
 
@@ -42,9 +48,7 @@ namespace proyecto.Bussines
         public bool IsActive { get; set; }
 
 
-
-        public string Code { get ; set ; }
-        public int Order { get ; set ; }
+       
 
         public override void Delete()
         {

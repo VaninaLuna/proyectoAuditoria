@@ -513,6 +513,7 @@
     <Compile Include="Controllers\AuditController.cs" />
     <Compile Include="Controllers\AuditorController.cs" />
     <Compile Include="Controllers\DepartmentController.cs" />
+    <Compile Include="Controllers\FindingController.cs" />
     <Compile Include="Controllers\FindingTypeController.cs" />
     <Compile Include="Controllers\AuditorStatusController.cs" />
     <Compile Include="Controllers\AuditStatusController.cs" />
@@ -2723,6 +2724,7 @@
     <Content Include="Views\Department\Index.cshtml" />
     <Content Include="Views\Responsible\Index.cshtml" />
     <Content Include="Views\Audit\Index.cshtml" />
+    <Content Include="Views\Finding\Crear.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

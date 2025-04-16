@@ -55,6 +55,11 @@
         <th>
             Opciones
         </th>
+        <th> Crear Hallazgo</th>
+        <th>
+            Ver detalles
+        </th>
+
     </tr>
 
     @foreach (var item in Model)
@@ -96,9 +101,9 @@
 
             <td>
                 @*<button type="button" onclick="CrearAuditoria(@item.Id)" class="fa fa-edit text-info">
-                </button>
-                <button type="button" onclick="modalEliminar(@item.Id)" class="fa fa-trash text-danger">
-                </button>*@
+            </button>
+            <button type="button" onclick="modalEliminar(@item.Id)" class="fa fa-trash text-danger">
+            </button>*@
                 <button type="button" onclick="CrearAuditoria(@item.Id)" class="btn btn-link text-success p-0" style="padding: 0 5px 0 5px">
                     <i class="fa fa-lg fa-edit"></i>
                 </button>
@@ -106,6 +111,19 @@
                     <i class="fa fa-lg fa-trash"></i>
                 </button>
             </td>
+            
+            <td>
+                <button type="button" onclick="CrearHallazgo(@item.Id)" class="btn btn-link text-info p-0" style="padding: 0 5px 0 5px">
+                    <i class="fa fa-lg fa-plus-circle"></i>
+                    <span class="sr-only">Crear hallazgo</span>
+                </button>
+            </td>
+            <td>
+                <button type="button" onclick="CrearAuditoria(@item.Id)" class="btn btn-link text-info p-0" style="padding: 0 5px 0 5px">
+                    <i class="fa fa-lg fa-eye"></i>
+                </button>
+            </td>
+
         </tr>
     }
 
@@ -273,7 +291,7 @@
                     $('#ddlAuditor').append($('<option>').val(auditor.Id).text(auditor.Name));
                 });
 
-               
+
                 // Ocultar spinner
                 $('#spinnerCrear').hide();
 
@@ -309,7 +327,7 @@
                             const endDate = new Date(data.auditDTO.EndDateString);
                             const finFormateada = endDate.toISOString().split('T')[0];
                             $('#txtEndDate').val(finFormateada);
-                        }                       
+                        }
 
                         // Cambiamos título del modal si estás editando
                         $('#titleModalLabel').text('Editar Auditoria');
@@ -370,4 +388,10 @@
         $('.text-danger').hide();
         $('#spinnerCrear').hide();
     }
+
+    
+        function CrearHallazgo(id) {
+            window.location.href = '/Finding/Crear/' + id;
+    }
+
 </script>
