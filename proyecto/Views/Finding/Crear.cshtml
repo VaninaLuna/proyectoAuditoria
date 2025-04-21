@@ -5,7 +5,7 @@
     var auditoriaId = ViewBag.AuditoriaId;
 }
 
-<h2>Crear Hallazgo</h2>
+<h3>Crear Hallazgo</h3>
 
 
 @using (Html.BeginForm()) 
@@ -42,16 +42,13 @@
 
     <div class="form-group">
         @Html.LabelFor(model => model.FindingImage, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            <!-- Input para la imagen con estilo de ancho al 50% -->
-            <input type="file" id="imageInput" class="form-control input-field" accept="image/*" onchange="previewImage(event)" style="width: 50%;" />
-
-            <!-- Contenedor para la previsualización de la imagen -->
+        <div class="col-md-10">           
+            <input type="file" id="imageInput" class="form-control input-field" accept="image/*" onchange="previewImage(event)" style="width: 40%;" />
+                        
             <div id="imagePreviewContainer" style="margin-top: 10px;">
-                <img id="imagePreview" src="#" alt="Vista previa" style="max-width: 50%; display: none;" />
+                <img id="imagePreview" src="#" alt="Vista previa" style="max-width: 40%; display: none;" />
             </div>
-
-            <!-- Campo oculto para almacenar la cadena Base64 -->
+                        
             <input type="hidden" id="imageBase64" name="FindingImage" />
 
             @Html.ValidationMessageFor(model => model.FindingImage, "", new { @class = "text-danger" })
@@ -59,40 +56,53 @@
     </div>
 
     <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Crear Hallazgo" class="btn btn-primary" />
+        @Html.Label("Estado de Hallazgo", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-7">
+            @Html.DropDownList("FindingStatusId", new SelectList(ViewBag.Estados, "Id", "Name"), "-- Seleccione Estado --", new { @class = "form-control", style = "width: 50%" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Tipo de Hallazgo", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-7">
+            @Html.DropDownList("FindingTypeId", new SelectList(ViewBag.Tipos, "Id", "Name"), "-- Seleccione Tipo --", new { @class = "form-control", style = "width: 50%" })
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Crear Hallazgo" class="btn btn-primary" />
+            </div>
+        </div>
+
+        <div class="mt-4 text-left" style="padding:10px">
+            <a href="@Url.Action("Index", "Audit")" class="btn btn-warning btn-sm">Volver a la lista</a>
         </div>
     </div>
 </div>
 }
 
-@*<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>*@
+
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
 
-<script>
-    // Función para previsualizar la imagen y convertirla a Base64
+<script>    
     function previewImage(event) {
         var reader = new FileReader();
 
-        reader.onload = function () {
-            // Obtener la URL Base64 de la imagen
+        reader.onload = function () {            
             var base64String = reader.result;
-
-            // Mostrar la imagen en el contenedor de previsualización
+            
             var preview = document.getElementById('imagePreview');
             preview.src = base64String;
-            preview.style.display = 'block'; // Mostrar la imagen
-
-            // Asignar la cadena Base64 al campo oculto
+            preview.style.display = 'block';
+            
             document.getElementById('imageBase64').value = base64String;
         }
-
-        // Leer la imagen como URL base64
+                
         reader.readAsDataURL(event.target.files[0]);
     }
 </script>

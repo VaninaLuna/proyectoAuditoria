@@ -1,0 +1,147 @@
+﻿@model proyecto.Bussines.Audit
+
+@{
+    ViewBag.Title = "VerAuditoria";
+}
+
+<!-- Encabezado -->
+<h2 class="text-center my-4">Detalles de la Auditoría</h2>
+
+<!-- CSS interno -->
+<style>
+
+    .dl-horizontal dt {
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .dl-horizontal dd {
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="container" style="background-color: #f8f9fa; padding: 30px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-size: 16px; margin-top: 30px;">
+    <div class="row d-flex align-items-center">
+        <div class="col-md-6">
+            <h4>Información de la Auditoría</h4>
+        </div>
+        <div class="col-md-6 text-right">
+            <button class="btn btn-primary">
+                <i class="fa fa-upload"></i> Exportar
+            </button>
+        </div>
+    </div>
+    <hr />
+
+    <dl class="dl-horizontal" style="overflow: visible;">
+        <dt>Auditoría</dt>
+        <dd>@Html.DisplayFor(model => model.Name)</dd>
+
+        <dt>Fecha de Creación</dt>
+        <dd>@Html.DisplayFor(model => model.CreateDate)</dd>
+
+        <dt>Fecha de Finalización</dt>
+        <dd>@Html.DisplayFor(model => model.EndDate)</dd>
+
+        <dt>Estado de la Auditoría</dt>
+        <dd>@Html.DisplayFor(model => model.AuditStatus.Name)</dd>
+
+        <dt>Departamento</dt>
+        <dd>@Html.DisplayFor(model => model.Department.Name)</dd>
+
+        <dt>Auditores</dt>
+        <dd>
+            @{
+                var auditorNames = new List<string>();
+                foreach (var auditor in Model.Auditors)
+                {
+                    auditorNames.Add(auditor.User.FullName);
+                }
+
+                var nombresMostrados = auditorNames.Take(3);
+                var auditores = string.Join(", ", nombresMostrados);
+                var tooltip = string.Join(", ", auditorNames);
+                if (auditorNames.Count > 2)
+                {
+                    auditores += "...";
+                }
+            }
+            <span data-toggle="tooltip" title="@tooltip" class="text-info">@auditores</span>
+        </dd>
+    </dl>
+
+    @if (ViewBag.Hallazgos != null)
+    {
+        var hallazgos = ViewBag.Hallazgos as List<proyecto.Bussines.Finding>;
+        <h4 class="mt-5">Hallazgos relacionados</h4>
+        <table class="table table-striped table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                    <th>Estado</th>
+                    <th>Descripción</th>
+                    <th>Evidencia</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var h in hallazgos)
+                {
+                    <tr>
+                        <td>@h.Name</td>
+                        <td>@h.FindingType.Name</td>
+                        <td>@h.FindingStatus.Name</td>
+                        <td>@h.Description</td>
+                        @*<td>
+                                @if (!string.IsNullOrEmpty(h.FindingImage))
+                                {
+                                    <img src="@h.FindingImage" alt="Evidencia" class="img-thumbnail" style="max-width: 100px; cursor: pointer;" data-toggle="modal" data-target="#imageModal" data-img="@h.FindingImage" />
+                                }
+                            </td>*@
+                        <td>
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Flag_of_Argentina.svg/2560px-Flag_of_Argentina.svg.png"
+                                 class="img-thumbnail"
+                                 data-toggle="modal"
+                                 data-target="#imageModal"
+                                 data-img="https://financialcrimeacademy.org/wp-content/uploads/2022/03/2-1-1024x576.jpg" />
+                        </td>
+
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <!-- Enlaces de acción -->
+    <div class="mt-4 text-left">
+        <a href="@Url.Action("Index", "Audit")" class="btn btn-warning btn-sm">Volver a la lista</a>
+    </div>
+</div>
+
+<!-- Modale Evidencia -->
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" style="margin-top: 80px">
+    <div class="modal-dialog modal-sm" role="document">
+
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <img id="modalImage" src="" class="img-fluid" style="max-height: 50vh;" /> 
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-2.2.4.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+
+        $(document).on('click', 'img[data-toggle="modal"]', function () {
+            var imgSrc = $(this).data('img');
+            $('#modalImage').attr('src', imgSrc);
+        });
+    });
+</script>
+

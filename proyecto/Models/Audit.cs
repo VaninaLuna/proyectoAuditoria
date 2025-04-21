@@ -15,7 +15,9 @@ namespace proyecto.Bussines
     {
         public override long Id { get; set ; }
 
+        [Required]
         [Display(Name = "Nombre")]
+        [StringLength(50, ErrorMessage ="No debe superar los 50 caracteres")]
         public string Name { get; set; }
 
 

@@ -119,7 +119,7 @@
                 </button>
             </td>
             <td>
-                <button type="button" onclick="CrearAuditoria(@item.Id)" class="btn btn-link text-info p-0" style="padding: 0 5px 0 5px">
+                <button type="button" onclick="VerAuditoria(@item.Id)" class="btn btn-link text-info p-0" style="padding: 0 5px 0 5px">
                     <i class="fa fa-lg fa-eye"></i>
                 </button>
             </td>
@@ -392,6 +392,10 @@
     
         function CrearHallazgo(id) {
             window.location.href = '/Finding/Crear/' + id;
+    }
+
+    function VerAuditoria(id) {
+        window.location.href = '/Audit/VerAuditoria/' + id;
     }
 
 </script>

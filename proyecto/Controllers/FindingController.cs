@@ -29,33 +29,47 @@ namespace proyecto.Controllers
 
         public JsonResult ObtenerDatos()
         {
-            var estadosAuditoria = AuditStatus.Dao.GetAll();
-            var estados = estadosAuditoria?
+            var estadosHallazgos = FindingStatus.Dao.GetAll();
+            var estados = estadosHallazgos?
                 .Select(u => new { u.Id, u.Name })
                 .ToList();
 
-            var allAuditores = Auditor.Dao.GetAll();
-            foreach (var auditor in allAuditores)
-            {
-                auditor.User = DNF.Security.Bussines.User.Dao.Get(auditor.User.Id);
-            }
-            var auditores = allAuditores?
-                .Select(u => new { u.Id, Name = $"{u.User.FullName} - {u.User.Email}" })
-                .ToList();
+            //var allAuditores = Auditor.Dao.GetAll();
+            //foreach (var auditor in allAuditores)
+            //{
+            //    auditor.User = DNF.Security.Bussines.User.Dao.Get(auditor.User.Id);
+            //}
+            //var auditores = allAuditores?
+            //    .Select(u => new { u.Id, Name = $"{u.User.FullName} - {u.User.Email}" })
+            //    .ToList();
 
-            var departamentosAuditoria = Department.Dao.GetAll();
-            var departamentos = departamentosAuditoria?
+            var tipoHallazgo = FindingType.Dao.GetAll();
+            var tipos = tipoHallazgo?
                 .Select(u => new { u.Id, u.Name })
                 .ToList();
 
-            return Json(new { estados, auditores, departamentos }, JsonRequestBehavior.AllowGet);
+            return Json(new { estados, tipos }, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Crear(int id)
         {
-            
+            var estadosHallazgos = FindingStatus.Dao.GetAll();
+            var estados = estadosHallazgos?
+                .Select(u => new { u.Id, u.Name })
+                .ToList();
+
+            var tipoHallazgo = FindingType.Dao.GetAll();
+            var tipos = tipoHallazgo?
+                .Select(u => new { u.Id, u.Name })
+                .ToList();
+
+            // Pasamos los datos a la vista mediante ViewBag
+            ViewBag.Estados = estados;
+            ViewBag.Tipos = tipos;
             ViewBag.AuditoriaId = id;
             return View();
         }
+
+
     }
 }

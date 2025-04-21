@@ -28,5 +28,9 @@ namespace proyecto.DTOs
         //public List<int> AuditorsId { get; set; }
         public bool Active { get; set; }
 
+        public string StatusName { get; set; }
+        public string DepartmentName { get; set; }
+        public string AuditorName { get; set; }
+
     }
 }

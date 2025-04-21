@@ -2725,6 +2725,8 @@
     <Content Include="Views\Responsible\Index.cshtml" />
     <Content Include="Views\Audit\Index.cshtml" />
     <Content Include="Views\Finding\Crear.cshtml" />
+    <Content Include="Views\Finding\Index.cshtml" />
+    <Content Include="Views\Audit\VerAuditoria.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

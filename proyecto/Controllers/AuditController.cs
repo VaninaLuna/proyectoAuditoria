@@ -1,4 +1,5 @@
 ﻿using DNF.Entity;
+using System.Data.Entity;
 using proyecto.Bussines;
 using proyecto.DTOs;
 using proyecto.Models;
@@ -151,6 +152,45 @@ namespace proyecto.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "Error al guardar la Auditoria");
             }
+        }
+
+        public ActionResult VerAuditoria(int id)
+        {
+            //Audit audit = Audit.Dao.Get(id);
+            Audit audit = Audit.Dao.Get(id);
+            if (audit == null)
+            {
+                return HttpNotFound();
+            }
+            audit.AuditStatus = AuditStatus.Dao.Get(audit.AuditStatus.Id);
+            audit.Department = Department.Dao.Get(audit.Department.Id);
+
+            // Cargar los auditores y sus usuarios
+            foreach (var auditor in audit.Auditors)
+            {
+                var auditorDetails = Auditor.Dao.Get(auditor.Id);
+                if (auditorDetails?.User != null)
+                {
+                    auditor.User = DNF.Security.Bussines.User.Dao.Get(auditorDetails.User.Id);
+                }
+            }
+
+            var hallazgos = Finding.Dao.GetAll()
+            .Where(f => f.IsActive && f.Audit.Id == id)
+            .ToList();
+
+            // Cargo relaciones de los hallazgos
+            foreach (var finding in hallazgos)
+            {
+                finding.FindingStatus = FindingStatus.Dao.Get(finding.FindingStatus.Id);
+                finding.FindingType = FindingType.Dao.Get(finding.FindingType.Id);
+                finding.Audit = audit; // opcional si ya tenés el objeto
+            }
+
+            // Paso los datos a la vista con ViewBag o ViewModel
+            ViewBag.Hallazgos = hallazgos;
+
+            return View(audit);
         }
     }
 }
