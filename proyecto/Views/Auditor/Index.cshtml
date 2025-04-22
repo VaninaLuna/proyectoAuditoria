@@ -30,286 +30,294 @@
 <script src="~/Scripts/jquery-2.2.4.min.js"></script>
 <script src="~/Scripts/bootstrap.min.js"></script>
 
-<h2>Auditores</h2>
+<h2 class="text-center my-4">Auditores</h2>
 
-<button type="button" class="btn btn-primary" id="btnCrear" onclick="CrearAuditor()">
-    Crear Auditor
-</button>
-<br />
-<br />
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.FileNumber)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.StartDate)
-        </th>
-        <th>
-            Usuario
-        </th>
-        <th>
-            Estado
-        </th>
-        <th>Opciones</th>
-    </tr>
+<div class="container" style="background-color: #f8f9fa; padding: 30px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-size: 14px; margin-top: 30px;margin-bottom:30px">
 
-    @foreach (var item in Model)
-    {
+
+    <button type="button" class="btn btn-primary" id="btnCrear" onclick="CrearAuditor()">
+        Crear Auditor
+    </button>
+    <br />
+    <br />
+    <table class="table">
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FileNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.FullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AuditorStatus.Name)
-            </td>
-            <td>
-                <button type="button" onclick="CrearAuditor(@item.Id)" class="fa fa-edit text-info">
-                </button>
-                <button type="button" onclick="modalEliminar(@item.Id)" class="fa fa-trash text-danger" data-toggle="modal" data-target="#modalEliminar">
-                </button>
-            </td>
+            <th>
+                @Html.DisplayNameFor(model => model.FileNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartDate)
+            </th>
+            <th>
+                Usuario
+            </th>
+            <th>
+                Estado
+            </th>
+            <th>Opciones</th>
         </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FileNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AuditorStatus.Name)
+                </td>
+                <td>
+                    <button type="button" onclick="CrearAuditor(@item.Id)" class="btn btn-link text-success p-0" style="padding: 0 5px 0 5px">
+                        <i class="fa fa-lg fa-edit"></i>
+                    </button>
+                    <button type="button" onclick="modalEliminar(@item.Id)" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: red" data-toggle="modal" data-target="#modalEliminar">
+                        <i class="fa fa-lg fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+    @using (Html.BeginForm("Eliminar", "Auditor", FormMethod.Post, new { @id = "frmEliminar" }))
+    {
+        @Html.Hidden("idAuditor");
     }
-</table>
-@using (Html.BeginForm("Eliminar", "Auditor", FormMethod.Post, new { @id = "frmEliminar" }))
-{
-    @Html.Hidden("idAuditor");
-}
 
-<!-- Modal Eliminar -->
-<div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title" id="exampleModalLabel">Deseas eliminar este Auditor</h4>
-            </div>
-            <div style="padding:1em">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                <button type="button" onclick="Eliminar()" class="btn btn-success">Aceptar</button>
+    <!-- Modal Eliminar -->
+    <div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="exampleModalLabel">Deseas eliminar este Auditor</h4>
+                </div>
+                <div style="padding:1em">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    <button type="button" onclick="Eliminar()" class="btn btn-success">Aceptar</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Modal Agregar -->
-<div class="modal fade" id="modalCrear" tabindex="-1" role="dialog" aria-labelledby="titleModalLabel">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <!-- Header -->
-            <div class="modal-header">
-                <h4 class="modal-title" id="titleModalLabel">Crear Auditor</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <!-- Formulario -->
-            <div class="modal-body">
-                <form id="frmAuditor">
-                    <div class="form-group">
-                        <label>Legajo</label>
-                        <input type="text" id="txtLegajo" name="legajo" class="form-control" />
-                        <span class="text-danger" id="errorLegajo" style="display:none;">* Campo obligatorio</span>
-                    </div>
+    <!-- Modal Agregar -->
+    <div class="modal fade" id="modalCrear" tabindex="-1" role="dialog" aria-labelledby="titleModalLabel">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <!-- Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title" id="titleModalLabel">Crear Auditor</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <!-- Formulario -->
+                <div class="modal-body">
+                    <form id="frmAuditor">
+                        <div class="form-group">
+                            <label>Legajo</label>
+                            <input type="text" id="txtLegajo" name="legajo" class="form-control" />
+                            <span class="text-danger" id="errorLegajo" style="display:none;">* Campo obligatorio</span>
+                        </div>
 
-                    <div class="form-group">
-                        <label>Fecha de Alta</label>
-                        <input type="date" id="txtFechaAlta" name="fecha_alta" class="form-control" />
-                        <span class="text-danger" id="errorFechaAlta" style="display:none;">* Campo obligatorio</span>
-                    </div>
+                        <div class="form-group">
+                            <label>Fecha de Alta</label>
+                            <input type="date" id="txtFechaAlta" name="fecha_alta" class="form-control" />
+                            <span class="text-danger" id="errorFechaAlta" style="display:none;">* Campo obligatorio</span>
+                        </div>
 
-                    <div class="form-group">
-                        <label>Estado</label>
-                        <select id="ddlEstado" name="idEstado" class="form-control">
-                            <option value="">-- Seleccionar Estado --</option>
-                        </select>
-                        <span class="text-danger" id="errorEstado" style="display:none;">* Selecciona un estado</span>
-                    </div>
+                        <div class="form-group">
+                            <label>Estado</label>
+                            <select id="ddlEstado" name="idEstado" class="form-control">
+                                <option value="">-- Seleccionar Estado --</option>
+                            </select>
+                            <span class="text-danger" id="errorEstado" style="display:none;">* Selecciona un estado</span>
+                        </div>
 
-                    <div class="form-group">
-                        <label>Usuario</label>
-                        <select id="ddlUsuario" name="idUsuario" class="form-control">
-                            <option value="">-- Seleccionar Usuario --</option>
-                        </select>
-                        <span class="text-danger" id="errorUsuario" style="display:none;">* Selecciona un usuario</span>
-                    </div>
-                    <!-- Spinner -->
-                    <div id="spinnerCrear" style="display:none; text-align:center;">
-                        <i class="fa fa-spinner fa-spin fa-2x text-primary"></i>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-primary" form="frmAuditor">Aceptar</button>
+                        <div class="form-group">
+                            <label>Usuario</label>
+                            <select id="ddlUsuario" name="idUsuario" class="form-control">
+                                <option value="">-- Seleccionar Usuario --</option>
+                            </select>
+                            <span class="text-danger" id="errorUsuario" style="display:none;">* Selecciona un usuario</span>
+                        </div>
+                        <!-- Spinner -->
+                        <div id="spinnerCrear" style="display:none; text-align:center;">
+                            <i class="fa fa-spinner fa-spin fa-2x text-primary"></i>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" form="frmAuditor">Aceptar</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
-<script>
-    var auditorId = 0;
-    $(document).ready(function () {
-        //cargar datos de usuarios y estados al abrir el modal
-        //$('#btnCrear').click(function () {
+    <script>
+        var auditorId = 0;
+        $(document).ready(function () {
+            //cargar datos de usuarios y estados al abrir el modal
+            //$('#btnCrear').click(function () {
 
-        //});
+            //});
 
-        $('#modalCrear').on('hidden.bs.modal', function () {
-            limpiarCampos();
-        });
-
-        // Envío del formulario por AJAX
-        $('#frmAuditor').submit(function (e) {
-            e.preventDefault();
-
-            if (!validarFormulario()) return;
-
-            const auditor = {
-                id: auditorId,
-                FileNumber: $('#txtLegajo').val(),
-                StartDate: $('#txtFechaAlta').val(),
-                StatusId: $('#ddlEstado').val(),
-                UserId: $('#ddlUsuario').val()
-            };
-            $('#spinnerCrear').show();
-
-            $.ajax({
-                url: '/Auditor/Crear',
-                type: 'POST',
-                contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify(auditor),
-                success: function () {
-                    $('#modalCrear').modal('hide');
-                    location.reload(); // O actualizar la tabla sin recargar toda la página
-                },
-                error: function () {
-                    alert('Error al crear el auditor.');
-                },
-                complete: function () {
-                    // Ocultar spinner, mostrar contenido
-                    $('#spinnerCrear').hide();
-                }
+            $('#modalCrear').on('hidden.bs.modal', function () {
+                limpiarCampos();
             });
+
+            // Envío del formulario por AJAX
+            $('#frmAuditor').submit(function (e) {
+                e.preventDefault();
+
+                if (!validarFormulario()) return;
+
+                const auditor = {
+                    id: auditorId,
+                    FileNumber: $('#txtLegajo').val(),
+                    StartDate: $('#txtFechaAlta').val(),
+                    StatusId: $('#ddlEstado').val(),
+                    UserId: $('#ddlUsuario').val()
+                };
+                $('#spinnerCrear').show();
+
+                $.ajax({
+                    url: '/Auditor/Crear',
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(auditor),
+                    success: function () {
+                        $('#modalCrear').modal('hide');
+                        location.reload(); // O actualizar la tabla sin recargar toda la página
+                    },
+                    error: function () {
+                        alert('Error al crear el auditor.');
+                    },
+                    complete: function () {
+                        // Ocultar spinner, mostrar contenido
+                        $('#spinnerCrear').hide();
+                    }
+                });
+            });
+
         });
 
-    });
-
-    function CrearAuditor(id) {
-        limpiarCampos();
-        // Mostrar spinner, ocultar contenido
-        $('#spinnerCrear').show();
-        $.ajax({
-            url: '/Auditor/ObtenerDatos',
-            type: 'GET',
-            success: function (data) {
-                // Limpiar anteriores
-                $('#ddlEstado').empty().append('<option value="">-- Seleccionar Estado --</option>');
-                $('#ddlUsuario').empty().append('<option value="">-- Seleccionar Usuario --</option>');
-
-                // Cargar estados
-                $.each(data.estados, function (i, estado) {
-                    $('#ddlEstado').append($('<option>').val(estado.Id).text(estado.Name));
-                });
-
-                // Cargar usuarios
-                $.each(data.usuarios, function (i, usuario) {
-                    $('#ddlUsuario').append($('<option>').val(usuario.Id).text(usuario.Name));
-                });
-
-                // Ocultar spinner
-                $('#spinnerCrear').hide();
-
-                // Mostrar el modal
-                $('#modalCrear').modal('show');
-            },
-            error: function () {
-                alert('Error al obtener los datos.');
-                $('#spinnerCrear').hide();
-            }
-        });
-
-        if (id > 0) {
-            auditorId = id;
+        function CrearAuditor(id) {
+            limpiarCampos();
+            // Mostrar spinner, ocultar contenido
+            $('#spinnerCrear').show();
             $.ajax({
-                url: '/Auditor/ObtenerAuditor?id=' + id,
+                url: '/Auditor/ObtenerDatos',
                 type: 'GET',
                 success: function (data) {
-                    if (data.auditorDTO) {
-                        $('#txtLegajo').val(data.auditorDTO.FileNumber);
+                    // Limpiar anteriores
+                    $('#ddlEstado').empty().append('<option value="">-- Seleccionar Estado --</option>');
+                    $('#ddlUsuario').empty().append('<option value="">-- Seleccionar Usuario --</option>');
 
-                        // Convertimos la fecha al formato yyyy-MM-dd
-                        const fechaAlta = new Date(data.auditorDTO.StartDateString);
-                        const fechaFormateada = fechaAlta.toISOString().split('T')[0];
-                        $('#txtFechaAlta').val(fechaFormateada);
+                    // Cargar estados
+                    $.each(data.estados, function (i, estado) {
+                        $('#ddlEstado').append($('<option>').val(estado.Id).text(estado.Name));
+                    });
 
-                        $('#ddlEstado').val(data.auditorDTO.StatusId);
-                        $('#ddlUsuario').val(data.auditorDTO.UserId);
+                    // Cargar usuarios
+                    $.each(data.usuarios, function (i, usuario) {
+                        $('#ddlUsuario').append($('<option>').val(usuario.Id).text(usuario.Name));
+                    });
 
-                        // Cambiamos título del modal si estás editando
-                        $('#titleModalLabel').text('Editar Auditor');
-                    } else {
-                        $('#titleModalLabel').text('Crear Auditor');
+                    if (id > 0) {
+                        auditorId = id;
+                        $.ajax({
+                            url: '/Auditor/ObtenerAuditor?id=' + id,
+                            type: 'GET',
+                            success: function (data) {
+                                if (data.auditorDTO) {
+                                    $('#txtLegajo').val(data.auditorDTO.FileNumber);
+
+                                    // Convertimos la fecha al formato yyyy-MM-dd
+                                    const fechaAlta = new Date(data.auditorDTO.StartDateString);
+                                    const fechaFormateada = fechaAlta.toISOString().split('T')[0];
+                                    $('#txtFechaAlta').val(fechaFormateada);
+
+                                    $('#ddlEstado').val(data.auditorDTO.StatusId);
+                                    $('#ddlUsuario').val(data.auditorDTO.UserId);
+
+                                    // Cambiamos título del modal si estás editando
+                                    $('#titleModalLabel').text('Editar Auditor');
+                                } else {
+                                    $('#titleModalLabel').text('Crear Auditor');
+                                }
+                            },
+                            error: function () {
+                                alert('Error al obtener los datos.');
+                                $('#spinnerCrear').hide();
+                            }
+                        });
                     }
+
+                    // Ocultar spinner
+                    $('#spinnerCrear').hide();
+
+                    // Mostrar el modal
+                    $('#modalCrear').modal('show');
                 },
                 error: function () {
                     alert('Error al obtener los datos.');
                     $('#spinnerCrear').hide();
                 }
             });
+
+            
+
         }
-       
-    }
 
-    function modalEliminar(id) {
-        document.getElementById("idAuditor").value = id
-    }
-
-    function Eliminar() {
-        var frmEliminar = document.getElementById("frmEliminar");
-        frmEliminar.submit();
-    }
-
-    // Validación
-    function validarFormulario() {
-        let valido = true;
-
-        $('.text-danger').hide();
-
-        if (!$('#txtLegajo').val()) {
-            $('#errorLegajo').show(); valido = false;
+        function modalEliminar(id) {
+            document.getElementById("idAuditor").value = id
         }
-        if (!$('#txtFechaAlta').val()) {
-            $('#errorFechaAlta').show(); valido = false;
-        }
-        if (!$('#ddlEstado').val()) {
-            $('#errorEstado').show(); valido = false;
-        }
-        if (!$('#ddlUsuario').val()) {
-            $('#errorUsuario').show(); valido = false;
-        }
-        return valido;
-    }
 
-    // Función para limpiar
-    function limpiarCampos() {
-        $('#txtLegajo').val('');
-        $('#txtFechaAlta').val('');
-        $('#ddlEstado').empty().append('<option value="">-- Seleccionar Estado --</option>');
-        $('#ddlUsuario').empty().append('<option value="">-- Seleccionar Usuario --</option>');
-        $('.text-danger').hide();
-        $('#spinnerCrear').hide();
-    }
-</script>
+        function Eliminar() {
+            var frmEliminar = document.getElementById("frmEliminar");
+            frmEliminar.submit();
+        }
+
+        // Validación
+        function validarFormulario() {
+            let valido = true;
+
+            $('.text-danger').hide();
+
+            if (!$('#txtLegajo').val()) {
+                $('#errorLegajo').show(); valido = false;
+            }
+            if (!$('#txtFechaAlta').val()) {
+                $('#errorFechaAlta').show(); valido = false;
+            }
+            if (!$('#ddlEstado').val()) {
+                $('#errorEstado').show(); valido = false;
+            }
+            if (!$('#ddlUsuario').val()) {
+                $('#errorUsuario').show(); valido = false;
+            }
+            return valido;
+        }
+
+        // Función para limpiar
+        function limpiarCampos() {
+            $('#txtLegajo').val('');
+            $('#txtFechaAlta').val('');
+            $('#ddlEstado').empty().append('<option value="">-- Seleccionar Estado --</option>');
+            $('#ddlUsuario').empty().append('<option value="">-- Seleccionar Usuario --</option>');
+            $('.text-danger').hide();
+            $('#spinnerCrear').hide();
+        }
+    </script>
 
 

@@ -4,84 +4,86 @@
     ViewBag.Title = "Index Hallazgos";
 }
 
-<h2>Hallazgos</h2>
+<h2 class="text-center my-4">Hallazgos</h2>
 
+<div class="container" style="background-color: #f8f9fa; padding: 30px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-size: 14px; margin-top: 30px;margin-bottom:30px">
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreateDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th>
-            Auditoria
-        </th>
-        <th>
-            Departamento
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FindingImage)
-        </th>
-
-    </tr>
-
-    @foreach (var item in Model)
-    {
+    <table class="table">
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreateDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Audit.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Audit.Department.Name)
-            </td>
-            <td>
-                @if (!string.IsNullOrEmpty(item.FindingImage))
-                {
-                    <img src="@item.FindingImage" alt="Evidencia" class="img-thumbnail" style="max-width: 100px; cursor: pointer;" data-toggle="modal" data-target="#imageModal" data-img="@item.FindingImage" />
-                }
-            </td>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreateDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                Auditoria
+            </th>
+            <th>
+                Departamento
+            </th>
+            <th>
+                Evidencia
+            </th>
+
         </tr>
-    }
 
-</table>
-<div class="mt-4 text-left">
-    <a href="@Url.Action("Index", "Audit")" class="btn btn-warning btn-sm">Ver Auditorias</a>
-</div>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreateDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    <a href="@Url.Action("VerAuditoria/" + item.Id, "Audit")">@item.Audit.Name</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Audit.Department.Name)
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.FindingImage))
+                    {
+                        <img src="@item.FindingImage" alt="Evidencia" class="img-thumbnail" style="max-width: 100px; cursor: pointer;" data-toggle="modal" data-target="#imageModal" data-img="@item.FindingImage" />
+                    }
+                </td>
+            </tr>
+        }
 
-<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" style="margin-top: 80px">
-    <div class="modal-dialog modal-sm" role="document">
-
-        <div class="modal-content">
-            <div class="modal-body text-center">
-                <img id="modalImage" src="" class="img-fluid" style="max-height: 50vh;" />
-            </div>
-        </div>
+    </table>
+    <div class="mt-4 text-left">
+        <a href="@Url.Action("Index", "Audit")" class="btn btn-warning btn-sm">Ver Auditorias</a>
     </div>
 </div>
 
-<script src="~/Scripts/jquery-2.2.4.min.js"></script>
-<script src="~/Scripts/bootstrap.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $('[data-toggle="tooltip"]').tooltip();
+    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" style="margin-top: 80px">
+        <div class="modal-dialog modal-sm" role="document">
 
-        $(document).on('click', 'img[data-toggle="modal"]', function () {
-            var imgSrc = $(this).data('img');
-            $('#modalImage').attr('src', imgSrc);
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <img id="modalImage" src="" class="img-fluid" style="max-height: 50vh;" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/Scripts/jquery-2.2.4.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+
+            $(document).on('click', 'img[data-toggle="modal"]', function () {
+                var imgSrc = $(this).data('img');
+                $('#modalImage').attr('src', imgSrc);
+            });
         });
-    });
-</script>
+    </script>

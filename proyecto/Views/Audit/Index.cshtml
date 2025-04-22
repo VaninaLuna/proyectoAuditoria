@@ -25,315 +25,316 @@
 <script src="~/Scripts/jquery-2.2.4.min.js"></script>
 <script src="~/Scripts/bootstrap.min.js"></script>
 
-<h2>Auditorias</h2>
+<h2 class="text-center my-4">Auditorias</h2>
 
-<button type="button" class="btn btn-primary" id="btnCrear" onclick="CrearAuditoria()">
-    Crear Auditoria
-</button>
-<br />
-<br />
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreateDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EndDate)
-        </th>
-        <th>
-            Estado
-        </th>
-        <th>
-            Departamento
-        </th>
-        <th>
-            Auditor
-        </th>
-        <th>
-            Opciones
-        </th>
-        <th> Crear Hallazgo</th>
-        <th>
-            Ver detalles
-        </th>
+<div class="container" style="background-color: #f8f9fa; padding: 30px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-size: 14px; margin-top: 30px;margin-bottom:30px">
 
-    </tr>
-
-    @foreach (var item in Model)
-    {
+    <button type="button" class="btn btn-primary" id="btnCrear" onclick="CrearAuditoria()">
+        Crear Auditoria
+    </button>
+    <br />
+    <br />
+    <table class="table">
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreateDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AuditStatus.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Department.Name)
-            </td>
-            <td>
-                @{
-                    var auditorNames = new List<string>();
-                    foreach (var auditor in item.Auditors)
-                    {
-                        auditorNames.Add(auditor.User.FullName);
-                    }
-
-                    var nombresMostrados = auditorNames.Take(3);
-                    var auditores = string.Join(", ", nombresMostrados);
-                    var tooltip = string.Join(", ", auditorNames);
-                    if (auditorNames.Count > 2)
-                    {
-                        auditores += "...";
-                    }
-                }
-                <span title="@tooltip">@auditores</span>
-            </td>
-
-            <td>
-                @*<button type="button" onclick="CrearAuditoria(@item.Id)" class="fa fa-edit text-info">
-            </button>
-            <button type="button" onclick="modalEliminar(@item.Id)" class="fa fa-trash text-danger">
-            </button>*@
-                <button type="button" onclick="CrearAuditoria(@item.Id)" class="btn btn-link text-success p-0" style="padding: 0 5px 0 5px">
-                    <i class="fa fa-lg fa-edit"></i>
-                </button>
-                <button type="button" onclick="modalEliminar(@item.Id)" class="btn btn-link text-danger p-0" style="padding: 0 5px 0 5px">
-                    <i class="fa fa-lg fa-trash"></i>
-                </button>
-            </td>
-            
-            <td>
-                <button type="button" onclick="CrearHallazgo(@item.Id)" class="btn btn-link text-info p-0" style="padding: 0 5px 0 5px">
-                    <i class="fa fa-lg fa-plus-circle"></i>
-                    <span class="sr-only">Crear hallazgo</span>
-                </button>
-            </td>
-            <td>
-                <button type="button" onclick="VerAuditoria(@item.Id)" class="btn btn-link text-info p-0" style="padding: 0 5px 0 5px">
-                    <i class="fa fa-lg fa-eye"></i>
-                </button>
-            </td>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreateDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndDate)
+            </th>
+            <th>
+                Estado
+            </th>
+            <th>
+                Departamento
+            </th>
+            <th>
+                Auditor
+            </th>
+            <th>
+                Opciones
+            </th>
+            <th> Crear Hallazgo</th>
+            <th>
+                Ver detalles
+            </th>
 
         </tr>
-    }
 
-</table>
-@using (Html.BeginForm("Eliminar", "Audit", FormMethod.Post, new { @id = "frmEliminar" }))
-{
-    @Html.Hidden("idAuditoria");
-}
-<!-- Modal Eliminar -->
-<div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title" id="exampleModalLabel">Deseas eliminar esta Auditoria</h4>
-            </div>
-            <div style="padding:1em">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                <button type="button" onclick="Eliminar()" class="btn btn-success">Aceptar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Agregar -->
-<div class="modal fade" id="modalCrear" tabindex="-1" role="dialog" aria-labelledby="titleModalLabel">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <!-- Header -->
-            <div class="modal-header">
-                <h4 class="modal-title" id="titleModalLabel">Crear Auditoria</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <!-- Formulario -->
-            <div class="modal-body">
-                <form id="frmAuditor">
-                    <div class="form-group">
-                        <label>Nombre</label>
-                        <input type="text" id="txtName" name="name" class="form-control" />
-                        <span class="text-danger" id="errorName" style="display:none;">* Campo obligatorio</span>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Fecha de Creacion</label>
-                        <input type="date" id="txtCreateDate" name="create_date" class="form-control" />
-                        <span class="text-danger" id="errorCreateDate" style="display:none;">* Campo obligatorio</span>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Fecha de Finalizacion</label>
-                        <input type="date" id="txtEndDate" name="end_date" class="form-control" />
-                    </div>
-
-                    <div class="form-group">
-                        <label>Estado</label>
-                        <select id="ddlEstado" name="idEstado" class="form-control">
-                            <option value="">-- Seleccionar Estado --</option>
-                        </select>
-                        <span class="text-danger" id="errorEstado" style="display:none;">* Selecciona un estado</span>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Departamento</label>
-                        <select id="ddlDepartment" name="idDepartamento" class="form-control">
-                            <option value="">-- Seleccionar Departamento --</option>
-                        </select>
-                        <span class="text-danger" id="errorDepartamento" style="display:none;">* Selecciona un Departamento</span>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Auditor</label>
-                        <select id="ddlAuditor" name="idAuditor" class="form-control">
-                            <option value="">-- Seleccionar Auditor --</option>
-                        </select>
-                        <span class="text-danger" id="errorAuditor" style="display:none;">* Selecciona un Auditor</span>
-                    </div>
-                    <!-- Spinner -->
-                    <div id="spinnerCrear" style="display:none; text-align:center;">
-                        <i class="fa fa-spinner fa-spin fa-2x text-primary"></i>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-primary" form="frmAuditor">Aceptar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    var auditoriaId = 0;
-    $(document).ready(function () {
-        $('#modalCrear').on('hidden.bs.modal', function () {
-            limpiarCampos();
-        });
-        // Envío del formulario por AJAX
-        $('#frmAuditor').submit(function (e) {
-            e.preventDefault();
-
-            if (!validarFormulario()) return;
-
-            const audit = {
-                id: auditoriaId,
-                Name: $('#txtName').val(),
-                CreateDate: $('#txtCreateDate').val(),
-                EndDate: $('#txtEndDate').val(),
-                StatusId: $('#ddlEstado').val(),
-                DepartmentId: $('#ddlDepartment').val(),
-                AuditorId: $('#ddlAuditor').val()
-            };
-            $('#spinnerCrear').show();
-
-            $.ajax({
-                url: '/Audit/Crear',
-                type: 'POST',
-                contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify(audit),
-                success: function () {
-                    $('#modalCrear').modal('hide');
-                    location.reload(); // O actualizar la tabla sin recargar toda la página
-                },
-                error: function () {
-                    alert('Error al crear la auditoria.');
-                },
-                complete: function () {
-                    // Ocultar spinner, mostrar contenido
-                    $('#spinnerCrear').hide();
-                }
-            });
-        });
-
-    });
-
-    function CrearAuditoria(id) {
-        limpiarCampos();
-        $('button .fa-trash').parent().css('display', 'inline-block');
-        // Mostrar spinner, ocultar contenido
-        $('#spinnerCrear').show();
-        $.ajax({
-            url: '/Audit/ObtenerDatos',
-            type: 'GET',
-            success: function (data) {
-                // Limpiar anteriores
-                $('#ddlEstado').empty().append('<option value="">-- Seleccionar Estado --</option>');
-                $('#ddlDepartment').empty().append('<option value="">-- Seleccionar Departamento --</option>');
-                $('#ddlAuditor').empty().append('<option value="">-- Seleccionar Auditor --</option>');
-
-                // Cargar estados
-                $.each(data.estados, function (i, estado) {
-                    $('#ddlEstado').append($('<option>').val(estado.Id).text(estado.Name));
-                });
-
-                // Cargar departamentos
-                $.each(data.departamentos, function (i, departamento) {
-                    $('#ddlDepartment').append($('<option>').val(departamento.Id).text(departamento.Name));
-                });
-
-                // Cargar auditores
-                $.each(data.auditores, function (i, auditor) {
-                    $('#ddlAuditor').append($('<option>').val(auditor.Id).text(auditor.Name));
-                });
-
-
-                // Ocultar spinner
-                $('#spinnerCrear').hide();
-
-                // Mostrar el modal
-                $('#modalCrear').modal('show');
-            },
-            error: function () {
-                alert('Error al obtener los datos.');
-                $('#spinnerCrear').hide();
-            }
-        });
-
-        if (id > 0) {
-            auditoriaId = id;
-            $.ajax({
-                url: '/Audit/ObtenerAuditoria?id=' + id,
-                type: 'GET',
-                success: function (data) {
-                    if (data.auditDTO) {
-                        $('#txtName').val(data.auditDTO.Name);
-
-                        $('#ddlEstado').val(data.auditDTO.StatusId);
-                        $('#ddlDepartment').val(data.auditDTO.DepartmentId);
-                        $('#ddlAuditor').val(data.auditDTO.AuditorId);
-
-
-                        // Convertimos la fecha al formato yyyy-MM-dd
-                        const createDate = new Date(data.auditDTO.CreateDateString);
-                        const fechaFormateada = createDate.toISOString().split('T')[0];
-                        $('#txtCreateDate').val(fechaFormateada);
-
-                        if (data.auditDTO.endDate != null) {
-                            const endDate = new Date(data.auditDTO.EndDateString);
-                            const finFormateada = endDate.toISOString().split('T')[0];
-                            $('#txtEndDate').val(finFormateada);
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreateDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AuditStatus.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Department.Name)
+                </td>
+                <td>
+                    @{
+                        var auditorNames = new List<string>();
+                        foreach (var auditor in item.Auditors)
+                        {
+                            auditorNames.Add(auditor.User.FullName);
                         }
 
-                        // Cambiamos título del modal si estás editando
-                        $('#titleModalLabel').text('Editar Auditoria');
-                    } else {
-                        $('#titleModalLabel').text('Crear Auditoria');
+                        var nombresMostrados = auditorNames.Take(3);
+                        var auditores = string.Join(", ", nombresMostrados);
+                        var tooltip = string.Join(", ", auditorNames);
+                        if (auditorNames.Count > 2)
+                        {
+                            auditores += "...";
+                        }
                     }
+                    <span title="@tooltip">@auditores</span>
+                </td>
+
+                <td>                    
+                    <button type="button" onclick="CrearAuditoria(@item.Id)" class="btn btn-link text-success p-0" style="padding: 0 5px 0 5px">
+                        <i class="fa fa-lg fa-edit"></i>
+                    </button>
+
+                    <button type="button" onclick="modalEliminar(@item.Id)" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: red" data-toggle="modal" data-target="#modalEliminar">
+                        <i class="fa fa-lg fa-trash"></i>
+                    </button>
+
+                </td>
+
+                <td>
+                    <button type="button" onclick="CrearHallazgo(@item.Id)" class="btn btn-link text-info p-0" style="padding: 0 5px 0 5px">
+                        <i class="fa fa-lg fa-plus-circle"></i>
+                        <span class="sr-only">Crear hallazgo</span>
+                    </button>
+                </td>
+                <td>
+                    <button type="button" onclick="VerAuditoria(@item.Id)" class="btn btn-link text-info p-0" style="padding: 0 5px 0 5px">
+                        <i class="fa fa-lg fa-eye"></i>
+                    </button>
+                </td>
+
+            </tr>
+        }
+
+    </table>
+</div>
+    @using (Html.BeginForm("Eliminar", "Audit", FormMethod.Post, new { @id = "frmEliminar" }))
+    {
+        @Html.Hidden("idAuditoria");
+    }
+    <!-- Modal Eliminar -->
+    <div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="exampleModalLabel">Deseas eliminar esta Auditoria</h4>
+                </div>
+                <div style="padding:1em">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    <button type="button" onclick="Eliminar()" class="btn btn-success">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Agregar -->
+    <div class="modal fade" id="modalCrear" tabindex="-1" role="dialog" aria-labelledby="titleModalLabel">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <!-- Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title" id="titleModalLabel">Crear Auditoria</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <!-- Formulario -->
+                <div class="modal-body">
+                    <form id="frmAuditor">
+                        <div class="form-group">
+                            <label>Nombre</label>
+                            <input type="text" id="txtName" name="name" class="form-control" />
+                            <span class="text-danger" id="errorName" style="display:none;">* Campo obligatorio</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Fecha de Creacion</label>
+                            <input type="date" id="txtCreateDate" name="create_date" class="form-control" />
+                            <span class="text-danger" id="errorCreateDate" style="display:none;">* Campo obligatorio</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Fecha de Finalizacion</label>
+                            <input type="date" id="txtEndDate" name="end_date" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Estado</label>
+                            <select id="ddlEstado" name="idEstado" class="form-control">
+                                <option value="">-- Seleccionar Estado --</option>
+                            </select>
+                            <span class="text-danger" id="errorEstado" style="display:none;">* Selecciona un estado</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Departamento</label>
+                            <select id="ddlDepartment" name="idDepartamento" class="form-control">
+                                <option value="">-- Seleccionar Departamento --</option>
+                            </select>
+                            <span class="text-danger" id="errorDepartamento" style="display:none;">* Selecciona un Departamento</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Auditor</label>
+                            <select id="ddlAuditor" name="idAuditor" class="form-control">
+                                <option value="">-- Seleccionar Auditor --</option>
+                            </select>
+                            <span class="text-danger" id="errorAuditor" style="display:none;">* Selecciona un Auditor</span>
+                        </div>
+                        <!-- Spinner -->
+                        <div id="spinnerCrear" style="display:none; text-align:center;">
+                            <i class="fa fa-spinner fa-spin fa-2x text-primary"></i>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" form="frmAuditor">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var auditoriaId = 0;
+        $(document).ready(function () {
+            $('#modalCrear').on('hidden.bs.modal', function () {
+                limpiarCampos();
+            });
+            // Envío del formulario por AJAX
+            $('#frmAuditor').submit(function (e) {
+                e.preventDefault();
+
+                if (!validarFormulario()) return;
+
+                const audit = {
+                    id: auditoriaId,
+                    Name: $('#txtName').val(),
+                    CreateDate: $('#txtCreateDate').val(),
+                    EndDate: $('#txtEndDate').val(),
+                    StatusId: $('#ddlEstado').val(),
+                    DepartmentId: $('#ddlDepartment').val(),
+                    AuditorId: $('#ddlAuditor').val()
+                };
+                $('#spinnerCrear').show();
+
+                $.ajax({
+                    url: '/Audit/Crear',
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(audit),
+                    success: function () {
+                        $('#modalCrear').modal('hide');
+                        location.reload(); // O actualizar la tabla sin recargar toda la página
+                    },
+                    error: function () {
+                        alert('Error al crear la auditoria.');
+                    },
+                    complete: function () {
+                        // Ocultar spinner, mostrar contenido
+                        $('#spinnerCrear').hide();
+                    }
+                });
+            });
+
+        });
+
+        function CrearAuditoria(id) {
+            limpiarCampos();
+            $('button .fa-trash').parent().css('display', 'inline-block');
+            // Mostrar spinner, ocultar contenido
+            $('#spinnerCrear').show();
+            $.ajax({
+                url: '/Audit/ObtenerDatos',
+                type: 'GET',
+                success: function (data) {
+                    // Limpiar anteriores
+                    $('#ddlEstado').empty().append('<option value="">-- Seleccionar Estado --</option>');
+                    $('#ddlDepartment').empty().append('<option value="">-- Seleccionar Departamento --</option>');
+                    $('#ddlAuditor').empty().append('<option value="">-- Seleccionar Auditor --</option>');
+
+                    // Cargar estados
+                    $.each(data.estados, function (i, estado) {
+                        $('#ddlEstado').append($('<option>').val(estado.Id).text(estado.Name));
+                    });
+
+                    // Cargar departamentos
+                    $.each(data.departamentos, function (i, departamento) {
+                        $('#ddlDepartment').append($('<option>').val(departamento.Id).text(departamento.Name));
+                    });
+
+                    // Cargar auditores
+                    $.each(data.auditores, function (i, auditor) {
+                        $('#ddlAuditor').append($('<option>').val(auditor.Id).text(auditor.Name));
+                    });
+
+                    if (id > 0) {
+                        auditoriaId = id;
+                        $.ajax({
+                            url: '/Audit/ObtenerAuditoria?id=' + id,
+                            type: 'GET',
+                            success: function (data) {
+                                if (data.auditDTO) {
+                                    $('#txtName').val(data.auditDTO.Name);
+
+                                    $('#ddlEstado').val(data.auditDTO.StatusId);
+                                    $('#ddlDepartment').val(data.auditDTO.DepartmentId);
+                                    $('#ddlAuditor').val(data.auditDTO.AuditorId);
+
+                                    // Convertimos la fecha al formato yyyy-MM-dd
+                                    const createDate = new Date(data.auditDTO.CreateDateString);
+                                    const fechaFormateada = createDate.toISOString().split('T')[0];
+                                    $('#txtCreateDate').val(fechaFormateada);
+
+                                    if (data.auditDTO.EndDateString != null || data.auditDTO.EndDateString != "") {
+                                        const endDate = new Date(data.auditDTO.EndDateString);
+                                        const finFormateada = endDate.toISOString().split('T')[0];
+                                        $('#txtEndDate').val(finFormateada);
+                                    }
+
+                                    // Cambiamos título del modal si estás editando
+                                    $('#titleModalLabel').text('Editar Auditoria');
+                                } else {
+                                    $('#titleModalLabel').text('Crear Auditoria');
+                                }
+                            },
+                            error: function () {
+                                alert('Error al obtener los datos.');
+                                $('#spinnerCrear').hide();
+                            }
+                        });
+                    }
+
+
+                    // Ocultar spinner
+                    $('#spinnerCrear').hide();
+
+                    // Mostrar el modal
+                    $('#modalCrear').modal('show');
                 },
                 error: function () {
                     alert('Error al obtener los datos.');
@@ -342,60 +343,58 @@
             });
         }
 
-    }
-
-    function modalEliminar(id) {
-        $('#modalEliminar').modal('show');
-        document.getElementById("idAuditoria").value = id
-    }
-
-    function Eliminar() {
-        var frmEliminar = document.getElementById("frmEliminar");
-        frmEliminar.submit();
-    }
-
-    // Validación
-    function validarFormulario() {
-        let valido = true;
-
-        $('.text-danger').hide();
-        if (!$('#txtName').val()) {
-            $('#errorName').show(); valido = false;
+        function modalEliminar(id) {
+            $('#modalEliminar').modal('show');
+            document.getElementById("idAuditoria").value = id
         }
-        if (!$('#txtCreateDate').val()) {
-            $('#errorCreateDate').show(); valido = false;
-        }
-        if (!$('#ddlEstado').val()) {
-            $('#errorEstado').show(); valido = false;
-        }
-        if (!$('#ddlDepartment').val()) {
-            $('#errorDepartamento').show(); valido = false;
-        }
-        if (!$('#ddlAuditor').val()) {
-            $('#errorAuditor').show(); valido = false;
-        }
-        return valido;
-    }
 
-    // Función para limpiar
-    function limpiarCampos() {
-        $('#txtName').val('');
-        $('#txtCreateDate').val('');
-        $('#txtEndDate').val('');
-        $('#ddlEstado').empty().append('<option value="">-- Seleccionar Estado --</option>');
-        $('#ddlDepartment').empty().append('<option value="">-- Seleccionar Departamento --</option>');
-        $('#errorAuditor').empty().append('<option value="">-- Seleccionar Auditor --</option>');
-        $('.text-danger').hide();
-        $('#spinnerCrear').hide();
-    }
+        function Eliminar() {
+            var frmEliminar = document.getElementById("frmEliminar");
+            frmEliminar.submit();
+        }
 
-    
-    function CrearHallazgo(id) {
-        window.location.href = '/Finding/Crear?auditoriaId=' + id;
-    }
+        // Validación
+        function validarFormulario() {
+            let valido = true;
 
-    function VerAuditoria(id) {
-        window.location.href = '/Audit/VerAuditoria/' + id;
-    }
+            $('.text-danger').hide();
+            if (!$('#txtName').val()) {
+                $('#errorName').show(); valido = false;
+            }
+            if (!$('#txtCreateDate').val()) {
+                $('#errorCreateDate').show(); valido = false;
+            }
+            if (!$('#ddlEstado').val()) {
+                $('#errorEstado').show(); valido = false;
+            }
+            if (!$('#ddlDepartment').val()) {
+                $('#errorDepartamento').show(); valido = false;
+            }
+            if (!$('#ddlAuditor').val()) {
+                $('#errorAuditor').show(); valido = false;
+            }
+            return valido;
+        }
 
-</script>
+        // Función para limpiar
+        function limpiarCampos() {
+            $('#txtName').val('');
+            $('#txtCreateDate').val('');
+            $('#txtEndDate').val('');
+            $('#ddlEstado').empty().append('<option value="">-- Seleccionar Estado --</option>');
+            $('#ddlDepartment').empty().append('<option value="">-- Seleccionar Departamento --</option>');
+            $('#errorAuditor').empty().append('<option value="">-- Seleccionar Auditor --</option>');
+            $('.text-danger').hide();
+            $('#spinnerCrear').hide();
+        }
+
+
+        function CrearHallazgo(id) {
+            window.location.href = '/Finding/Crear?auditoriaId=' + id;
+        }
+
+        function VerAuditoria(id) {
+            window.location.href = '/Audit/VerAuditoria/' + id;
+        }
+
+    </script>

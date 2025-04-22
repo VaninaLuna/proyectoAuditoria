@@ -2,8 +2,7 @@
     ViewBag.Title = "Home Page";
 }
 
-
-<div class="container">
+<div class="container" style="background-color: #f8f9fa; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-size: 14px; margin-bottom:30px">
     <h1 class="page-header">Dashboard</h1>
     <p class="text-muted">Bienvenido de nuevo</p>
 
@@ -11,36 +10,36 @@
         <div class="col-sm-6 col-md-3">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <h5>Total Auditorías</h5>
-                    <h3><strong>24</strong></h3>
-                    <small class="text-success">+2 desde el mes pasado</small>
+                    <h4>Total Auditorías</h4>
+                    <h2 class="text-success"><strong>24</strong></h2>
+                    @*<small class="text-success">+2 desde el mes pasado</small>*@
                 </div>
             </div>
         </div>
         <div class="col-sm-6 col-md-3">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <h5>En Progreso</h5>
-                    <h3><strong>7</strong></h3>
-                    <small class="text-danger">-1 desde el mes pasado</small>
+                    <h4>En Progreso</h4>
+                    <h2 class="text-warning"><strong>7</strong></h2>
+                    @*<small class="text-danger">-1 desde el mes pasado</small>*@
                 </div>
             </div>
         </div>
         <div class="col-sm-6 col-md-3">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <h5>Completadas</h5>
-                    <h3><strong>15</strong></h3>
-                    <small class="text-success">+3 desde el mes pasado</small>
+                    <h4>Completadas</h4>
+                    <h2 class="text-info"><strong>15</strong></h2>
+                    @*<small class="text-success">+3 desde el mes pasado</small>*@
                 </div>
             </div>
         </div>
         <div class="col-sm-6 col-md-3">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <h5>Hallazgos Críticos</h5>
-                    <h3 class="text-danger"><strong>9</strong></h3>
-                    <small class="text-danger">+2 desde el mes pasado</small>
+                    <h4>Hallazgos Realizados</h4>
+                    <h2 class="text-danger"><strong>9</strong></h2>
+                    @*<small class="text-danger">+2 desde el mes pasado</small>*@
                 </div>
             </div>
         </div>
@@ -114,12 +113,12 @@
         </div>
         <div class="col-md-6">
             <div class="panel panel-default">
-                <div class="panel-heading"><strong>Tendencia de Hallazgos</strong></div>
+                <div class="panel-heading"><strong>Hallazgos por Tipo</strong></div>
                 <div class="panel-body text-center">
-                    <p class="text-muted">Número de hallazgos en los últimos 6 meses</p>
+                    <p class="text-muted">Número de hallazgos totales</p>
                     <div class="well well-sm">
                         <p>Gráfico de Tendencia de Hallazgos</p>
-                        <small>Últimos 6 meses</small>
+                        @*<small>Últimos 6 meses</small>*@
                     </div>
                 </div>
             </div>
