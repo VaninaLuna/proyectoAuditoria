@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<proyecto.Bussines.Finding>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Index Hallazgos";
 }
 
 <h2>Hallazgos</h2>
@@ -17,6 +17,12 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            Auditoria
+        </th>
+        <th>
+            Departamento
         </th>
         <th>
             @Html.DisplayNameFor(model => model.FindingImage)
@@ -37,7 +43,16 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.FindingImage)
+                @Html.DisplayFor(modelItem => item.Audit.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Audit.Department.Name)
+            </td>
+            <td>
+                @if (!string.IsNullOrEmpty(item.FindingImage))
+                {
+                    <img src="@item.FindingImage" alt="Evidencia" class="img-thumbnail" style="max-width: 100px; cursor: pointer;" data-toggle="modal" data-target="#imageModal" data-img="@item.FindingImage" />
+                }
             </td>
         </tr>
     }
@@ -46,3 +61,27 @@
 <div class="mt-4 text-left">
     <a href="@Url.Action("Index", "Audit")" class="btn btn-warning btn-sm">Ver Auditorias</a>
 </div>
+
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" style="margin-top: 80px">
+    <div class="modal-dialog modal-sm" role="document">
+
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <img id="modalImage" src="" class="img-fluid" style="max-height: 50vh;" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-2.2.4.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+
+        $(document).on('click', 'img[data-toggle="modal"]', function () {
+            var imgSrc = $(this).data('img');
+            $('#modalImage').attr('src', imgSrc);
+        });
+    });
+</script>

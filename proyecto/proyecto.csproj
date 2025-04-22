@@ -523,6 +523,7 @@
     <Compile Include="Controllers\EstadoPlanController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RolController.cs" />
+    <Compile Include="DTOs\FindingEditDTO.cs" />
     <Compile Include="DTOs\AuditEditDTO.cs" />
     <Compile Include="DTOs\AuditorEditDTO.cs" />
     <Compile Include="DTOs\ResponsibleEditDTO.cs" />
