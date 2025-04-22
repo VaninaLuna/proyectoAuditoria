@@ -64,7 +64,7 @@ namespace proyecto.Controllers
         }
 
         [HttpPost]
-        public ActionResult Crear(AuditorEditDTO auditorDTO) //crear DTO para traer los id desde el index
+        public ActionResult Crear(AuditorEditDTO auditorDTO) //uso el DTO para traer los id desde el index
         {
             if (auditorDTO == null || string.IsNullOrEmpty(auditorDTO.FileNumber) || auditorDTO.StatusId == 0 || auditorDTO.UserId == 0)
             {
