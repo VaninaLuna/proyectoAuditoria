@@ -1,9 +1,5 @@
-﻿using com.sun.tools.javac.resources;
-using com.sun.xml.@internal.bind.v2.model.core;
-using proyecto.Bussines;
-using proyecto.Dao;
+﻿using proyecto.Bussines;
 using proyecto.DTOs;
-using proyecto.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -129,10 +125,3 @@ namespace proyecto.Controllers
         }
     }
 }
-
-//modificar id de fk.. EstadoAuditor_Id / User_Id
-//modificar el modelo empleado
-//crear sp get, getall, save
-//crear dto
-//crear controlador
-//crear index
