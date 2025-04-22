@@ -99,7 +99,6 @@ namespace proyecto.Controllers
                     auditor
                 };
 
-
                 if (auditEditDTO.Id > 0)
                 {
                     Audit audit = Audit.Dao.Get(auditEditDTO.Id);
