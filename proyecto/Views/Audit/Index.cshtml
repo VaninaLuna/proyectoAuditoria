@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<proyecto.Bussines.Audit>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Index Auditoria";
 }
 
 <style>
@@ -390,8 +390,8 @@
     }
 
     
-        function CrearHallazgo(id) {
-            window.location.href = '/Finding/Crear/' + id;
+    function CrearHallazgo(id) {
+        window.location.href = '/Finding/Crear?auditoriaId=' + id;
     }
 
     function VerAuditoria(id) {
