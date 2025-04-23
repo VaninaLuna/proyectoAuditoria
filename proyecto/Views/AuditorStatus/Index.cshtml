@@ -111,7 +111,7 @@
                     @using (Html.BeginForm("Crear", "AuditorStatus", FormMethod.Post, new { @id = "frmEstado" }))
                     {
                         @Html.Label("Nombre")
-                        @Html.TextBox("Name", null, new { @class = "form-control", @id = "txtNameEstado" })
+                        @Html.TextBox("Name", null, new { @class = "form-control", @id = "txtNameEstado", maxlength = "50" })
                     }
 
                 </div>

@@ -9,17 +9,38 @@ using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using System.Web.UI.WebControls;
+using OfficeOpenXml;
+using System.IO;
+using DNF.Security.Bussines;
 
 namespace proyecto.Controllers
 {
     public class AuditController : Controller
     {
+        public User currentUser = Current.User;
         // GET: Audit
         public ActionResult Index()
         {
-            List<Audit> list = Audit.Dao.GetAll()
-            .Where(d => d.IsActive) // solo los activos
-            .ToList();
+            List<Audit> list;
+
+            if (currentUser.Profiles.Any(p => p.Id == 2))
+            {
+                var currentAuditor = Auditor.Dao.GetByUser(currentUser.Id);
+                list = Audit.Dao.GetAll()
+                    .Where(d => d.IsActive && d.Auditors.Any(a => a.Id == currentAuditor.Id))
+                    .ToList();
+            } else if (currentUser.Profiles.Any(p => p.Id == 4))
+            {
+                var currentResponsible = Responsible.Dao.GetByUser(currentUser.Id);
+                list = Audit.Dao.GetAll()
+                    .Where(d => d.IsActive && d.AuditStatus.Id == 4 && d.Department.Id == currentResponsible.Department.Id)
+                    .ToList();
+            } else
+            {
+                list = Audit.Dao.GetAll()
+                    .Where(d => d.IsActive) //solo activos
+                    .ToList();
+            }
 
             foreach (Audit audit in list)
             {
@@ -40,22 +61,31 @@ namespace proyecto.Controllers
             var estados = estadosAuditoria?
                 .Select(u => new { u.Id, u.Name })
                 .ToList();
-
-            var allAuditores = Auditor.Dao.GetAll();
-            foreach (var auditor in allAuditores)
+            List<Auditor> allAuditores = new List<Auditor>();
+            var auditorProfile = currentUser.Profiles.Any(p => p.Id == 2);
+            if (auditorProfile) 
             {
-                auditor.User = DNF.Security.Bussines.User.Dao.Get(auditor.User.Id);
+                var currentAuditor = Auditor.Dao.GetByUser(currentUser.Id);
+                currentAuditor.User = currentUser;
+                allAuditores.Add(currentAuditor);
+            } else
+            {
+                allAuditores = Auditor.Dao.GetAll();
+                foreach (var auditor in allAuditores)
+                {
+                    auditor.User = DNF.Security.Bussines.User.Dao.Get(auditor.User.Id);
+                }               
             }
-            var auditores = allAuditores?
-                .Select(u => new { u.Id, Name = $"{u.User.FullName} - {u.User.Email}" })
-                .ToList();
+            var auditores = allAuditores
+                   .Select(u => new { u.Id, Name = $"{u.User.FullName} - {u.User.Email}" })
+                   .ToList();
 
             var departamentosAuditoria = Department.Dao.GetAll();
             var departamentos = departamentosAuditoria?
                 .Select(u => new { u.Id, u.Name })
                 .ToList();
 
-            return Json(new { estados, auditores, departamentos }, JsonRequestBehavior.AllowGet);
+            return Json(new { estados, auditores, departamentos, auditorProfile }, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult ObtenerAuditoria(int id)
@@ -80,13 +110,13 @@ namespace proyecto.Controllers
 
 
         [HttpPost]
-        public ActionResult Crear(AuditEditDTO auditEditDTO) //crear DTO para traer los id desde el index
+        public ActionResult Crear(AuditEditDTO auditEditDTO)
         {
             if (auditEditDTO == null || string.IsNullOrEmpty(auditEditDTO.Name) || auditEditDTO.CreateDate.Equals(DateTime.MinValue) 
                 || auditEditDTO.StatusId == 0 || auditEditDTO.DepartmentId == 0 || auditEditDTO.AuditorId == 0)
-                //|| auditEditDTO.AuditorsId.Count < 1
+                //|| auditEditDTO.AuditorsId.Count < 1)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Datos inválidos");
+                return Json(new { message = "Datos invalidos" }, JsonRequestBehavior.AllowGet);
             }
 
             try
@@ -113,14 +143,19 @@ namespace proyecto.Controllers
                     audit.IsActive = true;
                     audit.Save();
 
+                    foreach (var aa in audit.AuditorAudits)
+                    {
+                        aa.Delete();
+                    }
+
                     //audit.AuditorAudits.Delete();
-                    //audit.AuditorAudits =
-                    //       auditors.Select(a => new AuditorAudit
-                    //       {
-                    //           Auditor = a,
-                    //           Audit = audit
-                    //       }).ToList();
-                    //audit.AuditorAudits.Save();
+                    audit.AuditorAudits =
+                           auditors.Select(a => new AuditorAudit
+                           {
+                               Auditor = a,
+                               Audit = audit
+                           }).ToList();
+                    audit.AuditorAudits.Save();
                 }
                 else
                 {
@@ -149,13 +184,12 @@ namespace proyecto.Controllers
             }
             catch (Exception ex)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "Error al guardar la Auditoria");
+                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, ex.ToString());
             }
         }
 
         public ActionResult VerAuditoria(int id)
         {
-            //Audit audit = Audit.Dao.Get(id);
             Audit audit = Audit.Dao.Get(id);
             if (audit == null)
             {
@@ -183,13 +217,80 @@ namespace proyecto.Controllers
             {
                 finding.FindingStatus = FindingStatus.Dao.Get(finding.FindingStatus.Id);
                 finding.FindingType = FindingType.Dao.Get(finding.FindingType.Id);
-                finding.Audit = audit; // opcional si ya tenés el objeto
+                finding.Audit = audit;
             }
 
-            // Paso los datos a la vista con ViewBag o ViewModel
             ViewBag.Hallazgos = hallazgos;
 
             return View(audit);
+        }
+
+        public ActionResult ExportarExcel(int id)
+        {
+            var auditoria = Audit.Dao.Get(id);
+            var estadoAudit = AuditStatus.Dao.Get(auditoria.AuditStatus.Id);
+            var departamento = Department.Dao.Get(auditoria.Department.Id);
+
+            if (auditoria == null)
+                return HttpNotFound();
+
+            var hallazgos = Finding.Dao.GetAll().Where(h => h.Audit.Id == id).ToList();
+            
+            using (var package = new ExcelPackage())
+            {
+                var sheet = package.Workbook.Worksheets.Add("Auditoría");
+
+                // Datos auditoría
+                sheet.Cells["A1:A5"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                sheet.Cells["A1:A5"].Style.Fill.BackgroundColor.SetColor(1, 198, 238, 156);
+                sheet.Cells["A1:A5"].Style.Font.Bold = true;
+                sheet.Cells["A1"].Value = "Nombre";
+                sheet.Cells["B1"].Value = auditoria.Name;
+
+                sheet.Cells["A2"].Value = "Fecha Creación";
+                sheet.Cells["B2"].Value = auditoria.CreateDate.ToString(("yyyy-MM-dd"));
+
+                sheet.Cells["A3"].Value = "Fecha Finalizacion";
+                sheet.Cells["B3"].Value = auditoria.EndDate.Value.ToString(("yyyy-MM-dd"));
+
+                sheet.Cells["A4"].Value = "Estado";
+                sheet.Cells["B4"].Value = estadoAudit.Name;
+
+                sheet.Cells["A5"].Value = "Departamento";
+                sheet.Cells["B5"].Value = departamento.Name;
+
+
+                sheet.Cells["A7:E7"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                sheet.Cells["A7:E7"].Style.Fill.BackgroundColor.SetColor(1, 198, 238, 156);
+                sheet.Cells["A7:E7"].Style.Font.Bold = true;
+                sheet.Cells["A7"].Value = "Nombre";                
+                sheet.Cells["B7"].Value = "Tipo";
+                sheet.Cells["C7"].Value = "Estado";
+                sheet.Cells["D7"].Value = "Fecha de Creacion";
+                sheet.Cells["E7"].Value = "Descripción";
+
+                int row = 8;
+                foreach (var h in hallazgos)
+                {
+                    var tipo = FindingType.Dao.Get(h.FindingType.Id);
+                    var estadoH = FindingStatus.Dao.Get(h.FindingStatus.Id);
+
+                    sheet.Cells[row, 1].Value = h.Name;
+                    sheet.Cells[row, 2].Value = tipo.Name;
+                    sheet.Cells[row, 3].Value = estadoH.Name;
+                    sheet.Cells[row, 4].Value = h.CreateDate.ToString(("yyyy-MM-dd"));
+                    sheet.Cells[row, 5].Value = h.Description;
+                    row++;
+                }                
+                sheet.Cells[sheet.Dimension.Address].AutoFitColumns();
+
+                var stream = new MemoryStream(package.GetAsByteArray());
+                string nombreArchivo = $"Auditoria_{auditoria.Id}.xlsx";
+
+                return File(stream.ToArray(),
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    nombreArchivo);
+            }
         }
     }
 }

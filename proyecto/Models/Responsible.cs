@@ -37,13 +37,6 @@ namespace proyecto.Bussines
         public bool IsActive { get; set; }
 
 
-
-
-
-
-
-
-
         public string Name { get ; set ; }
         public string Code { get ; set ; }
         public int Order { get ; set ; }
@@ -67,6 +60,13 @@ namespace proyecto.Dao
 {
     public partial class ResponsibleDao : DaoDb<Responsible>
     {
-
+        public Responsible GetByFileNumber(string fileNumber)
+        {
+            return GetFirstFromSP("GetByFileNumber", new { fileNumber });
+        }
+        public Responsible GetByUser(long userId)
+        {
+            return GetFirstFromSP("GetByUser", new { User_Id = userId });
+        }
     }
 }

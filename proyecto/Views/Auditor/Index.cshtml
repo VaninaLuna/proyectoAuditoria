@@ -123,7 +123,7 @@
                     <form id="frmAuditor">
                         <div class="form-group">
                             <label>Legajo</label>
-                            <input type="text" id="txtLegajo" name="legajo" class="form-control" />
+                            <input type="text" id="txtLegajo" name="legajo" class="form-control" maxlength="10" />
                             <span class="text-danger" id="errorLegajo" style="display:none;">* Campo obligatorio</span>
                         </div>
 
@@ -195,9 +195,14 @@
                     type: 'POST',
                     contentType: 'application/json; charset=utf-8',
                     data: JSON.stringify(auditor),
-                    success: function () {
-                        $('#modalCrear').modal('hide');
-                        location.reload(); // O actualizar la tabla sin recargar toda la página
+                    success: function (data) {
+
+                        if (data.message) {
+                            alert(data.message);
+                        } else {
+                            $('#modalCrear').modal('hide');
+                            location.reload(); // O actualizar la tabla sin recargar toda la página
+                        }
                     },
                     error: function () {
                         alert('Error al crear el auditor.');
@@ -248,6 +253,7 @@
                                     $('#txtFechaAlta').val(fechaFormateada);
 
                                     $('#ddlEstado').val(data.auditorDTO.StatusId);
+                                    $('#ddlUsuario').append($('<option>').val(data.auditorDTO.UserId).text(data.auditorDTO.UserName));
                                     $('#ddlUsuario').val(data.auditorDTO.UserId);
 
                                     // Cambiamos título del modal si estás editando

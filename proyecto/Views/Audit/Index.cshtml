@@ -20,6 +20,50 @@
         padding: 20px;
         width: 40vw;
     }
+
+    .estado-1 {
+        background-color: #b0a1b37f;
+        color: #004085;
+        border-radius: 5px;
+        padding: 2px 8px;
+        display: inline-block;
+    }
+
+    .estado-2 {
+        background-color: #fff3cd;
+        color: #856404;
+        border-radius: 5px;
+        padding: 2px 8px;
+        display: inline-block;
+    }
+
+    .estado-3 {
+        background-color: #cce5ff;
+        color: #8a6d3b;
+        border-radius: 5px;
+        padding: 2px 8px;
+        display: inline-block;
+    }
+
+    .estado-4 {
+        background-color: #d4edda;
+        color: #155724;
+        border-radius: 5px;
+        padding: 2px 8px;
+        display: inline-block;
+    }
+
+    .progress-container {
+        height: 10px;
+        background-color: #e9ecef;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+    .progress-bar-black {
+        background-color: black;
+        height: 100%;
+    }
 </style>
 
 <script src="~/Scripts/jquery-2.2.4.min.js"></script>
@@ -49,6 +93,9 @@
                 Estado
             </th>
             <th>
+                Progreso
+            </th>
+            <th>
                 Departamento
             </th>
             <th>
@@ -61,7 +108,6 @@
             <th>
                 Ver detalles
             </th>
-
         </tr>
 
         @foreach (var item in Model)
@@ -76,9 +122,25 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.EndDate)
                 </td>
+
                 <td>
-                    @Html.DisplayFor(modelItem => item.AuditStatus.Name)
+                    <span class="estado-@item.AuditStatus.Id">@item.AuditStatus.Name</span>
                 </td>
+                <td>
+                    @{
+                        var porcentaje = item.AuditStatus.Id == 1 ? 1 :
+                                         item.AuditStatus.Id == 2 ? 30 :
+                                         item.AuditStatus.Id == 3 ? 60 :
+                                         item.AuditStatus.Id == 4 ? 100 : 0;
+                    }
+                    @if (porcentaje > 0)
+                    {
+                        <div class="progress-container">
+                            <div class="progress-bar-black" style="width: @porcentaje%"></div>
+                        </div>
+                    }
+                </td>
+                
                 <td>
                     @Html.DisplayFor(modelItem => item.Department.Name)
                 </td>
@@ -101,25 +163,30 @@
                     <span title="@tooltip">@auditores</span>
                 </td>
 
-                <td>                    
-                    <button type="button" onclick="CrearAuditoria(@item.Id)" class="btn btn-link text-success p-0" style="padding: 0 5px 0 5px">
-                        <i class="fa fa-lg fa-edit"></i>
-                    </button>
+                <td>
+                    @if (item.AuditStatus.Id != 4)
+                    {
+                        <button type="button" onclick="CrearAuditoria(@item.Id)" data-toggle="tooltip" title="Editar auditoría" class="btn btn-link text-success p-0" style="padding: 0 5px 0 5px">
+                            <i class="fa fa-lg fa-edit"></i>
+                        </button>
 
-                    <button type="button" onclick="modalEliminar(@item.Id)" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: red" data-toggle="modal" data-target="#modalEliminar">
-                        <i class="fa fa-lg fa-trash"></i>
-                    </button>
-
+                        <button type="button" onclick="modalEliminar(@item.Id)" data-toggle="tooltip" title="Eliminar auditoría" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: red" data-toggle="modal" data-target="#modalEliminar">
+                            <i class="fa fa-lg fa-trash"></i>
+                        </button>
+                    }
                 </td>
 
                 <td>
-                    <button type="button" onclick="CrearHallazgo(@item.Id)" class="btn btn-link text-info p-0" style="padding: 0 5px 0 5px">
-                        <i class="fa fa-lg fa-plus-circle"></i>
-                        <span class="sr-only">Crear hallazgo</span>
-                    </button>
+                    @if (item.AuditStatus.Id != 4)
+                    {
+                        <button type="button" onclick="CrearHallazgo(@item.Id)" data-toggle="tooltip" title="Crear Hallazgo" class="btn btn-link text-info p-0" style="padding: 0 5px 0 5px">
+                            <i class="fa fa-lg fa-plus-circle"></i>
+                            <span class="sr-only">Crear hallazgo</span>
+                        </button>
+                    }
                 </td>
                 <td>
-                    <button type="button" onclick="VerAuditoria(@item.Id)" class="btn btn-link text-info p-0" style="padding: 0 5px 0 5px">
+                    <button type="button" onclick="VerAuditoria(@item.Id)" data-toggle="tooltip" title="Detalle auditoría" class="btn btn-link text-info p-0" style="padding: 0 5px 0 5px">
                         <i class="fa fa-lg fa-eye"></i>
                     </button>
                 </td>
@@ -167,7 +234,7 @@
                     <form id="frmAuditor">
                         <div class="form-group">
                             <label>Nombre</label>
-                            <input type="text" id="txtName" name="name" class="form-control" />
+                            <input type="text" id="txtName" name="name" class="form-control" maxlength = "50" />
                             <span class="text-danger" id="errorName" style="display:none;">* Campo obligatorio</span>
                         </div>
 
@@ -180,6 +247,7 @@
                         <div class="form-group">
                             <label>Fecha de Finalizacion</label>
                             <input type="date" id="txtEndDate" name="end_date" class="form-control" />
+                            <span class="text-danger" id="errorEndDate" style="display:none;">* La fecha no debe ser menor a la de creacion</span>
                         </div>
 
                         <div class="form-group">
@@ -275,7 +343,19 @@
                     // Limpiar anteriores
                     $('#ddlEstado').empty().append('<option value="">-- Seleccionar Estado --</option>');
                     $('#ddlDepartment').empty().append('<option value="">-- Seleccionar Departamento --</option>');
-                    $('#ddlAuditor').empty().append('<option value="">-- Seleccionar Auditor --</option>');
+
+                    if (data.auditorProfile) {
+                        $('#ddlAuditor')
+                            .empty()
+                            .append($('<option>').val(data.auditores[0].Id).text(data.auditores[0].Name))
+                            .prop('disabled', true);
+                    } else {
+                        $('#ddlAuditor').empty().append('<option value="">-- Seleccionar Auditor --</option>');
+                        // Cargar auditores
+                        $.each(data.auditores, function (i, auditor) {
+                            $('#ddlAuditor').append($('<option>').val(auditor.Id).text(auditor.Name));
+                        });
+                    }
 
                     // Cargar estados
                     $.each(data.estados, function (i, estado) {
@@ -285,12 +365,7 @@
                     // Cargar departamentos
                     $.each(data.departamentos, function (i, departamento) {
                         $('#ddlDepartment').append($('<option>').val(departamento.Id).text(departamento.Name));
-                    });
-
-                    // Cargar auditores
-                    $.each(data.auditores, function (i, auditor) {
-                        $('#ddlAuditor').append($('<option>').val(auditor.Id).text(auditor.Name));
-                    });
+                    });                   
 
                     if (id > 0) {
                         auditoriaId = id;
@@ -303,7 +378,7 @@
 
                                     $('#ddlEstado').val(data.auditDTO.StatusId);
                                     $('#ddlDepartment').val(data.auditDTO.DepartmentId);
-                                    $('#ddlAuditor').val(data.auditDTO.AuditorId);
+                                    if (!data.auditorProfile) $('#ddlAuditor').val(data.auditDTO.AuditorId);
 
                                     // Convertimos la fecha al formato yyyy-MM-dd
                                     const createDate = new Date(data.auditDTO.CreateDateString);
@@ -364,6 +439,17 @@
             if (!$('#txtCreateDate').val()) {
                 $('#errorCreateDate').show(); valido = false;
             }
+
+            if ($('#txtEndDate').val() && $('#txtCreateDate').val()) {
+                let endDate = new Date($('#txtEndDate').val());
+                let createDate = new Date($('#txtCreateDate').val());
+                if (endDate < createDate) {
+                    $('#errorEndDate').show();
+                    valido = false;
+                }
+            }
+
+
             if (!$('#ddlEstado').val()) {
                 $('#errorEstado').show(); valido = false;
             }
@@ -396,5 +482,9 @@
         function VerAuditoria(id) {
             window.location.href = '/Audit/VerAuditoria/' + id;
         }
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
 
     </script>

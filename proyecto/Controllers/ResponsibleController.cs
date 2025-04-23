@@ -1,4 +1,5 @@
 ﻿using proyecto.Bussines;
+using proyecto.Dao;
 using proyecto.DTOs;
 using System;
 using System.Collections.Generic;
@@ -33,9 +34,12 @@ namespace proyecto.Controllers
             .Select(u => new { u.Id, u.Name })
             .ToList();
 
+            var responsables = Responsible.Dao.GetAll();
+            var usersId = responsables.Select(a => a.User.Id);
             var users = DNF.Security.Bussines.User.Dao.GetAll();
+
             var usuarios = users
-            .Where(u => u.Profiles.Any(p => p.Id == 4)) // auditor id:2 - empleado id: 4
+            .Where(u => u.Profiles.Any(p => p.Id == 4) && !usersId.Contains(u.Id)) // auditor id:2 - empleado id: 4
             .Select(u => new { u.Id, Name = $"{u.FullName} - {u.Email}" })
             .ToList();
 
@@ -50,6 +54,7 @@ namespace proyecto.Controllers
         public JsonResult ObtenerResponsable(int id)
         {
             Responsible responsible = Responsible.Dao.Get(id);
+            var user = DNF.Security.Bussines.User.Dao.Get(responsible.User.Id);
 
             ResponsibleEditDTO responsibleDTO = new ResponsibleEditDTO
             {
@@ -58,6 +63,7 @@ namespace proyecto.Controllers
                 StartDateString = responsible.StartDate.ToString("yyyy-MM-dd"),
                 StatusId = (int)responsible.ResponsibleStatus.Id,
                 UserId = (int)responsible.User.Id,
+                UserName = $"{user.FullName} - {user.Email}",
                 DepartmentId = (int)responsible.Department.Id,
                 Active = responsible.IsActive
             };
@@ -70,7 +76,17 @@ namespace proyecto.Controllers
         {
             if (responsibleDTO == null || string.IsNullOrEmpty(responsibleDTO.FileNumber) || responsibleDTO.StatusId == 0 || responsibleDTO.UserId == 0)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Datos inválidos");
+                return Json(new { message = "Datos invalidos" }, JsonRequestBehavior.AllowGet);
+            }
+
+            if (!string.IsNullOrEmpty(responsibleDTO.FileNumber))
+            {
+                var responsibleExist = Responsible.Dao.GetByFileNumber(responsibleDTO.FileNumber);
+
+                if (responsibleExist != null)
+                {
+                    return Json(new { message = "Ya existe un responsable con ese legajo" }, JsonRequestBehavior.AllowGet);
+                }
             }
 
             try

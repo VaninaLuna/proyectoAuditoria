@@ -14,9 +14,7 @@ namespace proyecto.Controllers
         public ActionResult Index()
         {
             List<Auditor> lista = Auditor.Dao.GetAll();
-            //lista.LoadRelation(x => x.User);
-            //lista.LoadRelation(x => x.EstadoAuditor);
-
+            
             foreach (Auditor auditor in lista) 
             {
                 auditor.AuditorStatus = AuditorStatus.Dao.Get(auditor.AuditorStatus.Id);
@@ -33,9 +31,12 @@ namespace proyecto.Controllers
             .Select(u => new { u.Id, u.Name })
             .ToList();
 
+            var auditores = Auditor.Dao.GetAll();
+            var usersId = auditores.Select(a => a.User.Id);
             var users = DNF.Security.Bussines.User.Dao.GetAll();
+
             var usuarios = users
-            .Where(u => u.Profiles.Any(p => p.Id == 2)) // auditor id:2 - empleado id: 4
+            .Where(u => u.Profiles.Any(p => p.Id == 2) && !usersId.Contains(u.Id)) // auditor id:2 - empleado id: 4
             .Select(u => new { u.Id, Name = $"{u.FullName} - {u.Email}" })
             .ToList();
 
@@ -45,7 +46,7 @@ namespace proyecto.Controllers
         public JsonResult ObtenerAuditor(int id)
         {
             Auditor auditor = Auditor.Dao.Get(id);
-
+            var user = DNF.Security.Bussines.User.Dao.Get(auditor.User.Id);
             AuditorEditDTO auditorDTO = new AuditorEditDTO
             {
                 Id = (int)auditor.Id,
@@ -53,6 +54,7 @@ namespace proyecto.Controllers
                 StartDateString = auditor.StartDate.ToString("yyyy-MM-dd"),
                 StatusId = (int)auditor.AuditorStatus.Id,
                 UserId = (int)auditor.User.Id,
+                UserName = $"{user.FullName} - {user.Email}",
                 Active = auditor.IsActive
             };
 
@@ -64,7 +66,17 @@ namespace proyecto.Controllers
         {
             if (auditorDTO == null || string.IsNullOrEmpty(auditorDTO.FileNumber) || auditorDTO.StatusId == 0 || auditorDTO.UserId == 0)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Datos inválidos");
+                return Json(new { message = "Datos invalidos" }, JsonRequestBehavior.AllowGet);
+            }
+
+            if (!string.IsNullOrEmpty(auditorDTO.FileNumber))
+            {
+                var auditorExist = Auditor.Dao.GetByFileNumber(auditorDTO.FileNumber);
+
+                if (auditorExist != null)
+                {
+                    return Json(new { message= "Ya existe un auditor con ese legajo" }, JsonRequestBehavior.AllowGet);
+                }
             }
 
             try

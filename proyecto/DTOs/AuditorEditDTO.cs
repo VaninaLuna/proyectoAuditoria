@@ -16,6 +16,7 @@ namespace proyecto.DTOs
         public string StartDateString { get; set; }
         public int StatusId { get; set; }
         public int UserId { get; set; }
+        public string UserName { get; set; }
         public bool Active {  get; set; }
     }
 }

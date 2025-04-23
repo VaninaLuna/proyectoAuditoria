@@ -75,5 +75,14 @@ namespace proyecto.Dao
     public partial class AuditorDao: DaoDb<Auditor>
     {
 
+        public Auditor GetByFileNumber(string fileNumber)
+        {
+            return GetFirstFromSP("GetByFileNumber", new { fileNumber });
+        }
+        public Auditor GetByUser(long userId)
+        {
+            return GetFirstFromSP("GetByUser", new { User_Id = userId });
+        }
+
     }
 }

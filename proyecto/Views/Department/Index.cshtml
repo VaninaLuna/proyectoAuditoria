@@ -118,11 +118,11 @@
                     @using (Html.BeginForm("Crear", "Department", FormMethod.Post, new { @id = "frmEstado" }))
                     {
                         @Html.Label("Nombre")
-                        @Html.TextBox("Name", null, new { @class = "form-control", @id = "txtNameEstado" })
+                        @Html.TextBox("Name", null, new { @class = "form-control", @id = "txtNameEstado", maxlength = "50" })
                         <br />
 
                         @Html.Label("Descripción")
-                        @Html.TextArea("Description", null, new { @class = "form-control", @id = "txtDescripcionEstado", rows = "3" })
+                        @Html.TextArea("Description", null, new { @class = "form-control", @id = "txtDescripcionEstado", rows = "3", maxlength = "100" })
                     }
 
                 </div>

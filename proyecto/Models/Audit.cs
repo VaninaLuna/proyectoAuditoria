@@ -36,8 +36,6 @@ namespace proyecto.Bussines
         //-----------RELACIONES-------------
         public Department Department{ get; set; }
 
-        //--------------------------------------------
-
         public AuditStatus AuditStatus { get; set; }
 
 

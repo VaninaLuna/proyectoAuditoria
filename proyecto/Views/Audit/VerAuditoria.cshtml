@@ -27,12 +27,11 @@
     <div class="row d-flex align-items-center">
         <div class="col-md-6">
             <h3>Información de la Auditoría</h3>
-        </div>
-        <div class="col-md-6 text-right">
-            <button class="btn btn-primary">
-                <i class="fa fa-upload"></i> Exportar
-            </button>
-        </div>
+        </div>       
+    <div class="col-md-6 text-right">
+        <a href="@Url.Action("ExportarExcel", "Audit", new { id = Model.Id })" class="btn btn-primary">
+            <i class="fa fa-upload"></i> Exportar
+        </a>  
     </div>
     <hr />
 
@@ -85,10 +84,14 @@
                     <th>Nombre</th>
                     <th>Tipo</th>
                     <th>Estado</th>
+                    <th>Fecha de Creacion</th>
                     <th>Descripción</th>
                     <th>Evidencia</th>
-                    <th>Opciones</th>
-                </tr>
+                    @if (Model.AuditStatus.Id != 4)
+                    {
+                        <th>Opciones</th>
+                    }
+                    </tr>
             </thead>
             <tbody>
                 @foreach (var h in hallazgos)
@@ -97,6 +100,7 @@
                         <td>@h.Name</td>
                         <td>@h.FindingType.Name</td>
                         <td>@h.FindingStatus.Name</td>
+                        <td>@h.CreateDate.ToString("yyyy-MM-dd")</td>
                         <td>@h.Description</td>
                         <td>
                             @if (!string.IsNullOrEmpty(h.FindingImage))
@@ -105,15 +109,21 @@
                             }
                         </td>
 
-                        <td>
-                            <button type="button" onclick="EditarHallazgo(@h.Id)" class="btn btn-link text-success p-0" style="padding: 0 5px 0 5px">
-                                <i class="fa fa-lg fa-edit"></i>
-                            </button>
-                            <button type="button" onclick="modalEliminar(@h.Id)" class="btn btn-link text-danger p-0" style="padding: 0 5px 0 5px">
-                                <i class="fa fa-lg fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
+                        @if (Model.AuditStatus.Id != 4)
+                        {
+                            <td>
+
+                                <button type="button" onclick="EditarHallazgo(@h.Id)" data-toggle="tooltip" title="Editar Hallazgo" class="btn btn-link text-success p-0" style="padding: 0 5px 0 5px">
+                                    <i class="fa fa-lg fa-edit"></i>
+                                </button>
+                                <button type="button" onclick="modalEliminar(@h.Id)" data-toggle="tooltip" title="Eliminar Hallazgo" class="btn btn-link text-danger p-0" style="padding: 0 5px 0 5px">
+                                    <i class="fa fa-lg fa-trash"></i>
+                                </button>
+                               
+
+                            </td>
+                        }
+                        </tr>
                 }
             </tbody>
         </table>
@@ -121,7 +131,7 @@
 
     <!-- Enlaces de acción -->
     <div class="mt-4 text-left">
-        <a href="@Url.Action("Index", "Audit")" class="btn btn-warning btn-sm">Volver a la lista</a>
+        <a href="@Url.Action("Index", "Audit")" class="btn btn-warning btn-sm">Volver a las Auditorias</a>
     </div>
 </div>
 

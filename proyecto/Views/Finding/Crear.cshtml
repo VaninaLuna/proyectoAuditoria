@@ -21,7 +21,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", style = "width: 50%", @id = "txtName" } })
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", style = "width: 50%", @id = "txtName" , maxlength="50"} })
                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -175,8 +175,12 @@
             type: 'POST',
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify(finding),
-            success: function () {
-                window.location.href = '/Audit/VerAuditoria/' + auditoriaId;
+            success: function (data) {
+                if (data.message) {
+                    alert(data.message);
+                } else {
+                    window.location.href = '/Audit/VerAuditoria/' + auditoriaId;
+                }
             },
             error: function () {
                 alert('Error al crear la auditoria.');

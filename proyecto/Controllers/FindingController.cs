@@ -1,4 +1,6 @@
-﻿using proyecto.Bussines;
+﻿using DNF.Security.Bussines;
+using proyecto.Bussines;
+using proyecto.Dao;
 using proyecto.DTOs;
 using System;
 using System.Collections.Generic;
@@ -10,12 +12,15 @@ namespace proyecto.Controllers
 {
     public class FindingController : Controller
     {
+        public User currentUser = Current.User;
+
         // GET: Finding
         public ActionResult Index()
         {
-            List<Finding> list = Finding.Dao.GetAll()
-            .Where(d => d.IsActive) // solo los activos
-            .ToList();
+            List<Finding> list;
+            list = Finding.Dao.GetAll()
+                .Where(d => d.IsActive) // solo los activos
+                .ToList();
 
             foreach (Finding finding in list)
             {
@@ -25,6 +30,22 @@ namespace proyecto.Controllers
                 finding.Audit.Department = Department.Dao.Get(finding.Audit.Department.Id);
                 
             }
+
+            if (currentUser.Profiles.Any(p => p.Id == 2))
+            {
+                var currentAuditor = Auditor.Dao.GetByUser(currentUser.Id);
+                list = list
+                    .Where(d => d.IsActive && d.Audit.Auditors.Any(a => a.Id == currentAuditor.Id))
+                    .ToList();
+            }
+            else if (currentUser.Profiles.Any(p => p.Id == 4))
+            {
+                var currentResponsible = Responsible.Dao.GetByUser(currentUser.Id);
+                list = list
+                    .Where(d => d.IsActive && d.Audit.AuditStatus.Id == 4 && d.Audit.Department.Id == currentResponsible.Department.Id)
+                    .ToList();
+            }
+
             return View(list);
         }
 
@@ -94,7 +115,7 @@ namespace proyecto.Controllers
         {
             if (findingDTO == null || string.IsNullOrEmpty(findingDTO.Name) || findingDTO.FindingStatus == 0 || findingDTO.AuditId == 0 || findingDTO.FindingType == 0)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Datos inválidos");
+                return Json(new { message = "Datos invalidos" }, JsonRequestBehavior.AllowGet);
             }
 
             try
@@ -102,6 +123,11 @@ namespace proyecto.Controllers
                 var findingStatus = FindingStatus.Dao.Get(findingDTO.FindingStatus);
                 var findingType = FindingType.Dao.Get(findingDTO.FindingType);
                 var audit = Audit.Dao.Get(findingDTO.AuditId);
+
+                if (findingDTO.CreateDate != null && audit.CreateDate > findingDTO.CreateDate)
+                {
+                    return Json(new { message = "La fecha no puede ser anterior a la fecha de creacion de la auditoria" }, JsonRequestBehavior.AllowGet);
+                }
 
                 if (findingDTO.Id > 0)
                 {

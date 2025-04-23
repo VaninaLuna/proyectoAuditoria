@@ -44,7 +44,7 @@
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
                 <td>
-                    <a href="@Url.Action("VerAuditoria/" + item.Id, "Audit")">@item.Audit.Name</a>
+                    <a href="@Url.Action("VerAuditoria/" + item.Audit.Id, "Audit")">@item.Audit.Name</a>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Audit.Department.Name)
