@@ -84,10 +84,10 @@
         }
     </table>
 </div>
-    @using (Html.BeginForm("Eliminar", "Auditor", FormMethod.Post, new { @id = "frmEliminar" }))
+    @*@using (Html.BeginForm("Eliminar", "Auditor", FormMethod.Post, new { @id = "frmEliminar" }))
     {
-        @Html.Hidden("idAuditor");
-    }
+        @Html.Hidden("id");
+    }*@
 
     <!-- Modal Eliminar -->
     <div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
@@ -98,6 +98,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                     <h4 class="modal-title" id="exampleModalLabel">Deseas eliminar este Auditor</h4>
+                    <span style="display:none" id="deleteAuditorId"></span>
                 </div>
                 <div style="padding:1em">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
@@ -280,18 +281,35 @@
                     $('#spinnerCrear').hide();
                 }
             });
-
-            
-
         }
 
         function modalEliminar(id) {
-            document.getElementById("idAuditor").value = id
+            document.getElementById("deleteAuditorId").value = id
         }
 
         function Eliminar() {
-            var frmEliminar = document.getElementById("frmEliminar");
-            frmEliminar.submit();
+            //var frmEliminar = document.getElementById("frmEliminar");
+            //frmEliminar.submit();
+            var aId = $("#deleteAuditorId").val();
+
+            $.ajax({
+                url: '/Auditor/Eliminar?id=' + aId,
+                type: 'POST',
+                success: function (res) {
+                    if (res.message) {
+                        alert(res.message);
+                    } else {
+                        window.location.href = '@Url.Action("Index", "Auditor")';
+                    }
+                    $('#modalEliminar').hide();
+                    $(".modal-backdrop").hide();
+                },
+                error: function () {
+                    $('#modalEliminar').hide();
+                    $(".modal-backdrop").hide()
+                    alert("Ocurrió un error inesperado.");
+                }
+            });
         }
 
         // Validación

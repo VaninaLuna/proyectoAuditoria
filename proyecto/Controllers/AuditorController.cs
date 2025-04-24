@@ -13,8 +13,10 @@ namespace proyecto.Controllers
         // GET: Auditor
         public ActionResult Index()
         {
-            List<Auditor> lista = Auditor.Dao.GetAll();
-            
+            List<Auditor> lista = Auditor.Dao.GetAll()
+            .Where(a => a.IsActive)
+            .ToList();
+
             foreach (Auditor auditor in lista) 
             {
                 auditor.AuditorStatus = AuditorStatus.Dao.Get(auditor.AuditorStatus.Id);
@@ -115,25 +117,22 @@ namespace proyecto.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "Error al guardar el auditor");
             }
         }
-
-        [HttpPost]
-        public ActionResult Eliminar(int id) //crear DTO para traer los id desde el index
+        
+        public ActionResult Eliminar(int id)
         {
-            try
-            {
-                if (id > 0)
-                {
-                    Auditor auditor = Auditor.Dao.Get(id);
-                    auditor.IsActive = false;
-                    auditor.Save();
-                }
+            var auditor = Auditor.Dao.Get(id);
+            var audits = Audit.Dao.GetAll()
+                .Where(a => a.Auditors.Any(b => b.Id == id))
+                .ToList();
 
-                return new HttpStatusCodeResult(HttpStatusCode.OK);
-            }
-            catch (Exception ex)
+            if (audits.Count > 0)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "Error al guardar el auditor");
+                return Json(new { message = "No se puede eliminar Si tiene Auditorias Creadas" }, JsonRequestBehavior.AllowGet);
             }
+
+            Auditor.Dao.Delete(auditor);
+
+            return RedirectToAction("Index");
         }
     }
 }

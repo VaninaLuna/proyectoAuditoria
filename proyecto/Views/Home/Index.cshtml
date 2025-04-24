@@ -2,6 +2,8 @@
     ViewBag.Title = "Home Page";
 }
 
+
+
 <div class="container" style="background-color: #f8f9fa; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-size: 14px; margin-bottom:30px">
     <h1 class="page-header">Dashboard</h1>
     <p class="text-muted">Bienvenido de nuevo</p>
@@ -11,16 +13,16 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <h4>Total Auditorías</h4>
-                    <h2 class="text-success"><strong>24</strong></h2>
+                    <h2 class="text-success"><strong>@ViewBag.TotalAuditorias</strong></h2>
                     @*<small class="text-success">+2 desde el mes pasado</small>*@
                 </div>
             </div>
-        </div>
+        </div>        
         <div class="col-sm-6 col-md-3">
             <div class="panel panel-default">
                 <div class="panel-body">
                     <h4>En Progreso</h4>
-                    <h2 class="text-warning"><strong>7</strong></h2>
+                    <h2 class="text-warning"><strong>@ViewBag.EnProgreso</strong></h2>
                     @*<small class="text-danger">-1 desde el mes pasado</small>*@
                 </div>
             </div>
@@ -29,7 +31,7 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <h4>Completadas</h4>
-                    <h2 class="text-info"><strong>15</strong></h2>
+                    <h2 class="text-info"><strong>@ViewBag.Completadas</strong></h2>
                     @*<small class="text-success">+3 desde el mes pasado</small>*@
                 </div>
             </div>
@@ -38,13 +40,14 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <h4>Hallazgos Realizados</h4>
-                    <h2 class="text-danger"><strong>9</strong></h2>
+                    <h2 class="text-danger"><strong>@ViewBag.TotalHallazgos</strong></h2>
                     @*<small class="text-danger">+2 desde el mes pasado</small>*@
                 </div>
             </div>
         </div>
     </div>
-
+    <br />
+    
     <div class="row">
         <div class="col-md-6">
             <div class="panel panel-default">
@@ -58,55 +61,28 @@
                             <tr>
                                 <th>Auditoría</th>
                                 <th>Estado</th>
-                                <th>Progreso</th>
+                                <th>Ver Detalles</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Auditoría de Seguridad TI</td>
-                                <td>
-                                    <span class="label" style="background-color: #f1c40f;">En Progreso</span>
-                                </td>
-                                <td>
-                                    <div class="progress">
-                                        <div class="progress-bar" style="width: 50%; background-color: #000;"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Controles Financieros</td>
-                                <td>
-                                    <span class="label" style="background-color: #2ecc71;">Completada</span>
-                                </td>
-                                <td>
-                                    <div class="progress">
-                                        <div class="progress-bar" style="width: 100%; background-color: #000;"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Revisión de Cumplimiento</td>
-                                <td>
-                                    <span class="label" style="background-color: #3498db;">Pendiente</span>
-                                </td>
-                                <td>
-                                    <div class="progress">
-                                        <div class="progress-bar" style="width: 0%; background-color: #000;"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Auditoría Operativa</td>
-                                <td>
-                                    <span class="label" style="background-color: #f1c40f;">En Progreso</span>
-                                </td>
-                                <td>
-                                    <div class="progress">
-                                        <div class="progress-bar" style="width: 70%; background-color: #000;"></div>
-                                    </div>
-                                </td>
-                            </tr>
+                            @foreach (var item in ViewBag.UltimasAuditorias)
+                            {
+                                <tr>
+                                    <td>@item.Name</td>
+                                    <td>
+                                        <span class="label" style="background-color: @(item.AuditStatus.Id == 2 ? "#fff3cd" : item.AuditStatus.Id == 3 ? "#cce5ff" : item.AuditStatus.Id == 4 ? "#d4edda" : "#b0a1b37f")">
+                                            @item.AuditStatus.Name
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="@Url.Action("VerAuditoria", "Audit", new { id = item.Id })" title="Ver detalles">
+                                            <span class="glyphicon glyphicon-eye-open" style="color:cadetblue" aria-hidden="true"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
+
                     </table>
                 </div>
             </div>
@@ -116,12 +92,40 @@
                 <div class="panel-heading"><strong>Hallazgos por Tipo</strong></div>
                 <div class="panel-body text-center">
                     <p class="text-muted">Número de hallazgos totales</p>
-                    <div class="well well-sm">
-                        <p>Gráfico de Tendencia de Hallazgos</p>
-                        @*<small>Últimos 6 meses</small>*@
-                    </div>
+                    <canvas id="hallazgosChart" width="100" height="38"></canvas>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('hallazgosChart').getContext('2d');
+    const hallazgosChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: @Html.Raw(Json.Encode(ViewBag.HallazgosChartLabels)),
+            datasets: [{
+                label: 'Cantidad de Hallazgos',
+                data: @Html.Raw(Json.Encode(ViewBag.HallazgosChartData)),
+                backgroundColor: 'rgba(39, 217, 245, 0.8)', // amarillo Bootstrap
+                borderColor: 'rgba(39, 217, 245, 0.8)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+</script>

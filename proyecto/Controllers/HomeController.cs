@@ -9,6 +9,9 @@ using System.Web.Routing;
 using DNF.Security.Bussines;
 using System.Web;
 using System.Configuration;
+using proyecto.Models;
+using proyecto.Bussines;
+using com.sun.xml.@internal.bind.v2.model.core;
 
 namespace proyecto.Controllers
 {
@@ -21,30 +24,44 @@ namespace proyecto.Controllers
             if (Current.User != null)
             {
                 var uderId = Current.User;
-                LogAccion.Dao.AddLog("LogIn", uderId.FullName, null);
+                LogAccion.Dao.AddLog("LogIn", uderId.FullName, null);                
 
-                //ver los accesos de los usuarios por consola
-                //foreach (var access in Current.User.Accesses)
-                //{
-                //    System.Diagnostics.Debug.WriteLine($"Acceso: {access.Name}, Tipo: {access.Type.Code}, Padre: {(access.Parent != null ? access.Parent.Name : "Ninguno")}");
-                //}
+                var auditoriasStado = AuditStatus.Dao.GetAll();
 
-                //agrego acceso que no existe
-                //if (!Current.User.Accesses.Any(x => x.Name == "VanItem"))
-                //{
-                //    var menuType = Current.User.Accesses.FirstOrDefault(x => x.Type.Code == "Menu")?.Type;
+                var auditorias = Audit.Dao.GetAll()
+                    .Where(d => d.IsActive) // solo los activos
+                    .ToList();
+                var hallazgos = Finding.Dao.GetAll()
+                    .Where(d => d.IsActive) // solo los activos
+                    .ToList();
 
-                //    // Encuentra "VanItem" o cualquier otro lugar donde quieras agregar el nuevo acceso
-                //    var parentAccess = Current.User.Accesses.FirstOrDefault(x => x.Name == "VanItem");
+                ViewBag.TotalAuditorias = auditorias.Count;
+                ViewBag.EnProgreso = auditorias.Count(a => a.AuditStatus.Id == 1 || a.AuditStatus.Id == 2 || a.AuditStatus.Id == 3);
+                ViewBag.Completadas = auditorias.Count(a => a.AuditStatus.Id == 4);
+                ViewBag.TotalHallazgos = hallazgos.Count;
 
-                //    Current.User.Accesses.Add(new Access
-                //    {
-                //        Id = 999,
-                //        Name = "VanItem",
-                //        Parent = parentAccess, // Establece "VanItem" como padre
-                //        Type = menuType
-                //    });
-                //}
+                var hallazgoTipo = FindingType.Dao.GetAll();
+
+                var datos = hallazgoTipo.Select(e => new {
+                    Estado = e.Name,
+                    Total = hallazgos.Count(h => h.FindingType.Id == e.Id)
+                }).ToList();
+
+                ViewBag.HallazgosChartLabels = datos.Select(x => x.Estado).ToList();
+                ViewBag.HallazgosChartData = datos.Select(x => x.Total).ToList();
+
+                var ultimas4 = Audit.Dao.GetAll()
+                .Where(d => d.IsActive)                   
+                .OrderByDescending(a => a.Id) 
+                .Take(4) 
+                .ToList();
+
+                foreach (var auditoria in ultimas4)
+                {
+                    auditoria.AuditStatus = AuditStatus.Dao.Get(auditoria.AuditStatus.Id);
+                }
+
+                ViewBag.UltimasAuditorias = ultimas4;
             }
 
 

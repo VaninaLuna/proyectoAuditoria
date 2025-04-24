@@ -15,7 +15,7 @@ namespace proyecto.Controllers
         public User currentUser = Current.User;
 
         // GET: Finding
-        public ActionResult Index()
+        public ActionResult Index(int? auditId)
         {
             List<Finding> list;
             list = Finding.Dao.GetAll()
@@ -45,6 +45,15 @@ namespace proyecto.Controllers
                     .Where(d => d.IsActive && d.Audit.AuditStatus.Id == 4 && d.Audit.Department.Id == currentResponsible.Department.Id)
                     .ToList();
             }
+
+            if (auditId.HasValue)
+            {
+                list = list.Where(a => a.Audit.Id == auditId.Value).ToList();
+            }
+
+            ViewBag.Audits = Audit.Dao.GetAll()
+                .Where(d => d.IsActive)
+                .ToList();
 
             return View(list);
         }
@@ -92,6 +101,12 @@ namespace proyecto.Controllers
 
         public ActionResult Crear(int auditoriaId, int hallazgoId = 0)
         {
+
+            if (currentUser.Profiles.Any(p => p.Id == 4))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             var estadosHallazgos = FindingStatus.Dao.GetAll();
             var estados = estadosHallazgos?
                 .Select(u => new { u.Id, u.Name })
@@ -165,6 +180,16 @@ namespace proyecto.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "Error al guardar el hallazgo");
             }
+        }
+
+        public ActionResult Eliminar(int idFinding)
+        {
+            //hacer sp del get y delete
+            var finding = Finding.Dao.Get(idFinding);
+            Finding.Dao.Delete(finding);
+
+
+            return RedirectToAction("VerAuditoria/" + finding.Audit.Id, "Audit");
         }
     }
 }

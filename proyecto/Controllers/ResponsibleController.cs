@@ -15,8 +15,10 @@ namespace proyecto.Controllers
         // GET: Responsible
         public ActionResult Index()
         {
-            List<Responsible> lista = Responsible.Dao.GetAll();
-           
+            List<Responsible> lista = Responsible.Dao.GetAll()
+                .Where(a => a.IsActive)
+                .ToList();
+
             foreach (Responsible responsible in lista)
             {
                 responsible.ResponsibleStatus = ResponsibleStatus.Dao.Get(responsible.ResponsibleStatus.Id);
@@ -129,24 +131,12 @@ namespace proyecto.Controllers
             }
         }
 
-        [HttpPost]
+        
         public ActionResult Eliminar(int id) //crear DTO para traer los id desde el index
         {
-            try
-            {
-                if (id > 0)
-                {
-                    Responsible responsible = Responsible.Dao.Get(id);
-                    responsible.IsActive = false;
-                    responsible.Save();
-                }
-
-                return new HttpStatusCodeResult(HttpStatusCode.OK);
-            }
-            catch (Exception ex)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "Error al guardar el responsable");
-            }
+            var responsible = Responsible.Dao.Get(id);
+            Responsible.Dao.Delete(responsible);
+            return RedirectToAction("Index");
         }
     }
 }

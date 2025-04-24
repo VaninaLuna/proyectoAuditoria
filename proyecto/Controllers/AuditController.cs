@@ -19,18 +19,20 @@ namespace proyecto.Controllers
     {
         public User currentUser = Current.User;
         // GET: Audit
-        public ActionResult Index()
+        public ActionResult Index( int? departmentId) //int? auditStatusId,
         {
             List<Audit> list;
-
+            var userProfile = 1;
             if (currentUser.Profiles.Any(p => p.Id == 2))
             {
+                userProfile = 2;
                 var currentAuditor = Auditor.Dao.GetByUser(currentUser.Id);
                 list = Audit.Dao.GetAll()
                     .Where(d => d.IsActive && d.Auditors.Any(a => a.Id == currentAuditor.Id))
                     .ToList();
             } else if (currentUser.Profiles.Any(p => p.Id == 4))
             {
+                userProfile = 4;
                 var currentResponsible = Responsible.Dao.GetByUser(currentUser.Id);
                 list = Audit.Dao.GetAll()
                     .Where(d => d.IsActive && d.AuditStatus.Id == 4 && d.Department.Id == currentResponsible.Department.Id)
@@ -42,6 +44,18 @@ namespace proyecto.Controllers
                     .ToList();
             }
 
+            //FILTRO
+            //if (auditStatusId.HasValue)
+            //{
+            //    list = list.Where(a => a.AuditStatus.Id == auditStatusId.Value).ToList();
+            //}
+            if (departmentId.HasValue)
+            {
+                //añadir filtro del auditor
+                list = list.Where(a => a.Department.Id == departmentId.Value).ToList();
+            }
+            //----------------------------------------------------------------------
+
             foreach (Audit audit in list)
             {
                 audit.AuditStatus = AuditStatus.Dao.Get(audit.AuditStatus.Id);                
@@ -52,6 +66,13 @@ namespace proyecto.Controllers
                     au.User = DNF.Security.Bussines.User.Dao.Get(auditor.User.Id);
                 }
             }
+
+            //ViewBag.Estados = AuditStatus.Dao.GetAll();
+            ViewBag.Departamentos = Department.Dao.GetAll()
+                .Where(d => d.IsActive)
+                .ToList();
+            ViewBag.UserProfile = userProfile;
+
             return View(list);
         }
 
@@ -82,6 +103,7 @@ namespace proyecto.Controllers
 
             var departamentosAuditoria = Department.Dao.GetAll();
             var departamentos = departamentosAuditoria?
+                .Where(d => d.IsActive)
                 .Select(u => new { u.Id, u.Name })
                 .ToList();
 
@@ -198,6 +220,27 @@ namespace proyecto.Controllers
             audit.AuditStatus = AuditStatus.Dao.Get(audit.AuditStatus.Id);
             audit.Department = Department.Dao.Get(audit.Department.Id);
 
+            if (currentUser.Profiles.Any(p => p.Id == 4))
+            {
+                var currentResponsible = Responsible.Dao.GetByUser(currentUser.Id);
+                if (audit.Department.Id != currentResponsible.Department.Id)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            else if (currentUser.Profiles.Any(p => p.Id == 2))
+            {
+                var currentAuditor = Auditor.Dao.GetByUser(currentUser.Id);
+                if (!audit.Auditors.Any(a => a.Id == currentAuditor.Id))
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+
+
+
+
+
             // Cargar los auditores y sus usuarios
             foreach (var auditor in audit.Auditors)
             {
@@ -291,6 +334,13 @@ namespace proyecto.Controllers
                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                     nombreArchivo);
             }
+        }
+
+        public ActionResult Eliminar(int id) //crear DTO para traer los id desde el index
+        {
+            var audit = Audit.Dao.Get(id);
+            Audit.Dao.Delete(audit);
+            return RedirectToAction("Index");
         }
     }
 }
