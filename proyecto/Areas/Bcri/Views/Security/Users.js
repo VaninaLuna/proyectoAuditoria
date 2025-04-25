@@ -38,7 +38,8 @@ $(document).ready(function () {
 
     $("#btnCrearUsuario").click(function () {
         $(gridTable).jqGrid("editGridRow", "new", {
-            addCaption: res.newUser,
+            //addCaption: res.newUser,
+            addCaption: "Usuario Nuevo",
             closeAfterAdd: true,
             recreateForm: true,
             beforeSubmit: EditOptions.beforeSubmit,
@@ -63,7 +64,8 @@ $(document).ready(function () {
                 hidden: true
             },
             {
-                label: res.name,
+                //label: res.name,
+                label: "Nombre",
                 name: "Name",
                 width: 100,
                 edittype: "text",
@@ -75,7 +77,8 @@ $(document).ready(function () {
                 }
             },
             {
-                label: res.fullname,
+                //label: res.fullname,
+                label: "Nombre Completo",
                 name: "FullName",
                 width: 220,
                 edittype: "text",
@@ -104,7 +107,8 @@ $(document).ready(function () {
                 }
             },
             {
-                label: res.state,
+                //label: res.state,
+                label: "Estado",
                 name: "State_Code",
                 edittype: "select",
                 editable: true,
@@ -119,7 +123,8 @@ $(document).ready(function () {
                 editrules: { required: true }
             },
             {
-                label: res.lastLogin,
+                //label: res.lastLogin,
+                label: "Ultimo Login",
                 name: "LastLogin",
                 width: 120,
                 fixed: true,
@@ -153,7 +158,8 @@ $(document).ready(function () {
                 hidden: true
             },
             {
-                label: res.profiles,
+                //label: res.profiles,
+                label: "Perfil",
                 name: "Profiles",
                 editable: true,
                 search: false,
@@ -211,7 +217,8 @@ $(document).ready(function () {
                 search: false
             },
             {
-                label: res.edit,
+                //label: res.edit,
+                label: "Editar",
                 name: "edit",
                 width: 50,
                 hidden: !Common.accessedit,

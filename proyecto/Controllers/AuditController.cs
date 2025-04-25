@@ -19,7 +19,7 @@ namespace proyecto.Controllers
     {
         public User currentUser = Current.User;
         // GET: Audit
-        public ActionResult Index( int? departmentId) //int? auditStatusId,
+        public ActionResult Index( int? departmentId) //solo para el filtro, sino no va el id este
         {
             List<Audit> list;
             var userProfile = 1;
@@ -40,15 +40,11 @@ namespace proyecto.Controllers
             } else
             {
                 list = Audit.Dao.GetAll()
-                    .Where(d => d.IsActive) //solo activos
+                    .Where(d => d.IsActive)
                     .ToList();
             }
 
-            //FILTRO
-            //if (auditStatusId.HasValue)
-            //{
-            //    list = list.Where(a => a.AuditStatus.Id == auditStatusId.Value).ToList();
-            //}
+            //FILTRO            
             if (departmentId.HasValue)
             {
                 //añadir filtro del auditor
@@ -66,8 +62,6 @@ namespace proyecto.Controllers
                     au.User = DNF.Security.Bussines.User.Dao.Get(auditor.User.Id);
                 }
             }
-
-            //ViewBag.Estados = AuditStatus.Dao.GetAll();
             ViewBag.Departamentos = Department.Dao.GetAll()
                 .Where(d => d.IsActive)
                 .ToList();
@@ -277,7 +271,7 @@ namespace proyecto.Controllers
             if (auditoria == null)
                 return HttpNotFound();
 
-            var hallazgos = Finding.Dao.GetAll().Where(h => h.Audit.Id == id).ToList();
+            var hallazgos = Finding.Dao.GetAll().Where(h => h.Audit.Id == id && h.IsActive).ToList();
             
             using (var package = new ExcelPackage())
             {

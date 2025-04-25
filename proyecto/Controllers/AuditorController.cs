@@ -1,4 +1,5 @@
-﻿using proyecto.Bussines;
+﻿using DevExpress.Web.Internal.XmlProcessor;
+using proyecto.Bussines;
 using proyecto.DTOs;
 using System;
 using System.Collections.Generic;
@@ -122,8 +123,8 @@ namespace proyecto.Controllers
         {
             var auditor = Auditor.Dao.Get(id);
             var audits = Audit.Dao.GetAll()
-                .Where(a => a.Auditors.Any(b => b.Id == id))
-                .ToList();
+               .Where(a => a.IsActive && a.Auditors.Any(b => b.Id == id))
+               .ToList();
 
             if (audits.Count > 0)
             {
