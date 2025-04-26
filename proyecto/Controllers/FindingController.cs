@@ -107,7 +107,7 @@ namespace proyecto.Controllers
             }
         }
 
-        public ActionResult Crear(int auditoriaId, int hallazgoId = 0)
+        public ActionResult Create(int auditId, int findingId = 0)
         {
 
             if (currentUser.Profiles.Any(p => p.Id == 4))
@@ -128,8 +128,8 @@ namespace proyecto.Controllers
             // Pasamos los datos a la vista mediante ViewBag
             ViewBag.Estados = estados;
             ViewBag.Tipos = tipos;
-            ViewBag.AuditoriaId = auditoriaId;
-            ViewBag.HallazgoId = hallazgoId;
+            ViewBag.AuditoriaId = auditId;
+            ViewBag.HallazgoId = findingId;
             return View();
         }
 
@@ -197,7 +197,7 @@ namespace proyecto.Controllers
             Finding.Dao.Delete(finding);
 
 
-            return RedirectToAction("VerAuditoria/" + finding.Audit.Id, "Audit");
+            return RedirectToAction("ViewAudit/" + finding.Audit.Id, "Audit");
         }
     }
 }

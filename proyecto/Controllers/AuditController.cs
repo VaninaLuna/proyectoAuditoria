@@ -210,7 +210,7 @@ namespace proyecto.Controllers
             }
         }
 
-        public ActionResult VerAuditoria(int id)
+        public ActionResult ViewAudit(int id)
         {
             Audit audit = Audit.Dao.Get(id);
             if (audit == null)
@@ -236,10 +236,6 @@ namespace proyecto.Controllers
                     return RedirectToAction("Index", "Home");
                 }
             }
-
-
-
-
 
             // Cargar los auditores y sus usuarios
             foreach (var auditor in audit.Auditors)
@@ -336,7 +332,7 @@ namespace proyecto.Controllers
             }
         }
 
-        public ActionResult Eliminar(int id) //crear DTO para traer los id desde el index
+        public ActionResult Eliminar(int id)
         {
             var audit = Audit.Dao.Get(id);
             Audit.Dao.Delete(audit);
