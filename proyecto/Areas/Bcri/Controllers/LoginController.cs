@@ -55,19 +55,19 @@ namespace proyecto.Areas.Bcri.Controllers
                 {
                     case "Disable"://2
                         {
-                            ViewData["error"] += " Your user has been disabled.\n" +
-                                                   "An email was send to your account with the procedure to re-activate your account.";
-                            user.PasswordRecover();
+                            ViewData["error"] += "Usuario deshabilitado";
+                                //" Your user has been disabled.\n" +
+                                //                   "An email was send to your account with the procedure to re-activate your account.";
+//                            user.PasswordRecover();
 
-                            var message = new MailMessage();
-                            message.To.Add(user.Email);
-                            message.Subject = "BCRI - Blocked user";
-                            if (Request.Url != null)
-                                message.Body = $@"Hello {user.Name},<br />
-Your BCRI account was blocked please follow this link <a href='{Url.Action("GeneratePassword", "Login", new { key = user.ActivationKey },Request.Url.Scheme)}'> here</a> to enable it again.
-< br /> Greetings. <br /> The BCRI team  <br />";
-                            SendEmail(message);
-
+//                            var message = new MailMessage();
+//                            message.To.Add(user.Email);
+//                            message.Subject = "BCRI - Blocked user";
+//                            if (Request.Url != null)
+//                                message.Body = $@"Hello {user.Name},<br />
+//Your BCRI account was blocked please follow this link <a href='{Url.Action("GeneratePassword", "Login", new { key = user.ActivationKey },Request.Url.Scheme)}'> here</a> to enable it again.
+//< br /> Greetings. <br /> The BCRI team  <br />";
+//                            SendEmail(message);
                             break;
                         }
                     case "Delete"://3
@@ -292,22 +292,22 @@ Your BCRI account was blocked please follow this link <a href='{Url.Action("Gene
         */
         public void SendEmail(MailMessage message)
         {
-            var smtp = new SmtpClient();
-            //Cast the newtwork credentials in to the NetworkCredential class and use it .
-            var credential = (NetworkCredential)smtp.Credentials;
-
-            smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-            smtp.UseDefaultCredentials = false;
-            smtp.EnableSsl = true;
-            smtp.Credentials = new NetworkCredential(SettingsSiteUtility.SMTPUser, SettingsSiteUtility.SMTPPassword);
-            smtp.Host = SettingsSiteUtility.SMTPServerId;
-            smtp.Port = SettingsSiteUtility.SMTPPort;
-            message.From = new MailAddress(SettingsSiteUtility.SMTPUser);
-            message.IsBodyHtml = true;
-            message.Body = message.Body;
-
             try
             {
+                var smtp = new SmtpClient();
+                //Cast the newtwork credentials in to the NetworkCredential class and use it .
+                var credential = (NetworkCredential)smtp.Credentials;
+
+                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                smtp.UseDefaultCredentials = false;
+                smtp.EnableSsl = true;
+                smtp.Credentials = new NetworkCredential(SettingsSiteUtility.SMTPUser, SettingsSiteUtility.SMTPPassword);
+                smtp.Host = SettingsSiteUtility.SMTPServerId;
+                smtp.Port = SettingsSiteUtility.SMTPPort;
+                message.From = new MailAddress(SettingsSiteUtility.SMTPUser);
+                message.IsBodyHtml = true;
+                message.Body = message.Body;
+
                 smtp.Send(message);
                 ViewBag.EmailSended = "true";
             }
