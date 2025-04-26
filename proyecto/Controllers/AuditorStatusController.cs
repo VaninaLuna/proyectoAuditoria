@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace proyecto.Controllers
 {
+    [Authenticated]
     public class AuditorStatusController : Controller
     {
         // GET: EstadoAuditor

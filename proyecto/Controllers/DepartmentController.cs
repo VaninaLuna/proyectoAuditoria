@@ -8,6 +8,7 @@ using System.Web.Mvc;
 
 namespace proyecto.Controllers
 {
+    [Authenticated]
     public class DepartmentController : Controller
     {
         // GET: Department

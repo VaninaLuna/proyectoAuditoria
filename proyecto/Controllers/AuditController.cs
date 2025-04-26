@@ -15,6 +15,7 @@ using DNF.Security.Bussines;
 
 namespace proyecto.Controllers
 {
+    [Authenticated]
     public class AuditController : Controller
     {
         public User currentUser = Current.User;

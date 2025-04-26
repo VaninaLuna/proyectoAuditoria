@@ -8,6 +8,7 @@ using System.Web.Mvc;
 
 namespace proyecto.Controllers
 {
+    [Authenticated]
     public class FindingStatusController : Controller
     {
         public ActionResult Index()

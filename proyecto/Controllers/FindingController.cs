@@ -10,6 +10,7 @@ using System.Web.Mvc;
 
 namespace proyecto.Controllers
 {
+    [Authenticated]
     public class FindingController : Controller
     {
         public User currentUser = Current.User;
