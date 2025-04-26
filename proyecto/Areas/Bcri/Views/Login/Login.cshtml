@@ -10,7 +10,8 @@
         <h1 class="logo-name">CS</h1>
     </div>
     <br />
-    <h3>@Res.welcomeSignIn</h3>
+    @*<h3>@Res.welcomeSignIn</h3>*@
+    <h3>Bienvenido! Por favor inicia sesion</h3>
     <br />
     <!--
     <p>Addiotional login message</p>
@@ -26,7 +27,8 @@
         </div>
         <div class="checkbox">
             <label>
-                <input name="remember" type="checkbox" value="Remember Me">@Res.rememberMe
+                @*<input name="remember" type="checkbox" value="Remember Me"> @Res.rememberMe*@
+                <input name="remember" type="checkbox" value="Remember Me"> Recordarme
             </label>
         </div>
         if (ViewData["error"] != null)
@@ -36,7 +38,8 @@
             @:</div>
         }
         <button type="submit" class="btn btn-primary block full-width m-b">@Res.login</button>
-        @Html.ActionLink("Unable to access your account?", "ResetPassword", new { id = "0" }, new { @class = "btn btn-sm btn-white btn-block" })
+        
+        //@Html.ActionLink("Unable to access your account?", "ResetPassword", new { id = "0" }, new { @class = "btn btn-sm btn-white btn-block" })
     }
     <!-- <p class="m-t"> <small>Copyright � 2000</small> </p> -->
 </div>
