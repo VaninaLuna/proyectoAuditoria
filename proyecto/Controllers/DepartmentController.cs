@@ -1,4 +1,5 @@
 ﻿using proyecto.Bussines;
+using proyecto.Dao;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace proyecto.Controllers
         public ActionResult Index()
         {
             List<Department> list = Department.Dao.GetAll()
-            .Where(d => d.IsActive) // solo los activos
+            .Where(d => d.IsActive)
             .ToList();
             return View(list);
         }
@@ -41,10 +42,18 @@ namespace proyecto.Controllers
         }
 
         [HttpPost]
-        public ActionResult Eliminar(int idEstado)
+        public ActionResult Eliminar(int departmentId)
         {
-            //hacer sp del get y delete
-            var department = Department.Dao.Get(idEstado);
+            var audits = Audit.Dao.GetAll()
+                .Where(a => a.Department.Id == departmentId && a.IsActive)
+                .ToList();
+
+            if (audits.Count > 0)
+            {
+                return Json(new { message = "No puede eliminar un departamento con auditorias asociadas" }, JsonRequestBehavior.AllowGet);
+            }
+
+            var department = Department.Dao.Get(departmentId);
             Department.Dao.Delete(department);
             return RedirectToAction("Index");
         }
