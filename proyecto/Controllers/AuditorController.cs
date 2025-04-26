@@ -1,5 +1,6 @@
 ﻿using DevExpress.Web.Internal.XmlProcessor;
 using proyecto.Bussines;
+using proyecto.Dao;
 using proyecto.DTOs;
 using System;
 using System.Collections.Generic;
@@ -76,7 +77,7 @@ namespace proyecto.Controllers
             {
                 var auditorExist = Auditor.Dao.GetByFileNumber(auditorDTO.FileNumber);
 
-                if (auditorExist != null)
+                if (auditorExist != null && auditorExist.Id != auditorDTO.Id)
                 {
                     return Json(new { message= "Ya existe un auditor con ese legajo" }, JsonRequestBehavior.AllowGet);
                 }

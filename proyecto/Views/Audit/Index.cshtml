@@ -79,21 +79,21 @@
                 Crear Auditoria
             </button>
         </div>
-        @if (ViewBag.UserProfile != 4)
-        {
-            <div class="col-md-6 text-right">
-                @using (Html.BeginForm("Index", "Audit", FormMethod.Get, new { @class = "form-inline justify-content-end" }))
-                {
-                    <div class="form-group mx-1" style="border-radius: 20px;">
-                        @Html.Label("Departamento", new { @class = "mr-1" })
-                        @Html.DropDownList("departmentId", new SelectList(ViewBag.Departamentos, "Id", "Name"), "Todos", new { @class = "form-control form-control-sm", @style = "border-radius: 8px" })
-                    </div>
-                    <button type="submit" class="btn btn-sm btn-primary ml-2" title="Buscar">
-                        <i class="fa fa-search"></i>
-                    </button>
-                }
-            </div>
-        }
+        @*@if (ViewBag.UserProfile != 4)
+        {*@
+        <div class="col-md-6 text-right">
+            @using (Html.BeginForm("Index", "Audit", FormMethod.Get, new { @class = "form-inline justify-content-end" }))
+            {
+                <div class="form-group mx-1" style="border-radius: 20px;">
+                    @Html.Label("Departamento", new { @class = "mr-1" })
+                    @Html.DropDownList("departmentId", new SelectList(ViewBag.Departamentos, "Id", "Name"), "Todos", new { @class = "form-control form-control-sm", @style = "border-radius: 8px; min-width: 150px;" })
+                </div>
+                <button type="submit" class="btn btn-sm btn-primary ml-2" title="Buscar">
+                    <i class="fa fa-search"></i>
+                </button>
+            }
+        </div>
+        @*}*@
     </div>
 
     <br />
@@ -183,7 +183,7 @@
                 </td>
 
                 <td>
-                    @if (item.AuditStatus.Id != 4)
+                    @if (item.AuditStatus.Id != 4 || ViewBag.UserProfile == 1)
                     {
                         <button type="button" onclick="CrearAuditoria(@item.Id)" data-toggle="tooltip" title="Editar auditoría" class="btn btn-link text-success p-0" style="padding: 0 5px 0 5px">
                             <i class="fa fa-lg fa-edit"></i>

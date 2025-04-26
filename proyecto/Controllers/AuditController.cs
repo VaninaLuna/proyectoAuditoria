@@ -21,36 +21,44 @@ namespace proyecto.Controllers
         // GET: Audit
         public ActionResult Index( int? departmentId) //solo para el filtro, sino no va el id este
         {
-            List<Audit> list;
+            List<Audit> list = Audit.Dao.GetAll()
+                .Where(d => d.IsActive)
+                .ToList();
             var userProfile = 1;
+            List<Department> departamentos = new List<Department>();
+
             if (currentUser.Profiles.Any(p => p.Id == 2))
             {
                 userProfile = 2;
                 var currentAuditor = Auditor.Dao.GetByUser(currentUser.Id);
-                list = Audit.Dao.GetAll()
-                    .Where(d => d.IsActive && d.Auditors.Any(a => a.Id == currentAuditor.Id))
+                list = list
+                    .Where(d => d.Auditors.Any(a => a.Id == currentAuditor.Id))
                     .ToList();
             } else if (currentUser.Profiles.Any(p => p.Id == 4))
             {
                 userProfile = 4;
                 var currentResponsible = Responsible.Dao.GetByUser(currentUser.Id);
-                list = Audit.Dao.GetAll()
-                    .Where(d => d.IsActive && d.AuditStatus.Id == 4 && d.Department.Id == currentResponsible.Department.Id)
+                list = list
+                    .Where(d => d.Department.Id == currentResponsible.Department.Id /*&& d.AuditStatus.Id == 4 */)
                     .ToList();
-            } else
-            {
-                list = Audit.Dao.GetAll()
-                    .Where(d => d.IsActive)
-                    .ToList();
+
+                departamentos = Department.Dao.GetAll()
+                .Where(d => d.IsActive && d.Id == currentResponsible.Department.Id)
+                .ToList();
             }
 
             //FILTRO            
             if (departmentId.HasValue)
             {
-                //añadir filtro del auditor
                 list = list.Where(a => a.Department.Id == departmentId.Value).ToList();
             }
-            //----------------------------------------------------------------------
+
+            if (userProfile != 4)
+            {
+                departamentos = Department.Dao.GetAll()
+                .Where(d => d.IsActive)
+                .ToList();
+            }
 
             foreach (Audit audit in list)
             {
@@ -62,9 +70,7 @@ namespace proyecto.Controllers
                     au.User = DNF.Security.Bussines.User.Dao.Get(auditor.User.Id);
                 }
             }
-            ViewBag.Departamentos = Department.Dao.GetAll()
-                .Where(d => d.IsActive)
-                .ToList();
+            ViewBag.Departamentos = departamentos;
             ViewBag.UserProfile = userProfile;
 
             return View(list);

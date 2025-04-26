@@ -17,9 +17,11 @@ namespace proyecto.Controllers
         // GET: Finding
         public ActionResult Index(int? auditId)
         {
-            List<Finding> list;
-            list = Finding.Dao.GetAll()
-                .Where(d => d.IsActive) // solo los activos
+            List<Finding> list = Finding.Dao.GetAll()
+                .Where(d => d.IsActive)
+                .ToList();
+            List<Audit> audits = Audit.Dao.GetAll()
+                .Where(d => d.IsActive)
                 .ToList();
 
             foreach (Finding finding in list)
@@ -37,13 +39,21 @@ namespace proyecto.Controllers
                 list = list
                     .Where(d => d.IsActive && d.Audit.Auditors.Any(a => a.Id == currentAuditor.Id))
                     .ToList();
+
+                audits = audits
+                   .Where(d => d.IsActive && d.Auditors.Any(a => a.Id == currentAuditor.Id))
+                   .ToList();
             }
             else if (currentUser.Profiles.Any(p => p.Id == 4))
             {
                 var currentResponsible = Responsible.Dao.GetByUser(currentUser.Id);
                 list = list
-                    .Where(d => d.IsActive && d.Audit.AuditStatus.Id == 4 && d.Audit.Department.Id == currentResponsible.Department.Id)
+                    .Where(d => d.IsActive && d.Audit.Department.Id == currentResponsible.Department.Id /*&& d.Audit.AuditStatus.Id == 4*/)
                     .ToList();
+
+                audits = audits
+                   .Where(d => d.IsActive && d.Department.Id == currentResponsible.Department.Id)
+                   .ToList();
             }
 
             if (auditId.HasValue)
@@ -51,9 +61,7 @@ namespace proyecto.Controllers
                 list = list.Where(a => a.Audit.Id == auditId.Value).ToList();
             }
 
-            ViewBag.Audits = Audit.Dao.GetAll()
-                .Where(d => d.IsActive)
-                .ToList();
+            ViewBag.Audits = audits;
 
             return View(list);
         }

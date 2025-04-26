@@ -45,7 +45,8 @@ namespace proyecto.Controllers
             .Select(u => new { u.Id, Name = $"{u.FullName} - {u.Email}" })
             .ToList();
 
-            var departamentoResponsable = Department.Dao.GetAll();
+            var departamentoResponsable = Department.Dao.GetAll()
+                .Where(d => d.IsActive);
             var departamento = departamentoResponsable
             .Select(u => new { u.Id, u.Name })
             .ToList();
@@ -85,7 +86,7 @@ namespace proyecto.Controllers
             {
                 var responsibleExist = Responsible.Dao.GetByFileNumber(responsibleDTO.FileNumber);
 
-                if (responsibleExist != null)
+                if (responsibleExist != null && responsibleExist.Id != responsibleDTO.Id)
                 {
                     return Json(new { message = "Ya existe un responsable con ese legajo" }, JsonRequestBehavior.AllowGet);
                 }
