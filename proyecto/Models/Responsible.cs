@@ -68,5 +68,10 @@ namespace proyecto.Dao
         {
             return GetFirstFromSP("GetByUser", new { User_Id = userId });
         }
+
+        public string Activate(long responsibleId)
+        {
+            return GetScalarFromSP("Activate", new { Id = responsibleId });
+        }
     }
 }

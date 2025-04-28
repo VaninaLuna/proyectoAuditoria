@@ -25,6 +25,11 @@ namespace proyecto.Controllers
                 responsible.ResponsibleStatus = ResponsibleStatus.Dao.Get(responsible.ResponsibleStatus.Id);
                 responsible.User = DNF.Security.Bussines.User.Dao.Get(responsible.User.Id);
                 responsible.Department = Department.Dao.Get(responsible.Department.Id);
+
+                if (responsible.Department.IsActive == false)
+                {
+                    responsible.Department.Name = "Departamento inhabilitado";
+                }
             }
 
             return View(lista);
@@ -133,7 +138,62 @@ namespace proyecto.Controllers
             }
         }
 
-        
+        [HttpGet]
+        public JsonResult ObtenerResponsables(bool activos)
+        {
+            try
+            {
+                var list = Responsible.Dao.GetAll()
+                    .Where(a => a.IsActive == activos)
+                    .ToList();
+
+                var responsables = new List<ResponsibleEditDTO>();
+
+                foreach (Responsible responsible in list)
+                {
+                    var estadoResponsable = ResponsibleStatus.Dao.Get(responsible.ResponsibleStatus.Id);
+                    var departamentoResponsable = Department.Dao.Get(responsible.Department.Id);
+                    var user = DNF.Security.Bussines.User.Dao.Get(responsible.User.Id);
+
+                    if (departamentoResponsable.IsActive == false)
+                    {
+                        departamentoResponsable.Name = "Departamento inhabilitado";
+                    }
+
+                    ResponsibleEditDTO responsibleDTO = new ResponsibleEditDTO
+                    {
+                        Id = (int)responsible.Id,
+                        FileNumber = responsible.FileNumber,
+                        StartDateString = responsible.StartDate.ToString("yyyy-MM-dd"),
+                        StatusId = (int)responsible.ResponsibleStatus.Id,
+                        StatusName = estadoResponsable.Name,
+                        UserName = user.FullName,
+                        UserId = (int)responsible.User.Id,
+                        DepartmentId = (int)departamentoResponsable.Id,
+                        DepartmentName = departamentoResponsable.Name,
+                        Active = responsible.IsActive
+                    };
+
+                    responsables.Add(responsibleDTO);
+                }
+
+                return Json(new { responsables }, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+        public ActionResult Activar(int id)
+        {
+            var r = Responsible.Dao.Activate(id);
+
+            return RedirectToAction("Index");
+        }
+
         public ActionResult Eliminar(int id) //crear DTO para traer los id desde el index
         {
             var responsible = Responsible.Dao.Get(id);
