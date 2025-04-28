@@ -76,7 +76,7 @@
                                     </td>
                                     <td class="text-center">
                                         <a href="@Url.Action("ViewAudit", "Audit", new { id = item.Id })" title="Ver detalles">
-                                            <span class="glyphicon glyphicon-eye-open" style="color:cadetblue" aria-hidden="true"></span>
+                                            <span class="glyphicon glyphicon-eye-open" style="color: #1AB394" aria-hidden="true"></span>
                                         </a>
                                     </td>
                                 </tr>
@@ -112,8 +112,8 @@
             datasets: [{
                 label: 'Cantidad de Hallazgos',
                 data: @Html.Raw(Json.Encode(ViewBag.HallazgosChartData)),
-                backgroundColor: 'rgba(39, 217, 245, 0.8)', // amarillo Bootstrap
-                borderColor: 'rgba(39, 217, 245, 0.8)',
+                backgroundColor: '#1AB394',
+                borderColor: '#1AB394',
                 borderWidth: 1
             }]
         },
