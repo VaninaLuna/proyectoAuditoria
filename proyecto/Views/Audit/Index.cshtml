@@ -398,23 +398,27 @@
                             success: function (data) {
                                 if (data.auditDTO) {
                                     $('#txtName').val(data.auditDTO.Name);
-
                                     $('#ddlEstado').val(data.auditDTO.StatusId);
                                     $('#ddlDepartment').val(data.auditDTO.DepartmentId);
                                     if (!data.auditorProfile) $('#ddlAuditor').val(data.auditDTO.AuditorId);
 
-                                    // Convertimos la fecha al formato yyyy-MM-dd
+                                    //formato yyyy-MM-dd
                                     const createDate = new Date(data.auditDTO.CreateDateString);
                                     const fechaFormateada = createDate.toISOString().split('T')[0];
                                     $('#txtCreateDate').val(fechaFormateada);
 
-                                    if (data.auditDTO.EndDateString != null || data.auditDTO.EndDateString != "") {
+                                    if (data.auditDTO.EndDateString && data.auditDTO.EndDateString.trim() !== "") {
                                         const endDate = new Date(data.auditDTO.EndDateString);
-                                        const finFormateada = endDate.toISOString().split('T')[0];
-                                        $('#txtEndDate').val(finFormateada);
+                                        if (!isNaN(endDate.getTime())) {
+                                            const finFormateada = endDate.toISOString().split('T')[0];
+                                            $('#txtEndDate').val(finFormateada);
+                                        } else {
+                                            $('#txtEndDate').val('');
+                                        }
+                                    } else {
+                                        $('#txtEndDate').val('');
                                     }
 
-                                    // Cambiamos título del modal si estás editando
                                     $('#titleModalLabel').text('Editar Auditoria');
                                 } else {
                                     $('#titleModalLabel').text('Crear Auditoria');

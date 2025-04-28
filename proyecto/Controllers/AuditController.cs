@@ -92,7 +92,9 @@ namespace proyecto.Controllers
                 allAuditores.Add(currentAuditor);
             } else
             {
-                allAuditores = Auditor.Dao.GetAll();
+                allAuditores = Auditor.Dao.GetAll()
+                    .Where(a => a.IsActive)
+                    .ToList();
                 foreach (var auditor in allAuditores)
                 {
                     auditor.User = DNF.Security.Bussines.User.Dao.Get(auditor.User.Id);
