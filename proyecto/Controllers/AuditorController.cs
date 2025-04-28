@@ -120,7 +120,55 @@ namespace proyecto.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "Error al guardar el auditor");
             }
         }
-        
+
+        [HttpGet]
+        public JsonResult ObtenerAuditores(bool activos)
+        {
+            try
+            {
+                var list = Auditor.Dao.GetAll()
+                    .Where(a => a.IsActive == activos)
+                    .ToList();
+
+                var auditores = new List<AuditorEditDTO>();
+
+                foreach (Auditor auditor in list)
+                {
+                    var auditorStatus = AuditorStatus.Dao.Get(auditor.AuditorStatus.Id);
+                    var user = DNF.Security.Bussines.User.Dao.Get(auditor.User.Id);
+
+
+                    AuditorEditDTO auditorDTO = new AuditorEditDTO
+                    {
+                        Id = (int)auditor.Id,
+                        FileNumber = auditor.FileNumber,
+                        StartDateString = auditor.StartDate.ToString("yyyy-MM-dd"),
+                        StatusId = (int)auditorStatus.Id,
+                        StatusName = auditorStatus.Name,
+                        UserId = (int)auditor.User.Id,
+                        UserName = user.FullName
+                    };
+
+                    auditores.Add(auditorDTO);
+                }
+
+                return Json(new { auditores }, JsonRequestBehavior.AllowGet);
+
+            }
+            catch(Exception ex)
+            {
+                return Json(new { error = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+            
+        }
+
+        public ActionResult Activar(int id)
+        {
+            var a = Auditor.Dao.Activate(id);
+
+            return RedirectToAction("Index");
+        }
+
         public ActionResult Eliminar(int id)
         {
             var auditor = Auditor.Dao.Get(id);
