@@ -1,4 +1,5 @@
-﻿using proyecto.Bussines;
+﻿using com.sun.xml.@internal.bind.v2.model.core;
+using proyecto.Bussines;
 using proyecto.Dao;
 using System;
 using System.Collections.Generic;
@@ -52,6 +53,15 @@ namespace proyecto.Controllers
             if (audits.Count > 0)
             {
                 return Json(new { message = "No puede eliminar un departamento con auditorias asociadas" }, JsonRequestBehavior.AllowGet);
+            }
+
+            var responsibles = Responsible.Dao.GetAll()
+                    .Where(a => a.Department.Id == departmentId)
+                    .ToList();
+
+            foreach (var r in responsibles)
+            {
+                Responsible.Dao.Delete(r.Id);
             }
 
             var department = Department.Dao.Get(departmentId);
