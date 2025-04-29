@@ -14,25 +14,25 @@
                 <div class="panel-body">
                     <h4>Total Auditorías</h4>
                     <h2 class="text-success"><strong>@ViewBag.TotalAuditorias</strong></h2>
-                    @*<small class="text-success">+2 desde el mes pasado</small>*@
+                    <small class="text-success">+@ViewBag.TotalAuditorias desde el inicio</small>
                 </div>
             </div>
         </div>        
         <div class="col-sm-6 col-md-3">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <h4>En Progreso</h4>
+                    <h4>Auditorias En Progreso</h4>
                     <h2 class="text-warning"><strong>@ViewBag.EnProgreso</strong></h2>
-                    @*<small class="text-danger">-1 desde el mes pasado</small>*@
+                    <small class="text-warning">+@ViewBag.EnProgreso desde el inicio</small>
                 </div>
             </div>
         </div>
         <div class="col-sm-6 col-md-3">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <h4>Completadas</h4>
+                    <h4>Auditorias Completadas</h4>
                     <h2 class="text-info"><strong>@ViewBag.Completadas</strong></h2>
-                    @*<small class="text-success">+3 desde el mes pasado</small>*@
+                    <small class="text-info">+@ViewBag.Completadas desde el inicio</small>
                 </div>
             </div>
         </div>
@@ -41,7 +41,7 @@
                 <div class="panel-body">
                     <h4>Hallazgos Realizados</h4>
                     <h2 class="text-danger"><strong>@ViewBag.TotalHallazgos</strong></h2>
-                    @*<small class="text-danger">+2 desde el mes pasado</small>*@
+                    <small class="text-danger">+@ViewBag.TotalHallazgos desde el inicio</small>
                 </div>
             </div>
         </div>

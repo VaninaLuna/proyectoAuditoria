@@ -2,16 +2,10 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using System;
 using System.Linq;
-using System.Security.Principal;
-using System.Web.Configuration;
-using proyecto.Areas.Bcri.Models;
-using System.Web.Routing;
 using DNF.Security.Bussines;
-using System.Web;
 using System.Configuration;
 using proyecto.Models;
 using proyecto.Bussines;
-using com.sun.xml.@internal.bind.v2.model.core;
 
 namespace proyecto.Controllers
 {
@@ -20,21 +14,56 @@ namespace proyecto.Controllers
     {
         public ActionResult Index()
         {
-
             if (Current.User != null)
             {
                 var uderId = Current.User;
-                LogAccion.Dao.AddLog("LogIn", uderId.FullName, null);                
+                var userProfile = 1;
+                LogAccion.Dao.AddLog("LogIn", uderId.FullName, null);
 
                 var auditoriasStado = AuditStatus.Dao.GetAll();
-
                 var auditorias = Audit.Dao.GetAll()
-                    .Where(d => d.IsActive) // solo los activos
+                    .Where(d => d.IsActive)
+                    .OrderByDescending(a => a.Id)
                     .ToList();
                 var hallazgos = Finding.Dao.GetAll()
-                    .Where(d => d.IsActive) // solo los activos
+                    .Where(d => d.IsActive)
                     .ToList();
 
+                if (uderId.Profiles.Any(p => p.Id == 2))
+                {
+                    userProfile = 2;
+                    var currentAuditor = Auditor.Dao.GetByUser(uderId.Id);
+                    auditorias = auditorias
+                        .Where(a => a.Auditors.Any(auditor => auditor.Id == currentAuditor.Id))
+                        .ToList();
+
+                    foreach (var h in hallazgos)
+                    {
+                        h.Audit = Audit.Dao.Get(h.Audit.Id);
+                    }
+
+                    hallazgos = hallazgos
+                        .Where(h => h.Audit.Auditors.Any(auditor => auditor.Id == currentAuditor.Id))
+                        .ToList();
+                }
+                else if (uderId.Profiles.Any(p => p.Id == 4))
+                {
+                    userProfile = 4;
+                    var currentResponsible = Responsible.Dao.GetByUser(uderId.Id);
+                    auditorias = auditorias
+                        .Where(a => a.Department.Id == currentResponsible.Department.Id /*&& d.AuditStatus.Id == 4 */)
+                        .ToList();
+
+                    foreach (var h in hallazgos)
+                    {
+                        h.Audit = Audit.Dao.Get(h.Audit.Id);
+                    }
+
+                    hallazgos = hallazgos
+                        .Where(h => h.Audit.Department.Id == currentResponsible.Department.Id)
+                        .ToList();
+                }
+               
                 ViewBag.TotalAuditorias = auditorias.Count;
                 ViewBag.EnProgreso = auditorias.Count(a => a.AuditStatus.Id == 1 || a.AuditStatus.Id == 2 || a.AuditStatus.Id == 3);
                 ViewBag.Completadas = auditorias.Count(a => a.AuditStatus.Id == 4);
@@ -50,9 +79,7 @@ namespace proyecto.Controllers
                 ViewBag.HallazgosChartLabels = datos.Select(x => x.Estado).ToList();
                 ViewBag.HallazgosChartData = datos.Select(x => x.Total).ToList();
 
-                var ultimas4 = Audit.Dao.GetAll()
-                .Where(d => d.IsActive)                   
-                .OrderByDescending(a => a.Id) 
+                var ultimas4 = auditorias 
                 .Take(4) 
                 .ToList();
 
@@ -63,7 +90,6 @@ namespace proyecto.Controllers
 
                 ViewBag.UltimasAuditorias = ultimas4;
             }
-
 
             return View();
         }
