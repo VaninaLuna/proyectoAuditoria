@@ -29,11 +29,29 @@ namespace proyecto.Controllers
             return RedirectToAction("Index");
         }
 
+        //[HttpPost]
+        //public ActionResult Eliminar(int idEstado)
+        //{
+        //    //hacer sp del get y delete
+        //    var status = FindingStatus.Dao.Get(idEstado);
+        //    FindingStatus.Dao.Delete(status);
+        //    return RedirectToAction("Index");
+        //}
+
         [HttpPost]
         public ActionResult Eliminar(int idEstado)
         {
-            //hacer sp del get y delete
+            var hallazgos = Finding.Dao.GetAll();
+            var hallazgo = hallazgos.FirstOrDefault(a => a.FindingStatus.Id == idEstado);
+
+            if (hallazgo != null && hallazgo.FindingStatus.Id == idEstado)
+            {
+                return Json(new { message = "No puede eliminar un tipo de hallazgo en uso" }, JsonRequestBehavior.AllowGet);
+            }
+
             var status = FindingStatus.Dao.Get(idEstado);
+
+
             FindingStatus.Dao.Delete(status);
             return RedirectToAction("Index");
         }

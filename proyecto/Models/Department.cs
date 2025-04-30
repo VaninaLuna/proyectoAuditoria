@@ -55,6 +55,10 @@ namespace proyecto.Dao
 {
     public partial class DepartmentDao : DaoDb<Department>
     {
+        public string Activate(long departmentId)
+        {
+            return GetScalarFromSP("Activate", new { Id = departmentId });
+        }
 
     }
 }

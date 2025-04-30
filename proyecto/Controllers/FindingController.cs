@@ -20,7 +20,7 @@ namespace proyecto.Controllers
         {
             List<Finding> list = Finding.Dao.GetAll()
                 .Where(d => d.IsActive)
-                .OrderByDescending(a => a.Id)
+                .OrderByDescending(a => a.CreateDate)
                 .ToList();
             List<Audit> audits = Audit.Dao.GetAll()
                 .Where(d => d.IsActive)

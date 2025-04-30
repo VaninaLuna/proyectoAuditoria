@@ -24,7 +24,7 @@ namespace proyecto.Controllers
         {
             List<Audit> list = Audit.Dao.GetAll()
                 .Where(d => d.IsActive)
-                .OrderByDescending(a => a.Id)
+                .OrderByDescending(a => a.CreateDate)
                 .ToList();
             var userProfile = 1;
             List<Department> departamentos = new List<Department>();

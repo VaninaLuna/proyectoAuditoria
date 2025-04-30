@@ -32,8 +32,17 @@ namespace proyecto.Controllers
         [HttpPost]
         public ActionResult Eliminar(int idEstado)
         {
-            //hacer sp del get y delete
+            var auditores = Auditor.Dao.GetAll();
+            var auditor = auditores.FirstOrDefault(a => a.AuditorStatus.Id == idEstado);
+
+            if (auditor != null && auditor.AuditorStatus.Id == idEstado)
+            {
+                return Json(new { message = "No puede eliminar un estado en uso" }, JsonRequestBehavior.AllowGet);
+            }
+
             var status = AuditorStatus.Dao.Get(idEstado);
+            
+
             AuditorStatus.Dao.Delete(status);
             return RedirectToAction("Index");
         }

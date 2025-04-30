@@ -1,4 +1,5 @@
 ﻿using proyecto.Bussines;
+using proyecto.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,12 +29,29 @@ namespace proyecto.Controllers
 
             return RedirectToAction("Index");
         }
+        //[HttpPost]
+        //public ActionResult Eliminar(int idEstado)
+        //{
+        //    //hacer sp del get y delete
+        //    var status = ResponsibleStatus.Dao.Get(idEstado);
+        //    ResponsibleStatus.Dao.Delete(status);
+        //    return RedirectToAction("Index");
+        //}
 
         [HttpPost]
         public ActionResult Eliminar(int idEstado)
         {
-            //hacer sp del get y delete
+            var responsables = Responsible.Dao.GetAll();
+            var responsable = responsables.FirstOrDefault(a => a.ResponsibleStatus.Id == idEstado);
+
+            if (responsable != null && responsable.ResponsibleStatus.Id == idEstado)
+            {
+                return Json(new { message = "No puede eliminar un estado en uso" }, JsonRequestBehavior.AllowGet);
+            }
+
             var status = ResponsibleStatus.Dao.Get(idEstado);
+
+
             ResponsibleStatus.Dao.Delete(status);
             return RedirectToAction("Index");
         }

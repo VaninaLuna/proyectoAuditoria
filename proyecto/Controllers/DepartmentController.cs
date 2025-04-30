@@ -1,6 +1,7 @@
 ﻿using com.sun.xml.@internal.bind.v2.model.core;
 using proyecto.Bussines;
 using proyecto.Dao;
+using proyecto.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,14 +22,6 @@ namespace proyecto.Controllers
             return View(list);
         }
 
-        public ActionResult Inactivos()
-        {
-            var departamentosInactivos = Department.Dao.GetAll()
-                .Where(d => !d.IsActive)
-                .ToList();
-            return View("Index", departamentosInactivos);
-        }
-
         [HttpPost]
         public ActionResult Crear(Department oDepartment)
         {
@@ -42,6 +35,32 @@ namespace proyecto.Controllers
 
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        public JsonResult ObtenerDepartamentos(bool activos)
+        {
+            try
+            {
+                var departamentos = Department.Dao.GetAll()
+                    .Where(a => a.IsActive == activos)
+                    .ToList();
+
+                return Json(new { departamentos }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+        public ActionResult Activar(int id)
+        {
+            var a = Department.Dao.Activate(id);
+
+            return RedirectToAction("Index");
+        }
+
 
         [HttpPost]
         public ActionResult Eliminar(int departmentId)
