@@ -2,6 +2,8 @@
 
 @{
     ViewBag.Title = "Index Hallazgos";
+
+    //bool viewDetailAudit = ViewBag.ViewDetailAudit;
 }
 
 <style>
@@ -99,9 +101,18 @@
                 auditoriaActualId = item.Audit.Id;
                 <tr style="background-color: #e9ecef;">
                     <td colspan="6">
-                        <strong>
-                            Auditoria - <a style="color: darkcyan" href="@Url.Action("ViewAudit", "Audit", new { id = item.Audit.Id })"> @item.Audit.Name</a>
-                        </strong> @*Departamento: @item.Audit.Department.Name*@
+                       @if (ViewBag.ViewDetailAudit)
+                        {
+                            <strong>
+                                Auditoria - <a style="color: darkcyan" href="@Url.Action("ViewAudit", "Audit", new { id = item.Audit.Id })"> @item.Audit.Name</a>
+                            </strong> @*Departamento: @item.Audit.Department.Name*@
+                        }
+                        else
+                        {
+                            <strong style="color: darkcyan">
+                                Auditoria - @item.Audit.Name
+                            </strong>
+                        }
                     </td>
                 </tr>
             }

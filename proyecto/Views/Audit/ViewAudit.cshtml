@@ -29,9 +29,12 @@
             <h3>Información de la Auditoría</h3>
         </div>
         <div class="col-md-6 text-right">
-            <a href="@Url.Action("ExportarExcel", "Audit", new { id = Model.Id })" class="btn btn-primary">
-                <i class="fa fa-upload"></i> Exportar
-            </a>
+            @if (ViewBag.ExportExcelAudit)
+            {
+                <a href="@Url.Action("ExportarExcel", "Audit", new { id = Model.Id })" class="btn btn-primary">
+                    <i class="fa fa-upload"></i> Exportar
+                </a>
+            }
         </div>
         <hr />
 
@@ -77,7 +80,7 @@
             var hallazgos = ViewBag.Hallazgos as List<proyecto.Bussines.Finding>;
             <hr />
             <h3><span>Hallazgos relacionados</span></h3>
-            if (Model.AuditStatus.Id != 4)
+            if (Model.AuditStatus.Id != 4 && ViewBag.CreateEditFinding)
             {
                 <div class="text-right" style="margin-bottom: 20px;">
                     <button type="button" onclick="CrearHallazgo(@Model.Id)" data-toggle="tooltip" title="Crear Hallazgo" class="btn btn-link text-info p-0" style="padding: 0 5px 0 5px">
@@ -120,15 +123,18 @@
                             @if (Model.AuditStatus.Id != 4)
                             {
                                 <td>
-
-                                    <button type="button" onclick="EditarHallazgo(@h.Id)" data-toggle="tooltip" title="Editar Hallazgo" class="btn btn-link text-success p-0" style="padding: 0 5px 0 5px">
-                                        <i class="fa fa-lg fa-edit"></i>
-                                    </button>
-                                    <button type="button" onclick="modalEliminar(@h.Id)" data-toggle="tooltip" title="Eliminar Hallazgo" class="btn btn-link text-danger p-0" style="padding: 0 5px 0 5px">
-                                        <i class="fa fa-lg fa-trash"></i>
-                                    </button>
-
-
+                                    @if (ViewBag.CreateEditFinding)
+                                    {
+                                        <button type="button" onclick="EditarHallazgo(@h.Id)" data-toggle="tooltip" title="Editar Hallazgo" class="btn btn-link text-success p-0" style="padding: 0 5px 0 5px">
+                                            <i class="fa fa-lg fa-edit"></i>
+                                        </button>
+                                    }
+                                    @if (ViewBag.DeleteFinding)
+                                    {
+                                        <button type="button" onclick="modalEliminar(@h.Id)" data-toggle="tooltip" title="Eliminar Hallazgo" class="btn btn-link text-danger p-0" style="padding: 0 5px 0 5px">
+                                            <i class="fa fa-lg fa-trash"></i>
+                                        </button>
+                                    }
                                 </td>
                             }
                         </tr>
@@ -142,71 +148,72 @@
             <a href="@Url.Action("Index", "Audit")" class="btn btn-warning btn-sm">Volver a las Auditorias</a>
         </div>
     </div>
+</div>
 
-    <!-- Modale Evidencia -->
-    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" style="margin-top: 80px">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+<!-- Modale Evidencia -->
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" style="margin-top: 80px">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
 
-            <div class="modal-content">
-                <div class="modal-body text-center">
-                    <img id="modalImage" src="" class="img-fluid" style="max-height: 50vh;" />
-                </div>
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <img id="modalImage" src="" class="img-fluid" style="max-height: 50vh;" />
             </div>
         </div>
     </div>
+</div>
 
-    @using (Html.BeginForm("Eliminar", "Finding", FormMethod.Post, new { @id = "frmEliminar" }))
-    {
-        @Html.Hidden("idFinding");
-    }
-    <!-- Modal Eliminar -->
-    <div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <h4 class="modal-title" id="exampleModalLabel">Deseas eliminar este Hallazgo</h4>
-                </div>
-                <div style="padding:1em">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                    <button type="button" onclick="Eliminar()" class="btn btn-success">Aceptar</button>
-                </div>
+@using (Html.BeginForm("Eliminar", "Finding", FormMethod.Post, new { @id = "frmEliminar" }))
+{
+    @Html.Hidden("idFinding");
+}
+<!-- Modal Eliminar -->
+<div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="exampleModalLabel">Deseas eliminar este Hallazgo</h4>
+            </div>
+            <div style="padding:1em">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                <button type="button" onclick="Eliminar()" class="btn btn-success">Aceptar</button>
             </div>
         </div>
     </div>
+</div>
 
-    <script src="~/Scripts/jquery-2.2.4.min.js"></script>
-    <script src="~/Scripts/bootstrap.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('[data-toggle="tooltip"]').tooltip();
+<script src="~/Scripts/jquery-2.2.4.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
 
-            $('#imageModal').on('show.bs.modal', function (e) {
-                var trigger = $(e.relatedTarget);
-                var imgSrc = trigger.data('img');
-                $('#modalImage').attr('src', imgSrc);
-            });
+        $('#imageModal').on('show.bs.modal', function (e) {
+            var trigger = $(e.relatedTarget);
+            var imgSrc = trigger.data('img');
+            $('#modalImage').attr('src', imgSrc);
         });
+    });
 
-        function EditarHallazgo(id) {
-            window.location.href = '/Finding/Create?auditId=' + @auditoriaId + '&findingId=' + id;
-        }
+    function EditarHallazgo(id) {
+        window.location.href = '/Finding/Create?auditId=' + @auditoriaId + '&findingId=' + id;
+    }
 
 
-        function modalEliminar(id) {
-            document.getElementById("idFinding").value = id;
-            $('#modalEliminar').modal('show');
-        }
+    function modalEliminar(id) {
+        document.getElementById("idFinding").value = id;
+        $('#modalEliminar').modal('show');
+    }
 
-         function Eliminar() {
-            var frmEliminar = document.getElementById("frmEliminar");
-            frmEliminar.submit();
-        }
+        function Eliminar() {
+        var frmEliminar = document.getElementById("frmEliminar");
+        frmEliminar.submit();
+    }
 
-        function CrearHallazgo(id) {
-            window.location.href = '/Finding/Create?auditId=' + id;
-        }
-    </script>
+    function CrearHallazgo(id) {
+        window.location.href = '/Finding/Create?auditId=' + id;
+    }
+</script>
 

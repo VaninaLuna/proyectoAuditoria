@@ -74,6 +74,10 @@ namespace proyecto.Controllers
             }
             ViewBag.Departamentos = departamentos;
             ViewBag.UserProfile = userProfile;
+            ViewBag.CreateEditAudit = currentUser.HasAccess("CreateEditAudit");
+            ViewBag.DeleteAudit = currentUser.HasAccess("DeleteAudit");
+            ViewBag.CreateEditFinding = currentUser.HasAccess("CreateEditFinding");
+            ViewBag.ViewDetailAudit = currentUser.HasAccess("ViewDetailAudit");
 
             return View(list);
         }
@@ -133,7 +137,6 @@ namespace proyecto.Controllers
 
             return Json(new { auditDTO }, JsonRequestBehavior.AllowGet);
         }
-
 
         [HttpPost]
         public ActionResult Crear(AuditEditDTO auditEditDTO)
@@ -214,6 +217,7 @@ namespace proyecto.Controllers
             }
         }
 
+        [AccessCode("ViewDetailAudit")]
         public ActionResult ViewAudit(int id)
         {
             Audit audit = Audit.Dao.Get(id);
@@ -264,10 +268,14 @@ namespace proyecto.Controllers
             }
 
             ViewBag.Hallazgos = hallazgos;
+            ViewBag.ExportExcelAudit = currentUser.HasAccess("ExportExcelAudit");
+            ViewBag.CreateEditFinding = currentUser.HasAccess("CreateEditFinding");
+            ViewBag.DeleteFinding = currentUser.HasAccess("DeleteFinding");
 
             return View(audit);
         }
 
+        [AccessCode("ExportExcelAudit")]
         public ActionResult ExportarExcel(int id)
         {
             var auditoria = Audit.Dao.Get(id);
@@ -336,6 +344,7 @@ namespace proyecto.Controllers
             }
         }
 
+        [AccessCode("DeleteAudit")]
         public ActionResult Eliminar(int id)
         {
             var audit = Audit.Dao.Get(id);

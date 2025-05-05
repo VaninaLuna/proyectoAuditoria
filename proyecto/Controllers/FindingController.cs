@@ -15,7 +15,7 @@ namespace proyecto.Controllers
     {
         public User currentUser = Current.User;
 
-        // GET: Finding
+        // GET: Finding        
         public ActionResult Index(int? auditId)
         {
             List<Finding> list = Finding.Dao.GetAll()
@@ -31,8 +31,7 @@ namespace proyecto.Controllers
                 finding.FindingStatus = FindingStatus.Dao.Get(finding.FindingStatus.Id);
                 finding.FindingType = FindingType.Dao.Get(finding.FindingType.Id);
                 finding.Audit = Audit.Dao.Get(finding.Audit.Id);
-                finding.Audit.Department = Department.Dao.Get(finding.Audit.Department.Id);
-                
+                finding.Audit.Department = Department.Dao.Get(finding.Audit.Department.Id);                
             }
 
             if (currentUser.Profiles.Any(p => p.Id == 2))
@@ -64,6 +63,8 @@ namespace proyecto.Controllers
             }
 
             ViewBag.Audits = audits;
+            ViewBag.ViewDetailAudit = currentUser.HasAccess("ViewDetailAudit");
+
 
             return View(list);
         }
@@ -109,6 +110,7 @@ namespace proyecto.Controllers
             }
         }
 
+        [AccessCode("CreateEditFinding")]
         public ActionResult Create(int auditId, int findingId = 0)
         {
 

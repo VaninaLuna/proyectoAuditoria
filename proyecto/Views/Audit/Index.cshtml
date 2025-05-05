@@ -75,9 +75,13 @@
 
     <div class="row mb-3">
         <div class="col-md-6">
-            <button type="button" class="btn btn-primary" id="btnCrear" onclick="CrearAuditoria()">
-                Crear Auditoria
-            </button>
+            @if (ViewBag.CreateEditAudit)
+            {
+                <button type="button" class="btn btn-primary" id="btnCrear" onclick="CrearAuditoria()">
+                    Crear Auditoria
+                </button>
+            }
+
         </div>
         @*@if (ViewBag.UserProfile != 4)
         {*@
@@ -183,7 +187,8 @@
                 </td>
 
                 <td>
-                    @if (item.AuditStatus.Id != 4 || ViewBag.UserProfile == 1)
+
+                    @if (ViewBag.UserProfile == 1)
                     {
                         <button type="button" onclick="CrearAuditoria(@item.Id)" data-toggle="tooltip" title="Editar auditoría" class="btn btn-link text-success p-0" style="padding: 0 5px 0 5px">
                             <i class="fa fa-lg fa-edit"></i>
@@ -193,10 +198,22 @@
                             <i class="fa fa-lg fa-trash"></i>
                         </button>
                     }
+                    else if (ViewBag.CreateEditAudit && item.AuditStatus.Id != 4)
+                    {
+                    <button type="button" onclick="CrearAuditoria(@item.Id)" data-toggle="tooltip" title="Editar auditoría" class="btn btn-link text-success p-0" style="padding: 0 5px 0 5px">
+                        <i class="fa fa-lg fa-edit"></i>
+                    </button>
+                    }
+                    else if (ViewBag.DeleteAudit && item.AuditStatus.Id != 4)
+                    {
+                    <button type="button" onclick="modalEliminar(@item.Id)" data-toggle="tooltip" title="Eliminar auditoría" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: red" data-toggle="modal" data-target="#modalEliminar">
+                        <i class="fa fa-lg fa-trash"></i>
+                    </button>
+                    }
                 </td>
 
                 <td>
-                    @if (item.AuditStatus.Id != 4)
+                    @if (item.AuditStatus.Id != 4 && ViewBag.CreateEditFinding)
                     {
                         <button type="button" onclick="CrearHallazgo(@item.Id)" data-toggle="tooltip" title="Crear Hallazgo" class="btn btn-link text-info p-0" style="padding: 0 5px 0 5px">
                             <i class="fa fa-lg fa-plus-circle"></i>
@@ -205,9 +222,12 @@
                     }
                 </td>
                 <td>
-                    <button type="button" onclick="VerAuditoria(@item.Id)" data-toggle="tooltip" title="Detalle auditoría" class="btn btn-link text-info p-0" style="padding: 0 5px 0 5px">
-                        <i class="fa fa-lg fa-eye"></i>
-                    </button>
+                    @if (ViewBag.ViewDetailAudit)
+                    {
+                        <button type="button" onclick="VerAuditoria(@item.Id)" data-toggle="tooltip" title="Detalle auditoría" class="btn btn-link text-info p-0" style="padding: 0 5px 0 5px">
+                            <i class="fa fa-lg fa-eye"></i>
+                        </button>
+                    }
                 </td>
 
             </tr>
