@@ -30,7 +30,7 @@
 <script src="~/Scripts/jquery-2.2.4.min.js"></script>
 <script src="~/Scripts/bootstrap.min.js"></script>
 
-<h2 class="text-center my-4">Estados Auditoria</h2>
+<h2 class="text-center my-4"><strong>Estados Auditorias</strong></h2>
 
 <div class="container" style="background-color: #f8f9fa; padding: 30px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-size: 14px; margin-top: 30px;margin-bottom:30px">
 
@@ -106,6 +106,7 @@
                     {
                         @Html.Label("Nombre")
                         @Html.TextBox("Name", null, new { @class = "form-control", @id = "txtNameEstado", maxlength = "50" })
+                        <span class="text-danger" id="errorName" style="display:none;">* Campo obligatorio (máx. 50 caracteres)</span>
                     }
 
                 </div>
@@ -123,12 +124,14 @@
         // Limpiar input cuando se cierra el modal
         $('#modalCrear').on('hidden.bs.modal', function () {
             $('#txtNameEstado').val('');
+            $("#errorName").hide();
         });
     });
 
     function Agregar() {
-        var frmEstado = document.getElementById("frmEstado");
-        frmEstado.submit();
+        Validar();
+        //var frmEstado = document.getElementById("frmEstado");
+        //frmEstado.submit();
     }
 
     function modalEliminar(id) {
@@ -156,6 +159,18 @@
                 alert("Ocurrió un error inesperado.");
             }
         });
+    }
+
+    function Validar() {
+        var name = $("#txtNameEstado").val().trim();
+
+        if (name === "" || name.length > 50) {
+            $("#errorName").show();
+            return;
+        } else {
+            $("#errorName").hide();
+        }
+        $("#frmEstado").submit();
     }
 </script>
 

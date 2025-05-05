@@ -30,7 +30,7 @@
 <script src="~/Scripts/jquery-2.2.4.min.js"></script>
 <script src="~/Scripts/bootstrap.min.js"></script>
 
-<h2 class="text-center my-4">Departamentos</h2>
+<h2 class="text-center my-4"><strong>Departamentos</strong></h2>
 
 <div class="container" style="background-color: #f8f9fa; padding: 30px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-size: 14px; margin-top: 30px;margin-bottom:30px">
 
@@ -142,10 +142,12 @@
                 {
                     @Html.Label("Nombre")
                     @Html.TextBox("Name", null, new { @class = "form-control", @id = "txtNameEstado", maxlength = "50" })
+                    <span class="text-danger" id="errorName" style="display:none;">* Campo obligatorio (máx. 50 caracteres)</span>
                     <br />
 
                     @Html.Label("Descripción")
                     @Html.TextArea("Description", null, new { @class = "form-control", @id = "txtDescripcionEstado", rows = "3", maxlength = "100" })
+                    <span class="text-danger" id="errorDescription" style="display:none;">* Campo obligatorio (máx. 100 caracteres)</span>
                 }
 
             </div>
@@ -164,12 +166,40 @@
         $('#modalCrear').on('hidden.bs.modal', function () {
             $('#txtNameEstado').val('');
             $('#txtDescripcionEstado').val('');
+            $("#errorName").hide();
+            $("#errorDescription").hide();
         });
     });
 
     function Agregar() {
-        var frmEstado = document.getElementById("frmEstado");
-        frmEstado.submit();
+        Validar();
+        //var frmEstado = document.getElementById("frmEstado");
+        //frmEstado.submit();
+    }
+
+    function Validar() {
+        var name = $("#txtNameEstado").val().trim();
+        var description = $("#txtDescripcionEstado").val().trim();
+        var isValid = true;
+
+        if (name === "" || name.length > 50) {
+            $("#errorName").show();
+            isValid = false;
+        } else {
+            $("#errorName").hide();
+        }
+        if (description === "" || name.length > 100) {
+            $("#errorDescription").show();
+            isValid = false;
+        } else {
+            $("#errorDescription").hide();
+        }
+
+        if (!isValid) {
+            return;
+        }
+        
+        $("#frmEstado").submit();
     }
 
     //function modalEliminar(id) {
