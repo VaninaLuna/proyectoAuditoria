@@ -17,7 +17,6 @@ namespace proyecto.Controllers
             if (Current.User != null)
             {
                 var uderId = Current.User;
-                var userProfile = 1;
                 LogAccion.Dao.AddLog("LogIn", uderId.FullName, null);
 
                 var auditoriasStado = AuditStatus.Dao.GetAll();
@@ -31,7 +30,6 @@ namespace proyecto.Controllers
 
                 if (uderId.Profiles.Any(p => p.Id == 2))
                 {
-                    userProfile = 2;
                     var currentAuditor = Auditor.Dao.GetByUser(uderId.Id);
                     auditorias = auditorias
                         .Where(a => a.Auditors.Any(auditor => auditor.Id == currentAuditor.Id))
@@ -48,7 +46,6 @@ namespace proyecto.Controllers
                 }
                 else if (uderId.Profiles.Any(p => p.Id == 4))
                 {
-                    userProfile = 4;
                     var currentResponsible = Responsible.Dao.GetByUser(uderId.Id);
                     auditorias = auditorias
                         .Where(a => a.Department.Id == currentResponsible.Department.Id /*&& d.AuditStatus.Id == 4 */)

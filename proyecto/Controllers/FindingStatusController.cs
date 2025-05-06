@@ -1,4 +1,5 @@
-﻿using proyecto.Bussines;
+﻿using DNF.Security.Bussines;
+using proyecto.Bussines;
 using proyecto.Models;
 using System;
 using System.Collections.Generic;
@@ -11,12 +12,18 @@ namespace proyecto.Controllers
     [Authenticated]
     public class FindingStatusController : Controller
     {
+        public User currentUser = Current.User;
         public ActionResult Index()
         {
             List<FindingStatus> list = FindingStatus.Dao.GetAll();
+
+            ViewBag.CreateStatus = currentUser.HasAccess("CreateStatus");
+            ViewBag.DeleteStatus = currentUser.HasAccess("DeleteStatus");
+
             return View(list);
         }
 
+        [AccessCode("CreateStatus")]
         [HttpPost]
         public ActionResult Crear(FindingStatus oFindingStatus)
         {
@@ -29,15 +36,7 @@ namespace proyecto.Controllers
             return RedirectToAction("Index");
         }
 
-        //[HttpPost]
-        //public ActionResult Eliminar(int idEstado)
-        //{
-        //    //hacer sp del get y delete
-        //    var status = FindingStatus.Dao.Get(idEstado);
-        //    FindingStatus.Dao.Delete(status);
-        //    return RedirectToAction("Index");
-        //}
-
+        [AccessCode("DeleteStatus")]
         [HttpPost]
         public ActionResult Eliminar(int idEstado)
         {

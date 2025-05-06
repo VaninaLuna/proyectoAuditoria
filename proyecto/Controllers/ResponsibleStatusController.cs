@@ -1,4 +1,5 @@
-﻿using proyecto.Bussines;
+﻿using DNF.Security.Bussines;
+using proyecto.Bussines;
 using proyecto.Models;
 using System;
 using System.Collections.Generic;
@@ -11,13 +12,19 @@ namespace proyecto.Controllers
     [Authenticated]
     public class ResponsibleStatusController : Controller
     {
+        public User currentUser = Current.User;
         // GET: EstadoEmpleado
         public ActionResult Index()
         {
             List<ResponsibleStatus> list = ResponsibleStatus.Dao.GetAll();
+
+            ViewBag.CreateStatus = currentUser.HasAccess("CreateStatus");
+            ViewBag.DeleteStatus = currentUser.HasAccess("DeleteStatus");
+
             return View(list);
         }
 
+        [AccessCode("CreateStatus")]
         [HttpPost]
         public ActionResult Crear(ResponsibleStatus oResponsibleStatus)
         {
@@ -29,15 +36,8 @@ namespace proyecto.Controllers
 
             return RedirectToAction("Index");
         }
-        //[HttpPost]
-        //public ActionResult Eliminar(int idEstado)
-        //{
-        //    //hacer sp del get y delete
-        //    var status = ResponsibleStatus.Dao.Get(idEstado);
-        //    ResponsibleStatus.Dao.Delete(status);
-        //    return RedirectToAction("Index");
-        //}
 
+        [AccessCode("DeleteStatus")]
         [HttpPost]
         public ActionResult Eliminar(int idEstado)
         {

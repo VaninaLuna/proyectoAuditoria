@@ -1,4 +1,5 @@
-﻿using proyecto.Bussines;
+﻿using DNF.Security.Bussines;
+using proyecto.Bussines;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +11,19 @@ namespace proyecto.Controllers
     [Authenticated]
     public class AuditorStatusController : Controller
     {
+        public User currentUser = Current.User;
         // GET: EstadoAuditor
         public ActionResult Index()
         {
             List<AuditorStatus> list =  AuditorStatus.Dao.GetAll();
+
+            ViewBag.CreateStatus = currentUser.HasAccess("CreateStatus");
+            ViewBag.DeleteStatus = currentUser.HasAccess("DeleteStatus");
+
             return View(list);
         }
 
+        [AccessCode("CreateStatus")]
         [HttpPost]
         public ActionResult Crear(AuditorStatus oAuditorStatus)
         {
@@ -29,6 +36,7 @@ namespace proyecto.Controllers
             return RedirectToAction("Index");
         }
 
+        [AccessCode("DeleteStatus")]
         [HttpPost]
         public ActionResult Eliminar(int idEstado)
         {

@@ -1,4 +1,5 @@
-﻿using proyecto.Bussines;
+﻿using DNF.Security.Bussines;
+using proyecto.Bussines;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +11,19 @@ namespace proyecto.Controllers
     [Authenticated]
     public class FindingTypeController : Controller
     {
+        public User currentUser = Current.User;
         // GET: Criticidad
         public ActionResult Index()
         {
             List<FindingType> list = FindingType.Dao.GetAll();
+
+
+            ViewBag.CreateFindingType = currentUser.HasAccess("CreateFindingType");
+            ViewBag.DeleteFindingType = currentUser.HasAccess("DeleteFindingType");
             return View(list);
         }
 
+        [AccessCode("CreateFindingType")]
         [HttpPost]
         public ActionResult Crear(FindingType oFindingType)
         {
@@ -29,15 +36,7 @@ namespace proyecto.Controllers
             return RedirectToAction("Index");
         }
 
-        //[HttpPost]
-        //public ActionResult Eliminar(int idEstado)
-        //{
-        //    //hacer sp del get y delete
-        //    var status = FindingType.Dao.Get(idEstado);
-        //    FindingType.Dao.Delete(status);
-        //    return RedirectToAction("Index");
-        //}
-
+        [AccessCode("DeleteFindingType")]
         [HttpPost]
         public ActionResult Eliminar(int idEstado)
         {

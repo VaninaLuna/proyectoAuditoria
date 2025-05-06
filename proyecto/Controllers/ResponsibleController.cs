@@ -1,4 +1,5 @@
-﻿using proyecto.Bussines;
+﻿using DNF.Security.Bussines;
+using proyecto.Bussines;
 using proyecto.Dao;
 using proyecto.DTOs;
 using System;
@@ -13,6 +14,7 @@ namespace proyecto.Controllers
     [Authenticated]
     public class ResponsibleController : Controller
     {
+        public User currentUser = Current.User;
         // GET: Responsible
         public ActionResult Index()
         {
@@ -31,6 +33,10 @@ namespace proyecto.Controllers
                     responsible.Department.Name = "Departamento inhabilitado";
                 }
             }
+
+            ViewBag.CreateEditResponsible = currentUser.HasAccess("CreateEditResponsible");
+            ViewBag.DeleteResponsible = currentUser.HasAccess("DeleteResponsible");
+            ViewBag.ViewInactiveResponsible = currentUser.HasAccess("ViewInactiveResponsible");
 
             return View(lista);
         }
@@ -80,6 +86,7 @@ namespace proyecto.Controllers
             return Json(new { responsibleDTO }, JsonRequestBehavior.AllowGet);
         }
 
+        [AccessCode("CreateEditResponsible")]
         [HttpPost]
         public ActionResult Crear(ResponsibleEditDTO responsibleDTO) //crear DTO para traer los id desde el index
         {
@@ -138,6 +145,7 @@ namespace proyecto.Controllers
             }
         }
 
+        [AccessCode("ViewInactiveResponsible")]
         [HttpGet]
         public JsonResult ObtenerResponsables(bool activos)
         {
@@ -187,6 +195,7 @@ namespace proyecto.Controllers
 
         }
 
+        [AccessCode("CreateEditResponsible")]
         public ActionResult Activar(int id)
         {
             var r = Responsible.Dao.Activate(id);
@@ -194,6 +203,7 @@ namespace proyecto.Controllers
             return RedirectToAction("Index");
         }
 
+        [AccessCode("DeleteResponsible")]
         public ActionResult Eliminar(int id) //crear DTO para traer los id desde el index
         {
             var responsible = Responsible.Dao.Get(id);

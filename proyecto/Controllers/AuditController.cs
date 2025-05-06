@@ -26,7 +26,7 @@ namespace proyecto.Controllers
                 .Where(d => d.IsActive)
                 .OrderByDescending(a => a.CreateDate)
                 .ToList();
-            var userProfile = 1;
+            var userProfile = currentUser.Profiles.First().Id;
             List<Department> departamentos = new List<Department>();
 
             if (currentUser.Profiles.Any(p => p.Id == 2))

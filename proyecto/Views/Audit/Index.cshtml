@@ -103,34 +103,16 @@
     <br />
     <table class="table">
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreateDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EndDate)
-            </th>
-            <th>
-                Estado
-            </th>
-            <th>
-                Progreso
-            </th>
-            <th>
-                Departamento
-            </th>
-            <th>
-                Auditor
-            </th>
-            <th>
-                Opciones
-            </th>
-            <th> Crear Hallazgo</th>
-            <th>
-                Ver detalles
-            </th>
+            <th>@Html.DisplayNameFor(model => model.Name)</th>
+            <th>@Html.DisplayNameFor(model => model.CreateDate)</th>
+            <th>@Html.DisplayNameFor(model => model.EndDate)</th>
+            <th>Estado</th>
+            <th>Progreso</th>
+            <th>Departamento</th>
+            <th>Auditor</th>
+            <th>Opciones</th>
+            <th>Crear Hallazgo</th>
+            <th>Ver detalles</th>
         </tr>
 
         @foreach (var item in Model)
@@ -188,28 +170,43 @@
 
                 <td>
 
-                    @if (ViewBag.UserProfile == 1)
+                    @*@if (ViewBag.UserProfile == 1)
+        {
+            <button type="button" onclick="CrearAuditoria(@item.Id)" data-toggle="tooltip" title="Editar auditoría" class="btn btn-link text-success p-0" style="padding: 0 5px 0 5px">
+                <i class="fa fa-lg fa-edit"></i>
+            </button>
+
+            <button type="button" onclick="modalEliminar(@item.Id)" data-toggle="tooltip" title="Eliminar auditoría" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: red" data-toggle="modal" data-target="#modalEliminar">
+                <i class="fa fa-lg fa-trash"></i>
+            </button>
+        }
+        else if (item.AuditStatus.Id != 4 && ViewBag.CreateEditAudit)
+        {
+        <button type="button" onclick="CrearAuditoria(@item.Id)" data-toggle="tooltip" title="Editar auditoría" class="btn btn-link text-success p-0" style="padding: 0 5px 0 5px">
+            <i class="fa fa-lg fa-edit"></i>
+        </button>
+        }
+        else if (item.AuditStatus.Id != 4 && ViewBag.DeleteAudit)
+        {
+        <button type="button" onclick="modalEliminar(@item.Id)" data-toggle="tooltip" title="Eliminar auditoría" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: red" data-toggle="modal" data-target="#modalEliminar">
+            <i class="fa fa-lg fa-trash"></i>
+        </button>
+        }*@
+
+                    @if (ViewBag.UserProfile == 1 || (item.AuditStatus.Id != 4 && ViewBag.CreateEditAudit))
                     {
                         <button type="button" onclick="CrearAuditoria(@item.Id)" data-toggle="tooltip" title="Editar auditoría" class="btn btn-link text-success p-0" style="padding: 0 5px 0 5px">
                             <i class="fa fa-lg fa-edit"></i>
                         </button>
-
+                    }
+                    @if (ViewBag.UserProfile == 1 || (item.AuditStatus.Id != 4 && ViewBag.DeleteAudit))
+                    {
                         <button type="button" onclick="modalEliminar(@item.Id)" data-toggle="tooltip" title="Eliminar auditoría" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: red" data-toggle="modal" data-target="#modalEliminar">
                             <i class="fa fa-lg fa-trash"></i>
                         </button>
                     }
-                    else if (ViewBag.CreateEditAudit && item.AuditStatus.Id != 4)
-                    {
-                    <button type="button" onclick="CrearAuditoria(@item.Id)" data-toggle="tooltip" title="Editar auditoría" class="btn btn-link text-success p-0" style="padding: 0 5px 0 5px">
-                        <i class="fa fa-lg fa-edit"></i>
-                    </button>
-                    }
-                    else if (ViewBag.DeleteAudit && item.AuditStatus.Id != 4)
-                    {
-                    <button type="button" onclick="modalEliminar(@item.Id)" data-toggle="tooltip" title="Eliminar auditoría" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: red" data-toggle="modal" data-target="#modalEliminar">
-                        <i class="fa fa-lg fa-trash"></i>
-                    </button>
-                    }
+
+
                 </td>
 
                 <td>

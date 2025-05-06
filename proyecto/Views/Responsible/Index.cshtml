@@ -35,14 +35,20 @@
 <div class="container" style="background-color: #f8f9fa; padding: 30px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-size: 14px; margin-top: 30px;margin-bottom:30px">
     <div class="row mb-3">
         <div class="col-md-6">
+            @if (ViewBag.CreateEditResponsible)
+            {
             <button type="button" class="btn btn-primary" id="btnCrear" onclick="CrearResponsible()">
                 Crear Responsable
             </button>
+            }
         </div>
         <div class="col-md-6 text-right">
+            @if (ViewBag.ViewInactiveResponsible)
+            {
             <button type="button" class="btn btn-warning" id="btnInactivos" onclick="VerInactivos()">
                 Ver Inactivos
             </button>
+            }
         </div>
     </div>
     <br />
@@ -88,12 +94,23 @@
                     @Html.DisplayFor(modelItem => item.Department.Name)
                 </td>
                 <td>
-                    <button type="button" onclick="CrearResponsible(@item.Id)" class="btn btn-link text-success p-0" style="padding: 0 5px 0 5px">
-                        <i class="fa fa-lg fa-edit"></i>
-                    </button>
-                    <button type="button" onclick="modalEliminar(@item.Id)" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: red" data-toggle="modal" data-target="#modalEliminar">
-                        <i class="fa fa-lg fa-trash"></i>
-                    </button>
+                    @if (ViewBag.CreateEditResponsible)
+                    {
+                        <button type="button" onclick="CrearResponsible(@item.Id)" class="btn btn-link text-success p-0" style="padding: 0 5px 0 5px">
+                            <i class="fa fa-lg fa-edit"></i>
+                        </button>
+
+                    }
+
+                    @if (ViewBag.DeleteResponsible)
+                    {
+                        <button type="button" onclick="modalEliminar(@item.Id)" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: red" data-toggle="modal" data-target="#modalEliminar">
+                            <i class="fa fa-lg fa-trash"></i>
+                        </button>
+
+                    }
+
+
                 </td>
 
             </tr>
@@ -206,6 +223,9 @@
 
 <script>
     var auditorId = 0;
+    var activeResponsable = @Html.Raw(Json.Encode(ViewBag.CreateEditResponsible));
+    var deleteResponsable = @Html.Raw(Json.Encode(ViewBag.DeleteResponsible));
+
     $(document).ready(function () {
         //cargar datos de usuarios y estados al abrir el modal
         //$('#btnCrear').click(function () {
@@ -449,14 +469,23 @@ function cargarTabla(verActivos) {
                                 <td>${item.StatusName}</td>
                                 <td>${item.DepartmentName}</td>
                                 <td>
-                                    <button type="button" onclick="CrearAuditor(${item.Id})" class="btn btn-link text-success p-0" style="padding: 0 5px 0 5px">
-                                        <i class="fa fa-lg fa-edit"></i>
-                                    </button>
-                                    <button type="button" onclick="modalEliminar(${item.Id})" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: red" data-toggle="modal" data-target="#modalEliminar">
-                                        <i class="fa fa-lg fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>`;
+                                `;
+                        if (activeResponsable) {
+                            html += `
+                                <button type="button" onclick="CrearAuditor(${item.Id})" class="btn btn-link text-success p-0" style="padding: 0 5px 0 5px">
+                                    <i class="fa fa-lg fa-edit"></i>
+                                </button>                                    
+                            `;
+                        }
+                        if (deleteResponsable) {
+                            html += `                                   
+                                <button type="button" onclick="modalEliminar(${item.Id})" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: red" data-toggle="modal" data-target="#modalEliminar">
+                                    <i class="fa fa-lg fa-trash"></i>
+                                </button>
+                            `;
+                        }
+                        html += `</td>
+                        </tr>`;
                     });
                 } else {
                     data.responsables.forEach(function (item) {
@@ -468,11 +497,17 @@ function cargarTabla(verActivos) {
                                 <td>${item.StatusName}</td>
                                 <td>${item.DepartmentName}</td>
                                 <td>
-                                    <button type="button" onclick="modalActivar(${item.Id})" title="Activar" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: #1AB394" data-toggle="modal" data-target="#modalActivar">
-                                        <i class="fa fa-lg fa-check-square-o"></i>
-                                    </button>
-                                </td>
-                            </tr>`;
+                                `;
+
+                        if (activeResponsable) {
+                            html += `
+                                <button type="button" onclick="modalActivar(${item.Id})" title="Activar" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: #1AB394" data-toggle="modal" data-target="#modalActivar">
+                                    <i class="fa fa-lg fa-check-square-o"></i>
+                                </button>                                 
+                            `;
+                        }
+                        html += `</td>
+                        </tr>`;
                     });
                 }
 

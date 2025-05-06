@@ -35,44 +35,50 @@
 
 <div class="container" style="background-color: #f8f9fa; padding: 30px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-size: 14px; margin-top: 30px;margin-bottom:30px">
 
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalCrear" id="btnEstado">
-        Crear Estado
-    </button>
-    <br />
-    <br />
+    @if (ViewBag.CreateStatus)
+    {
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalCrear" id="btnEstado">
+            Crear Estado
+        </button>
+    }
+        <br />
+        <br />
 
-    <table class="table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-
-            <th></th>
-        </tr>
-
-        @foreach (var item in Model)
-        {
+        <table class="table">
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
 
-                <td>
-                    <button type="button" onclick="modalEliminar(@item.Id)" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: red" data-toggle="modal" data-target="#modalEliminar">
-                        <i class="fa fa-lg fa-trash"></i>
-                    </button>
-                </td>
+                <th></th>
             </tr>
-        }
 
-    </table>
-</div>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+
+                    <td>
+                        @if (ViewBag.DeleteStatus)
+                        {
+                            <button type="button" onclick="modalEliminar(@item.Id)" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: red" data-toggle="modal" data-target="#modalEliminar">
+                                <i class="fa fa-lg fa-trash"></i>
+                            </button>
+                        }
+                        </td>
+                </tr>
+            }
+
+        </table>
+    </div>
 
     @*@using (Html.BeginForm("Eliminar", "ResponsibleStatus", FormMethod.Post, new { @id = "frmEliminar" }))
     {

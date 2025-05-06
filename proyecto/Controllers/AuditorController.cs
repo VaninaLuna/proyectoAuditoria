@@ -1,4 +1,5 @@
 ﻿using DevExpress.Web.Internal.XmlProcessor;
+using DNF.Security.Bussines;
 using proyecto.Bussines;
 using proyecto.Dao;
 using proyecto.DTOs;
@@ -13,6 +14,7 @@ namespace proyecto.Controllers
     [Authenticated]
     public class AuditorController : Controller
     {
+        public User currentUser = Current.User;
         // GET: Auditor
         public ActionResult Index()
         {
@@ -25,6 +27,10 @@ namespace proyecto.Controllers
                 auditor.AuditorStatus = AuditorStatus.Dao.Get(auditor.AuditorStatus.Id);
                 auditor.User = DNF.Security.Bussines.User.Dao.Get(auditor.User.Id);
             }
+
+            ViewBag.CreateEditAuditor = currentUser.HasAccess("CreateEditAuditor");
+            ViewBag.DeleteAuditor = currentUser.HasAccess("DeleteAuditor");
+            ViewBag.ViewInactiveAuditor = currentUser.HasAccess("ViewInactiveAuditor");
 
             return View(lista);
         }
@@ -66,6 +72,7 @@ namespace proyecto.Controllers
             return Json(new { auditorDTO }, JsonRequestBehavior.AllowGet);
         }
 
+        [AccessCode("CreateEditAuditor")]
         [HttpPost]
         public ActionResult Crear(AuditorEditDTO auditorDTO) //uso el DTO para traer los id desde el index
         {
@@ -121,6 +128,7 @@ namespace proyecto.Controllers
             }
         }
 
+        [AccessCode("ViewInactiveAuditor")]
         [HttpGet]
         public JsonResult ObtenerAuditores(bool activos)
         {
@@ -162,6 +170,7 @@ namespace proyecto.Controllers
             
         }
 
+        [AccessCode("CreateEditAuditor")]
         public ActionResult Activar(int id)
         {
             var a = Auditor.Dao.Activate(id);
@@ -169,6 +178,7 @@ namespace proyecto.Controllers
             return RedirectToAction("Index");
         }
 
+        [AccessCode("DeleteAuditor")]
         public ActionResult Eliminar(int id)
         {
             var auditor = Auditor.Dao.Get(id);

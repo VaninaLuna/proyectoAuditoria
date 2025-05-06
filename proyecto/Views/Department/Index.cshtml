@@ -36,14 +36,20 @@
 
     <div class="row mb-3">
         <div class="col-md-6">
+            @if (ViewBag.CreateDepartment)
+            {
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalCrear" id="btnEstado">
                 Crear Departamento
             </button>
+            }
         </div>
         <div class="col-md-6 text-right">
+            @if (ViewBag.ViewInactiveDepartments)
+            {
             <button type="button" class="btn btn-warning" id="btnInactivos" onclick="VerInactivos()">
                 Ver Inactivos
             </button>
+            }
         </div>
     </div>
     <br />
@@ -75,9 +81,12 @@
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
                 <td>
+                    @if (ViewBag.DeleteDepartment)
+                {
                     <button type="button" onclick="modalEliminar(@item.Id)" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: red" data-toggle="modal" data-target="#modalEliminar">
                         <i class="fa fa-lg fa-trash"></i>
                     </button>
+                }
                 </td>
             </tr>
         }
@@ -161,6 +170,9 @@
 
 
 <script>
+    var activeDepartment = @Html.Raw(Json.Encode(ViewBag.CreateDepartment));
+    var deleteDepartment = @Html.Raw(Json.Encode(ViewBag.DeleteDepartment));
+
     $(document).ready(function () {
         // Limpiar input cuando se cierra el modal
         $('#modalCrear').on('hidden.bs.modal', function () {
@@ -198,7 +210,7 @@
         if (!isValid) {
             return;
         }
-        
+
         $("#frmEstado").submit();
     }
 
@@ -294,7 +306,7 @@
                 <tbody>
                     <tr>
                         <th>@Html.DisplayNameFor(model => model.Name)</th>
-                        <th>@Html.DisplayNameFor(model => model.Description)</th>                       
+                        <th>@Html.DisplayNameFor(model => model.Description)</th>
                         <th></th>
                     </tr>`;
 
@@ -305,24 +317,36 @@
                                 <td>${item.Name}</td>
                                 <td>${item.Description}</td>
                                 <td>
-                                    <button type="button" onclick="modalEliminar(${item.Id})" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: red" data-toggle="modal" data-target="#modalEliminar">
-                                        <i class="fa fa-lg fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>`;
+                        `;
+                                    
+                        if (deleteDepartment) {
+                            html += `
+                                <button type="button" onclick="modalEliminar(${item.Id})" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: red" data-toggle="modal" data-target="#modalEliminar">
+                                    <i class="fa fa-lg fa-trash"></i>
+                                </button>
+                            `;
+                        }
+                        html += `</td>
+                        </tr>`;
                     });
                 } else {
                     data.departamentos.forEach(function (item) {
                         html += `
-                            <tr>
-                                <td>${item.Name}</td>
-                                <td>${item.Description}</td>                                
-                                <td>
-                                    <button type="button" onclick="modalActivar(${item.Id})" title="Activar" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: #1AB394" data-toggle="modal" data-target="#modalActivar">
-                                        <i class="fa fa-lg fa-check-square-o"></i>
-                                    </button>
-                                </td>
-                            </tr>`;
+                             <tr>
+                                 <td>${item.Name}</td>
+                                 <td>${item.Description}</td>
+                                 <td>
+                         `;
+
+                        if (activeDepartment) {
+                            html += `
+                                 <button type="button" onclick="modalActivar(${item.Id})" title="Activar" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: #1AB394" data-toggle="modal" data-target="#modalActivar">
+                                    <i class="fa fa-lg fa-check-square-o"></i>
+                                </button>
+                            `;
+                        }
+                        html += `</td>
+                        </tr>`;
                     });
                 }
 

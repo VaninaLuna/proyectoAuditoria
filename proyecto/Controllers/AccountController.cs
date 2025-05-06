@@ -16,7 +16,7 @@ namespace proyecto.Controllers
             {
                 UserName = currentUser.FullName,
                 UserEmail = currentUser.Email,
-                UserRol = "Administrador"
+                UserRol = currentUser.Profiles.First().Name
             };
 
             if (currentUser.Profiles.Any(p => p.Id == 2))

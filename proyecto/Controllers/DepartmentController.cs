@@ -1,4 +1,5 @@
 ﻿using com.sun.xml.@internal.bind.v2.model.core;
+using DNF.Security.Bussines;
 using proyecto.Bussines;
 using proyecto.Dao;
 using proyecto.DTOs;
@@ -13,16 +14,24 @@ namespace proyecto.Controllers
     [Authenticated]
     public class DepartmentController : Controller
     {
+        public User currentUser = Current.User;
         // GET: Department
         public ActionResult Index()
         {
             List<Department> list = Department.Dao.GetAll()
             .Where(d => d.IsActive)
             .ToList();
+
+            ViewBag.CreateDepartment = currentUser.HasAccess("CreateDepartment");
+            ViewBag.DeleteDepartment = currentUser.HasAccess("DeleteDepartment");
+            ViewBag.ViewInactiveDepartments = currentUser.HasAccess("ViewInactiveDepartments");
+
             return View(list);
         }
 
+        [AccessCode("CreateDepartment")]
         [HttpPost]
+
         public ActionResult Crear(Department oDepartment)
         {
             Department department = new Department
@@ -36,6 +45,7 @@ namespace proyecto.Controllers
             return RedirectToAction("Index");
         }
 
+        [AccessCode("ViewInactiveDepartments")]
         [HttpGet]
         public JsonResult ObtenerDepartamentos(bool activos)
         {
@@ -54,6 +64,7 @@ namespace proyecto.Controllers
 
         }
 
+        [AccessCode("CreateDepartment")]
         public ActionResult Activar(int id)
         {
             var a = Department.Dao.Activate(id);
@@ -61,7 +72,7 @@ namespace proyecto.Controllers
             return RedirectToAction("Index");
         }
 
-
+        [AccessCode("DeleteDepartment")]
         [HttpPost]
         public ActionResult Eliminar(int departmentId)
         {

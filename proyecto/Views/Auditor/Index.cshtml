@@ -31,14 +31,22 @@
 
     <div class="row mb-3">
         <div class="col-md-6">
-            <button type="button" class="btn btn-primary" id="btnCrear" onclick="CrearAuditor()">
-                Crear Auditor
-            </button>
+            @if (ViewBag.CreateEditAuditor)
+            {
+                <button type="button" class="btn btn-primary" id="btnCrear" onclick="CrearAuditor()">
+                     Crear Auditor
+                </button>
+            }
+
         </div>
         <div class="col-md-6 text-right">
-            <button type="button" class="btn btn-warning" id="btnInactivos" onclick="VerInactivos()">
-                Ver Inactivos
-            </button>
+            @if (ViewBag.ViewInactiveAuditor)
+            {
+                <button type="button" class="btn btn-warning" id="btnInactivos" onclick="VerInactivos()">
+                    Ver Inactivos
+                </button>
+            }
+
         </div>
     </div>
 
@@ -77,21 +85,26 @@
                     @Html.DisplayFor(modelItem => item.AuditorStatus.Name)
                 </td>
                 <td>
-                    <button type="button" onclick="CrearAuditor(@item.Id)" class="btn btn-link text-success p-0" style="padding: 0 5px 0 5px">
-                        <i class="fa fa-lg fa-edit"></i>
-                    </button>
-                    <button type="button" onclick="modalEliminar(@item.Id)" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: red" data-toggle="modal" data-target="#modalEliminar">
-                        <i class="fa fa-lg fa-trash"></i>
-                    </button>
+                    @if (ViewBag.CreateEditAuditor)
+                    {
+                        <button type="button" onclick="CrearAuditor(@item.Id)" class="btn btn-link text-success p-0" style="padding: 0 5px 0 5px">
+                            <i class="fa fa-lg fa-edit"></i>
+                        </button>
+
+                    }
+
+                    @if (ViewBag.DeleteAuditor)
+                    {
+                        <button type="button" onclick="modalEliminar(@item.Id)" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: red" data-toggle="modal" data-target="#modalEliminar">
+                            <i class="fa fa-lg fa-trash"></i>
+                        </button>
+                    }
+                    
                 </td>
             </tr>
         }
     </table>
 </div>
-@*@using (Html.BeginForm("Eliminar", "Auditor", FormMethod.Post, new { @id = "frmEliminar" }))
-    {
-        @Html.Hidden("id");
-    }*@
 
 <!-- Modal Eliminar -->
 <div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
@@ -189,6 +202,9 @@
 
 <script>
     var auditorId = 0;
+    var activeAuditor = @Html.Raw(Json.Encode(ViewBag.CreateEditAuditor));
+    var deleteAuditor = @Html.Raw(Json.Encode(ViewBag.DeleteAuditor));
+
     $(document).ready(function () {
         //cargar datos de usuarios y estados al abrir el modal
         //$('#btnCrear').click(function () {
@@ -438,14 +454,23 @@
                                     <td>${item.UserName}</td>
                                     <td>${item.StatusName}</td>
                                     <td>
-                                        <button type="button" onclick="CrearAuditor(${item.Id})" class="btn btn-link text-success p-0" style="padding: 0 5px 0 5px">
-                                            <i class="fa fa-lg fa-edit"></i>
-                                        </button>
-                                        <button type="button" onclick="modalEliminar(${item.Id})" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: red" data-toggle="modal" data-target="#modalEliminar">
-                                            <i class="fa fa-lg fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>`;
+                                    `;
+                            if (activeAuditor) {
+                                html += `
+                                    <button type="button" onclick="CrearAuditor(${item.Id})" class="btn btn-link text-success p-0" style="padding: 0 5px 0 5px">
+                                        <i class="fa fa-lg fa-edit"></i>
+                                    </button>                                    
+                                `;
+                            }
+                            if (deleteAuditor) {
+                                html += `                                   
+                                    <button type="button" onclick="modalEliminar(${item.Id})" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: red" data-toggle="modal" data-target="#modalEliminar">
+                                        <i class="fa fa-lg fa-trash"></i>
+                                    </button>
+                                `;
+                            }
+                            html += `</td>
+                            </tr>`;
                         });
                     } else {
                         data.auditores.forEach(function (item) {
@@ -456,11 +481,16 @@
                                     <td>${item.UserName}</td>
                                     <td>${item.StatusName}</td>
                                     <td>
-                                        <button type="button" onclick="modalActivar(${item.Id})" title="Activar" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: #1AB394" data-toggle="modal" data-target="#modalActivar">
-                                            <i class="fa fa-lg fa-check-square-o"></i>
-                                        </button>
-                                    </td>
-                                </tr>`;
+                                    `;
+                            if (activeAuditor) {
+                                html += `
+                                    <button type="button" onclick="modalActivar(${item.Id})" title="Activar" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: #1AB394" data-toggle="modal" data-target="#modalActivar">
+                                        <i class="fa fa-lg fa-check-square-o"></i>
+                                    </button>                                  
+                                `;
+                            }
+                            html += `</td>
+                            </tr>`;
                         });
                     }
 
