@@ -114,6 +114,24 @@
         }
     }
 
+    $("#btnCrearPerfil").click(function () {
+        $(gridTable).jqGrid("editGridRow", "new", {
+            addCaption: res.newProfile,
+            closeAfterAdd: true,
+            recreateForm: true,
+            beforeSubmit: EditOptions.beforeSubmit,
+            afterSubmit: EditOptions.afterSubmit,
+            beforeShowForm: function (formid) {
+                $("#State_Code>option:eq(2)").remove();
+                $("#State_Code>option:eq(1)").remove();
+            },
+            errorTextFormat: function (data) {
+                return "Error: " + data.responseText;
+            }
+        });
+    });
+
+
     $(gridTable).jqGrid({
         url: Common.dataurl,
         editurl: Common.editurl,
@@ -292,7 +310,7 @@
 
     $(gridTable).navGrid(gridPager,
         // the buttons to appear on the toolbar of the grid
-        { edit: false, add: Common.accessnew, del: Common.accessdelete, search: true, refresh: true, view: false, position: "left", cloneToTop: false },
+        { edit: false, add: /*Common.accessnew*/ true, del: Common.accessdelete, search: true, refresh: true, view: false, position: "left", cloneToTop: false },
         // options for the Edit Dialog
         EditOptions,
         // options for the Add Dialog
