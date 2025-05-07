@@ -15,6 +15,7 @@ using Bcri.Core;
 using System.Configuration;
 using Bcri.Core.Bussines;
 using proyecto.Areas.Bcri.Utility;
+using System.Linq;
 
 namespace proyecto.Areas.Bcri.Controllers
 {
@@ -55,18 +56,17 @@ namespace proyecto.Areas.Bcri.Controllers
                 {
                     case "Disable"://2
                         {
-                            ViewData["error"] += "Usuario deshabilitado";
+                            ViewData["error"] = "Usuario deshabilitado";
                                 //" Your user has been disabled.\n" +
-                                //                   "An email was send to your account with the procedure to re-activate your account.";
+//                              "An email was send to your account with the procedure to re-activate your account.";
 //                            user.PasswordRecover();
-
 //                            var message = new MailMessage();
 //                            message.To.Add(user.Email);
 //                            message.Subject = "BCRI - Blocked user";
 //                            if (Request.Url != null)
 //                                message.Body = $@"Hello {user.Name},<br />
-//Your BCRI account was blocked please follow this link <a href='{Url.Action("GeneratePassword", "Login", new { key = user.ActivationKey },Request.Url.Scheme)}'> here</a> to enable it again.
-//< br /> Greetings. <br /> The BCRI team  <br />";
+//                                  Your BCRI account was blocked please follow this link <a href='{Url.Action("GeneratePassword", "Login", new { key = user.ActivationKey },Request.Url.Scheme)}'> here</a> to enable it again.
+//                                  < br /> Greetings. <br /> The BCRI team  <br />";
 //                            SendEmail(message);
                             break;
                         }
@@ -81,6 +81,13 @@ namespace proyecto.Areas.Bcri.Controllers
                         ViewData["error"] =
                             $"User/Password incorrect. \nYou have {(5 - user.FailLoginCount)} tries.\n\n";
                         break;
+                }
+                
+                var profileDisable = user.Profiles.FirstOrDefault(p => p.State.Code.Equals("Disable"));
+
+                if (profileDisable != null)
+                {
+                    ViewData["error"] = "Perfil de acceso deshabilitado.";
                 }
 
                 return View();

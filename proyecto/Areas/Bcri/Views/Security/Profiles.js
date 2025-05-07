@@ -145,7 +145,7 @@
                 hidden: true
             },
             {
-                label: res.name,
+                label: "Nombre",
                 name: "Name",
                 width: 100,
                 edittype: "text",
@@ -154,7 +154,7 @@
                 editrules: { required: true }
             },
             {
-                label: res.state,
+                label: "Estado",
                 name: "State_Code",
                 edittype: "select",
                 editable: true,
@@ -274,7 +274,7 @@
                 }
             },
             {
-                label: res.edit,
+                label: "Editar",
                 name: "edit",
                 width: 50,
                 hidden: !Common.accessedit,
