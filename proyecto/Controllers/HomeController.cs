@@ -16,8 +16,8 @@ namespace proyecto.Controllers
         {
             if (Current.User != null)
             {
-                var uderId = Current.User;
-                LogAccion.Dao.AddLog("LogIn", uderId.FullName, null);
+                var currentUser = Current.User;
+                LogAccion.Dao.AddLog("LogIn", currentUser.FullName, null);
 
                 var auditoriasStado = AuditStatus.Dao.GetAll();
                 var auditorias = Audit.Dao.GetAll()
@@ -28,9 +28,9 @@ namespace proyecto.Controllers
                     .Where(d => d.IsActive)
                     .ToList();
 
-                if (uderId.Profiles.Any(p => p.Id == 2))
+                if (currentUser.Profiles.Any(p => p.Id == 2))
                 {
-                    var currentAuditor = Auditor.Dao.GetByUser(uderId.Id);
+                    var currentAuditor = Auditor.Dao.GetByUser(currentUser.Id);
                     auditorias = auditorias
                         .Where(a => a.Auditors.Any(auditor => auditor.Id == currentAuditor.Id))
                         .ToList();
@@ -44,9 +44,9 @@ namespace proyecto.Controllers
                         .Where(h => h.Audit.Auditors.Any(auditor => auditor.Id == currentAuditor.Id))
                         .ToList();
                 }
-                else if (uderId.Profiles.Any(p => p.Id == 4))
+                else if (currentUser.Profiles.Any(p => p.Id == 4))
                 {
-                    var currentResponsible = Responsible.Dao.GetByUser(uderId.Id);
+                    var currentResponsible = Responsible.Dao.GetByUser(currentUser.Id);
                     auditorias = auditorias
                         .Where(a => a.Department.Id == currentResponsible.Department.Id /*&& d.AuditStatus.Id == 4 */)
                         .ToList();
@@ -86,6 +86,7 @@ namespace proyecto.Controllers
                 }
 
                 ViewBag.UltimasAuditorias = ultimas4;
+                ViewBag.ViewDetailAudit = currentUser.HasAccess("ViewDetailAudit");
             }
 
             return View();

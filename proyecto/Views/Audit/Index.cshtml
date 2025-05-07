@@ -52,6 +52,13 @@
         padding: 2px 8px;
         display: inline-block;
     }
+    .estado-nuevo {
+        background-color: #d64df864;
+        color: #155724;
+        border-radius: 5px;
+        padding: 2px 8px;
+        display: inline-block;
+    }
 
     .progress-container {
         height: 10px;
@@ -90,7 +97,8 @@
             {
                 <div class="form-group mx-1" style="border-radius: 20px;">
                     @Html.Label("Departamento", new { @class = "mr-1" })
-                    @Html.DropDownList("departmentId", new SelectList(ViewBag.Departamentos, "Id", "Name"), "Todos", new { @class = "form-control form-control-sm", @style = "border-radius: 8px; min-width: 150px;" })
+                    @Html.DropDownList("departmentId", new SelectList(ViewBag.Departamentos, "Id", "Name"), "Todos", 
+                    new { @class = "form-control form-control-sm", @style = "border-radius: 8px; min-width: 150px;" })
                 </div>
                 <button type="submit" class="btn btn-sm btn-primary ml-2" title="Buscar">
                     <i class="fa fa-search"></i>
@@ -129,14 +137,27 @@
                 </td>
 
                 <td>
-                    <span class="estado-@item.AuditStatus.Id">@item.AuditStatus.Name</span>
+                    @{
+                        var idEstado = item.AuditStatus.Id;
+                    }
+
+                    @if (idEstado > 4)
+                     {
+                        <span class="estado-nuevo">@item.AuditStatus.Name</span>
+                     }
+                     else
+                     {
+                        <span class="estado-@item.AuditStatus.Id">@item.AuditStatus.Name</span>
+                     }  
+                    
                 </td>
                 <td>
                     @{
                         var porcentaje = item.AuditStatus.Id == 1 ? 1 :
                                          item.AuditStatus.Id == 2 ? 30 :
                                          item.AuditStatus.Id == 3 ? 60 :
-                                         item.AuditStatus.Id == 4 ? 100 : 0;
+                                         item.AuditStatus.Id == 4 ? 100 :
+                                         item.AuditStatus.Id > 4 ? 50 : 0;
                     }
                     @if (porcentaje > 0)
                     {

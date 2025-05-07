@@ -16,13 +16,11 @@
 
         <div class="form-horizontal">
 
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
             <div class="form-group">
                 @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
                     @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", style = "width: 50%", @id = "txtName", maxlength = "50" } })
-                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                    <span class="text-danger" id="errorName" style="display:none;">El Nombre es obligatorio</span>
                 </div>
             </div>
 
@@ -30,14 +28,14 @@
                 @Html.LabelFor(model => model.CreateDate, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
                     @Html.EditorFor(model => model.CreateDate, new { htmlAttributes = new { @class = "form-control", style = "width: 50%", @id = "txtCreateDate", @type = "date" } })
-                    @Html.ValidationMessageFor(model => model.CreateDate, "", new { @class = "text-danger" })
+                    <span class="text-danger" id="errorCreate" style="display:none;">La fecha es obligatoria</span>
                 </div>
             </div>
             <div class="form-group">
                 @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
                     @Html.TextAreaFor(model => model.Description, new { @class = "form-control", style = "height: 80px;width: 50%;", @id = "txtDescription" })
-                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                    <span class="text-danger" id="errorDescription" style="display:none;">La descripción es obligatoria</span>
                 </div>
             </div>
 
@@ -45,9 +43,6 @@
                 @Html.LabelFor(model => model.FindingImage, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
                     <input type="file" id="imageInput" class="form-control input-field" accept="image/*" onchange="previewImage(event)" style="width: 40%;" />
-
-
-
 
                     <div id="imagePreviewContainer" style="margin-top: 10px;">
                         <img id="imagePreview" src="#" alt="Vista previa" style="max-width: 40%; display: none;" />
@@ -74,24 +69,23 @@
                     <span class="text-danger" id="errorType" style="display:none;">El tipo es obligatorio</span>
                 </div>
             </div>
-
-            <div id="spinnerCrear" style="display:none; text-align:center;">
-                <i class="fa fa-spinner fa-spin fa-2x text-primary"></i>
-            </div>
-
-            <div class="form-group row">
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" onclick="GuardarHallazgo()" id="btnCrearHallazgo" value="Crear Hallazgo" class="btn btn-primary" />
-                    </div>
-                </div>
-
-                <div class="mt-4 text-left" style="padding:10px">
-                    <a href="@Url.Action("ViewAudit/" + auditoriaId, "Audit")" class="btn btn-warning btn-sm">Volver a la lista</a>
-                </div>
-            </div>
         </div>
     }
+
+    <div id="spinnerCrear" style="display:none; text-align:center;">
+        <i class="fa fa-spinner fa-spin fa-2x text-primary"></i>
+    </div>
+
+    <div class="form-group row">
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button onclick="GuardarHallazgo()" id="btnCrearHallazgo" class="btn btn-primary">Crear Hallazgo</button>
+            </div>
+        </div>
+        <div class="mt-4 text-left" style="padding:10px; margin-top: 50px">
+            <a href="@Url.Action("ViewAudit/" + auditoriaId, "Audit")" class="btn btn-warning btn-sm">Volver a la lista</a>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
@@ -148,22 +142,31 @@
 
     function previewImage(event) {
         var reader = new FileReader();
-
         reader.onload = function () {
             var base64String = reader.result;
-
             var preview = document.getElementById('imagePreview');
             preview.src = base64String;
             preview.style.display = 'block';
-
             document.getElementById('imageBase64').value = base64String;
         }
-
         reader.readAsDataURL(event.target.files[0]);
     }
 
     function GuardarHallazgo() {
-        if (!validarFormulario()) return;
+        $('#spinnerCrear').show();
+
+        if (!validarFormulario()) {
+            $('#spinnerCrear').hide();
+            return;
+        } else {
+            $('#errorImage').hide();
+            $('#errorState').hide();
+            $('#errorType').hide();
+            $('#errorName').hide();
+            $('#errorCreate').hide();
+            $('#errorDescription').hide();
+        }
+
         const finding = {
             id: hallazgoId,
             Name: $('#txtName').val(),
@@ -174,7 +177,6 @@
             FindingType: $('#ddlTipo').val(),
             AuditId: auditoriaId
         };
-        $('#spinnerCrear').show();
 
         $.ajax({
             url: '/Finding/GuardarHallazgo',
@@ -184,6 +186,10 @@
             success: function (data) {
                 if (data.message) {
                     alert(data.message);
+                } else if (data.messageDate) {
+                    alert(data.messageDate);
+                    $('#errorCreate').html(data.messageDate);
+                    $('#errorCreate').show();
                 } else {
                     window.location.href = '/Audit/ViewAudit/' + auditoriaId;
                 }
@@ -192,7 +198,6 @@
                 alert('Error al crear la auditoria.');
             },
             complete: function () {
-                // Ocultar spinner, mostrar contenido
                 $('#spinnerCrear').hide();
             }
         });
@@ -200,12 +205,13 @@
 
     function validarFormulario() {
         let valido = true;
-
         var imagen = document.getElementById("imageBase64").value;
         var estado = document.getElementById("ddlEstado").value;
         var tipo = document.getElementById("ddlTipo").value;
+        var name = $('#txtName').val();
+        var createDate = $('#txtCreateDate').val();
+        var description = $('#txtDescription').val();
 
-        //$('.text-danger').hide();
         if (!imagen) {
             $('#errorImage').show(); valido = false;
         }
@@ -214,7 +220,16 @@
         }
         if (!tipo || tipo === "" || tipo === "-- Seleccione Tipo --") {
             $('#errorType').show(); valido = false;
-        }        
+        }
+        if (!name || name === "" || name === " ") {
+            $('#errorName').show(); valido = false;
+        }
+        if (!createDate || createDate === "" || createDate === " ") {
+            $('#errorCreate').show(); valido = false;
+        }
+        if (!description || description === "" || description === " ") {
+            $('#errorDescription').show(); valido = false;
+        }
         return valido;             
     }
 </script>

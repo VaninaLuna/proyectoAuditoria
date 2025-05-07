@@ -23,7 +23,8 @@ namespace proyecto.Controllers
                 .OrderByDescending(a => a.CreateDate)
                 .ToList();
             List<Audit> audits = Audit.Dao.GetAll()
-                .Where(d => d.IsActive)
+                .Where(a => a.IsActive)
+                .OrderByDescending(a => a.CreateDate)
                 .ToList();
 
             foreach (Finding finding in list)
@@ -153,7 +154,7 @@ namespace proyecto.Controllers
 
                 if (findingDTO.CreateDate != null && audit.CreateDate > findingDTO.CreateDate)
                 {
-                    return Json(new { message = "La fecha no puede ser anterior a la fecha de creacion de la auditoria" }, JsonRequestBehavior.AllowGet);
+                    return Json(new { messageDate = "La fecha no puede ser anterior a la fecha de creacion de la auditoria" }, JsonRequestBehavior.AllowGet);
                 }
 
                 if (findingDTO.Id > 0)

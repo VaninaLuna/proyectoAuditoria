@@ -61,7 +61,10 @@
                             <tr>
                                 <th>Auditoría</th>
                                 <th>Estado</th>
-                                <th>Ver Detalles</th>
+                                @if (ViewBag.ViewDetailAudit)
+                                {
+                                    <th>Ver Detalles</th>
+                                }
                             </tr>
                         </thead>
                         <tbody>
@@ -74,11 +77,14 @@
                                             @item.AuditStatus.Name
                                         </span>
                                     </td>
-                                    <td class="text-center">
-                                        <a href="@Url.Action("ViewAudit", "Audit", new { id = item.Id })" title="Ver detalles">
-                                            <span class="glyphicon glyphicon-eye-open" style="color: #1AB394" aria-hidden="true"></span>
-                                        </a>
-                                    </td>
+                                    @if (ViewBag.ViewDetailAudit)
+                                    {
+                                        <td class="text-center">
+                                            <a href="@Url.Action("ViewAudit", "Audit", new { id = item.Id })" title="Ver detalles">
+                                                <span class="glyphicon glyphicon-eye-open" style="color: #1AB394" aria-hidden="true"></span>
+                                            </a>
+                                        </td>
+                                    }
                                 </tr>
                             }
                         </tbody>

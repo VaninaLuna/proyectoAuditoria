@@ -47,6 +47,14 @@
         padding: 2px 8px;
         display: inline-block;
     }
+
+    .estado-nuevo {
+        background-color: #d64df864;
+        color: #155724;
+        border-radius: 5px;
+        padding: 2px 8px;
+        display: inline-block;
+    }
     
 </style>
 
@@ -88,53 +96,66 @@
                 Evidencia
             </th>
 
-        </tr>       
+        </tr>
 
         @{
             long? auditoriaActualId = null;
+            var hallazgosAgrupados = Model.GroupBy(h => h.Audit.Id);
         }
 
-        @foreach (var item in Model)
+        @foreach (var grupo in hallazgosAgrupados)
         {
-            if (auditoriaActualId != item.Audit.Id)
+            var auditoria = grupo.First().Audit;
+            if (auditoriaActualId != auditoria.Id)
             {
-                auditoriaActualId = item.Audit.Id;
+                auditoriaActualId = auditoria.Id;
                 <tr style="background-color: #e9ecef;">
                     <td colspan="6">
-                       @if (ViewBag.ViewDetailAudit)
+                        @if (ViewBag.ViewDetailAudit)
                         {
                             <strong>
-                                Auditoria - <a style="color: darkcyan" href="@Url.Action("ViewAudit", "Audit", new { id = item.Audit.Id })"> @item.Audit.Name</a>
-                            </strong> @*Departamento: @item.Audit.Department.Name*@
+                                Auditoria - <a style="color: darkcyan" href="@Url.Action("ViewAudit", "Audit", new { id = auditoria.Id })"> @auditoria.Name</a>
+                            </strong>
                         }
                         else
                         {
                             <strong style="color: darkcyan">
-                                Auditoria - @item.Audit.Name
+                                Auditoria - @auditoria.Name
                             </strong>
                         }
                     </td>
                 </tr>
             }
 
-            <tr>
-                <td>@item.Name</td>
-                <td>@Html.DisplayFor(modelItem => item.CreateDate)</td>
-                @*<td>@item.CreateDate.ToShortDateString()</td>*@
-                <td>@item.Description</td>
+            foreach (var hallazgo in grupo.OrderByDescending(h => h.CreateDate))
+            {
+                <tr>
+                    <td>@hallazgo.Name</td>
+                    <td>@Html.DisplayFor(modelItem => hallazgo.CreateDate)</td>
+                    <td>@hallazgo.Description</td>
+                    <td>
+                        @{
+                            var idEstado = hallazgo.FindingStatus.Id;
+                        }
+                        @if (idEstado > 5)
+                        {
+                            <span class="estado-nuevo">@hallazgo.FindingStatus.Name</span>
+                        }
+                        else
+                        {
+                            <span class="estado-@hallazgo.FindingStatus.Id">@hallazgo.FindingStatus.Name</span>
+                        }
 
-                <td>
-                    <span class="estado-@item.FindingStatus.Id">@item.FindingStatus.Name</span>
-                    
-                </td>
-                <td>@item.Audit.Department.Name</td>
-                <td>
-                    @if (!string.IsNullOrEmpty(item.FindingImage))
-                    {
-                        <img src="@item.FindingImage" alt="Evidencia" class="img-thumbnail" style="max-width: 100px; cursor: pointer;" data-toggle="modal" data-target="#imageModal" data-img="@item.FindingImage" />
-                    }
-                </td>
-            </tr>
+                    </td>
+                    <td>@hallazgo.Audit.Department.Name</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(hallazgo.FindingImage))
+                        {
+                            <img src="@hallazgo.FindingImage" alt="Evidencia" class="img-thumbnail" style="max-width: 100px; cursor: pointer;" data-toggle="modal" data-target="#imageModal" data-img="@hallazgo.FindingImage" />
+                        }
+                    </td>
+                </tr>
+            }
         }
 
 
