@@ -9,7 +9,7 @@
 <style>
     
     .estado-1 {
-        background-color: #b0a1b37f;
+        background-color: #BEECF47E;
         color: #004085;
         border-radius: 5px;
         padding: 2px 8px;
@@ -17,7 +17,7 @@
     }
 
     .estado-2 {
-        background-color: #fff3cd;
+        background-color: #F4CABE7F;
         color: #856404;
         border-radius: 5px;
         padding: 2px 8px;
@@ -25,7 +25,7 @@
     }
 
     .estado-3 {
-        background-color: #cce5ff;
+        background-color: #E0BEF47F;
         color: #8a6d3b;
         border-radius: 5px;
         padding: 2px 8px;
@@ -49,7 +49,7 @@
     }
 
     .estado-nuevo {
-        background-color: #d64df864;
+        background-color: #F3F4BE7F;
         color: #155724;
         border-radius: 5px;
         padding: 2px 8px;
@@ -66,7 +66,7 @@
         @using (Html.BeginForm("Index", "Finding", FormMethod.Get, new { @class = "form-inline justify-content-end" }))
         {
             <div class="form-group mx-1" style="border-radius: 20px;">
-                @Html.Label("Auditoria", new { @class = "mr-1" })
+                @Html.Label("Auditoría", new { @class = "mr-1" })
                 @Html.DropDownList("auditId", new SelectList(ViewBag.Audits, "Id", "Name"), "Todos", new { @class = "form-control form-control-sm", @style = "border-radius: 8px; min-width: 150px;" })
             </div>
             <button type="submit" class="btn btn-sm btn-primary ml-2" title="Buscar">
@@ -114,7 +114,7 @@
                         @if (ViewBag.ViewDetailAudit)
                         {
                             <strong>
-                                Auditoria - <a style="color: darkcyan" href="@Url.Action("ViewAudit", "Audit", new { id = auditoria.Id })"> @auditoria.Name</a>
+                                Auditoría - <a style="color: darkcyan" href="@Url.Action("ViewAudit", "Audit", new { id = auditoria.Id })"> @auditoria.Name</a>
                             </strong>
                         }
                         else
@@ -204,5 +204,7 @@
             }
         });
     }
+
+    
 
 </script>

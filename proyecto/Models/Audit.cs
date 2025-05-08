@@ -21,13 +21,13 @@ namespace proyecto.Bussines
         public string Name { get; set; }
 
 
-        [Display(Name = "Fecha Creacion")]
+        [Display(Name = "Fecha Creación")]
         [Required]
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime CreateDate{ get; set; }
 
-        [Display(Name = "Fecha Finalizacion")]        
+        [Display(Name = "Fecha Finalización")]        
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? EndDate { get; set; }

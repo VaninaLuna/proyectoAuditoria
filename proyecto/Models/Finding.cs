@@ -20,13 +20,13 @@ namespace proyecto.Bussines
         public string Name { get ; set ; }
 
 
-        [Display(Name = "Fecha Creacion")]
+        [Display(Name = "Fecha Creación")]
         //[Required(ErrorMessage = "La fecha es obligatorio")]
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime CreateDate { get; set; }
 
-        [Display(Name = "Descripcion")]
+        [Display(Name = "Descripción")]
         //[Required(ErrorMessage = "La descripcion es obligatoria")]
         [StringLength(1000, ErrorMessage = "No debe superar los 1000 caracteres")]
         public string Description { get; set; }

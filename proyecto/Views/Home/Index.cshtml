@@ -21,7 +21,7 @@
         <div class="col-sm-6 col-md-3">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <h4>Auditorias En Progreso</h4>
+                    <h4>Auditorías En Progreso</h4>
                     <h2 class="text-warning"><strong>@ViewBag.EnProgreso</strong></h2>
                     <small class="text-warning">+@ViewBag.EnProgreso desde el inicio</small>
                 </div>
@@ -30,7 +30,7 @@
         <div class="col-sm-6 col-md-3">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <h4>Auditorias Completadas</h4>
+                    <h4>Auditorías Completadas</h4>
                     <h2 class="text-info"><strong>@ViewBag.Completadas</strong></h2>
                     <small class="text-info">+@ViewBag.Completadas desde el inicio</small>
                 </div>
@@ -73,7 +73,7 @@
                                 <tr>
                                     <td>@item.Name</td>
                                     <td>
-                                        <span class="label" style="background-color: @(item.AuditStatus.Id == 2 ? "#fff3cd" : item.AuditStatus.Id == 3 ? "#cce5ff" : item.AuditStatus.Id == 4 ? "#d4edda" : "#b0a1b37f")">
+                                        <span class="label" style="background-color: @(item.AuditStatus.Id == 1 ? "#F4C6D67F" : item.AuditStatus.Id == 2 ? "#fff3cd" : item.AuditStatus.Id == 3 ? "#cce5ff" : item.AuditStatus.Id == 4 ? "#d4edda" : "#d64df864")">
                                             @item.AuditStatus.Name
                                         </span>
                                     </td>
