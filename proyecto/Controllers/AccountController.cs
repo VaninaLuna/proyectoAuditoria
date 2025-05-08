@@ -16,7 +16,8 @@ namespace proyecto.Controllers
             {
                 UserName = currentUser.FullName,
                 UserEmail = currentUser.Email,
-                UserRol = currentUser.Profiles.First().Name
+                UserRol = string.Join(", ", currentUser.Profiles.Select(p => p.Name)),
+                UserRolId = (int)currentUser.Profiles.First().Id
             };
 
             if (currentUser.Profiles.Any(p => p.Id == 2))
@@ -28,20 +29,22 @@ namespace proyecto.Controllers
                 currentProfile.StartDate = currentAuditor.StartDate;
                 currentProfile.StartDateString = currentAuditor.StartDate.ToString("yyyy-MM-dd");
                 currentProfile.Status = auditorStatus.Name;
-
-                currentProfile.UserRol = "Auditor";
+                currentProfile.UserRolId = 2;
+                //currentProfile.UserRol = "Auditor";
             }
             else if (currentUser.Profiles.Any(p => p.Id == 4))
             {
                 var currentResponsible = Responsible.Dao.GetByUser(currentUser.Id);
                 var responsibleStatus = AuditorStatus.Dao.Get(currentResponsible.ResponsibleStatus.Id);
+                var responsibleDepartment = Department.Dao.Get(currentResponsible.Department.Id);
 
                 currentProfile.FileNumber = currentResponsible.FileNumber;
                 currentProfile.StartDate = currentResponsible.StartDate;
                 currentProfile.StartDateString = currentResponsible.StartDate.ToString("yyyy-MM-dd");
                 currentProfile.Status = responsibleStatus.Name;
-
-                currentProfile.UserRol = "Responsable";
+                currentProfile.Department = responsibleDepartment.Name;
+                currentProfile.UserRolId = 4;
+                //currentProfile.UserRol = "Responsable";
             }
 
             return View(currentProfile);

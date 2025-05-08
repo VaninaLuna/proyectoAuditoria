@@ -15,8 +15,10 @@ namespace proyecto.DTOs
         public DateTime StartDate { get; set; }
         public string StartDateString { get; set; }
         public string Status { get; set; }
+        public string Department { get; set; }
         public string UserRol { get; set; }
         public string UserName { get; set; }
         public string UserEmail { get; set; }
+        public int UserRolId { get; set; }
     }
 }
