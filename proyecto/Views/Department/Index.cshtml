@@ -56,9 +56,9 @@
     <br />
     <table class="table" id="tblDepartamentos">
         <tr>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.Id)
-            </th>
+            </th>*@
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
@@ -71,9 +71,9 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
+                @*<td>
                     @Html.DisplayFor(modelItem => item.Id)
-                </td>
+                </td>*@
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
@@ -81,12 +81,19 @@
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
                 <td>
+                    @if (ViewBag.CreateDepartment)
+                    {
+                        <button type="button" onclick="EditarDepartamento(@item.Id)" class="btn btn-link text-success p-0" style="padding: 0 5px 0 5px">
+                            <i class="fa fa-lg fa-edit"></i>
+                        </button>
+                    }
+
                     @if (ViewBag.DeleteDepartment)
-                {
-                    <button type="button" onclick="modalEliminar(@item.Id)" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: red" data-toggle="modal" data-target="#modalEliminar">
-                        <i class="fa fa-lg fa-trash"></i>
-                    </button>
-                }
+                    {
+                        <button type="button" onclick="modalEliminar(@item.Id)" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: red" data-toggle="modal" data-target="#modalEliminar">
+                            <i class="fa fa-lg fa-trash"></i>
+                        </button>
+                    }
                 </td>
             </tr>
         }
@@ -144,11 +151,13 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="exampleModalLabel">Crear Departamento</h4>
+                <h4 class="modal-title" id="titleModalLabel">Crear Departamento</h4>
             </div>
             <div class="modal-body">
                 @using (Html.BeginForm("Crear", "Department", FormMethod.Post, new { @id = "frmEstado" }))
                 {
+                    @Html.Hidden("Id", null, new { id = "idDepartment" })
+
                     @Html.Label("Nombre")
                     @Html.TextBox("Name", null, new { @class = "form-control", @id = "txtNameEstado", maxlength = "50" })
                     <span class="text-danger" id="errorName" style="display:none;">* Campo obligatorio (máx. 50 caracteres)</span>
@@ -172,6 +181,7 @@
 <script>
     var activeDepartment = @Html.Raw(Json.Encode(ViewBag.CreateDepartment));
     var deleteDepartment = @Html.Raw(Json.Encode(ViewBag.DeleteDepartment));
+    //var departmentId = 0;
 
     $(document).ready(function () {
         // Limpiar input cuando se cierra el modal
@@ -214,15 +224,29 @@
         $("#frmEstado").submit();
     }
 
-    //function modalEliminar(id) {
-    //    document.getElementById("idEstado").value = id
-    //}
+    function EditarDepartamento(id) {
+        document.getElementById("idDepartment").value = id;
+        $.ajax({
+            url: '/Department/ObtenerDepartamento?id=' + id,
+            type: 'GET',
+            success: function (data) {
+                debugger
+                if (data) {
+                    $('#txtNameEstado').val(data.department.Name);
+                    $('#txtDescripcionEstado').val(data.department.Description);
 
-    //function Eliminar() {
-    //    var frmEliminar = document.getElementById("frmEliminar");
-    //    frmEliminar.submit();
-    //}
-
+                    // Cambiamos título del modal si estás editando
+                    $('#titleModalLabel').text('Editar Departamento');
+                    $('#modalCrear').modal('show');
+                } else {
+                    $('#titleModalLabel').text('Crear Departamento');
+                }
+            },
+            error: function () {
+                alert('Error al obtener los datos.');
+            }
+        });
+    }
     function modalEliminar(id) {
         document.getElementById("deleteDepartmentId").value = id
     }
@@ -318,7 +342,14 @@
                                 <td>${item.Description}</td>
                                 <td>
                         `;
-                                    
+
+                        if (activeDepartment) {
+                            html += `
+                                <button type="button" onclick="EditarDepartamento(${item.Id})" class="btn btn-link text-success p-0" style="padding: 0 5px 0 5px">
+                                    <i class="fa fa-lg fa-edit"></i>
+                                </button>
+                            `;
+                        }
                         if (deleteDepartment) {
                             html += `
                                 <button type="button" onclick="modalEliminar(${item.Id})" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: red" data-toggle="modal" data-target="#modalEliminar">

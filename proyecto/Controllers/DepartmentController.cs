@@ -29,19 +29,36 @@ namespace proyecto.Controllers
             return View(list);
         }
 
+        public JsonResult ObtenerDepartamento(int id)
+        {
+            Department department = Department.Dao.Get(id);
+
+            return Json(new { department }, JsonRequestBehavior.AllowGet);
+        }
+
+
         [AccessCode("CreateDepartment")]
         [HttpPost]
-
         public ActionResult Crear(Department oDepartment)
         {
-            Department department = new Department
+            if (oDepartment.Id > 0)
             {
-                Name = oDepartment.Name,
-                Description = oDepartment.Description,
-                IsActive = true
-            };
-            department.Save();
-
+                Department dep = Department.Dao.Get(oDepartment.Id);
+                dep.Name = oDepartment.Name;
+                dep.Description = oDepartment.Description;
+                dep.Save();
+            }
+            else
+            {
+                Department department = new Department
+                {
+                    Name = oDepartment.Name,
+                    Description = oDepartment.Description,
+                    IsActive = true
+                };
+                department.Save();
+            }
+            
             return RedirectToAction("Index");
         }
 

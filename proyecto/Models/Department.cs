@@ -19,7 +19,7 @@ namespace proyecto.Bussines
         public string Name { get; set; }
 
 
-        [Display(Name="Descripcion")]
+        [Display(Name="Descripción")]
         [Required(ErrorMessage ="Debe ingresar una descripcion")]
         [StringLength(50, ErrorMessage ="Longitud maxima 50 caracteres")]
         public string Description { get; set; }
