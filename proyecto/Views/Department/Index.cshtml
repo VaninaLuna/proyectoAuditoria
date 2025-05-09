@@ -229,8 +229,7 @@
         $.ajax({
             url: '/Department/ObtenerDepartamento?id=' + id,
             type: 'GET',
-            success: function (data) {
-                debugger
+            success: function (data) {                
                 if (data) {
                     $('#txtNameEstado').val(data.department.Name);
                     $('#txtDescripcionEstado').val(data.department.Description);

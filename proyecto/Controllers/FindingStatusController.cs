@@ -23,16 +23,32 @@ namespace proyecto.Controllers
             return View(list);
         }
 
+        public JsonResult ObtenerEstado(int id)
+        {
+            FindingStatus status = FindingStatus.Dao.Get(id);
+
+            return Json(new { status }, JsonRequestBehavior.AllowGet);
+        }
+
         [AccessCode("CreateStatus")]
         [HttpPost]
         public ActionResult Crear(FindingStatus oFindingStatus)
         {
-            FindingStatus status = new FindingStatus
+            if (oFindingStatus.Id > 0)
             {
-                Name = oFindingStatus.Name
-            };
-            status.Save();
+                FindingStatus sta = FindingStatus.Dao.Get(oFindingStatus.Id);
+                sta.Name = oFindingStatus.Name;
+                sta.Save();
+            }
+            else
+            {
+                FindingStatus status = new FindingStatus
+                {
+                    Name = oFindingStatus.Name
+                };
+                status.Save();
 
+            }
             return RedirectToAction("Index");
         }
 

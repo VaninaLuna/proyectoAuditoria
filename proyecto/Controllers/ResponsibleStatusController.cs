@@ -24,16 +24,32 @@ namespace proyecto.Controllers
             return View(list);
         }
 
+        public JsonResult ObtenerEstado(int id)
+        {
+            ResponsibleStatus status = ResponsibleStatus.Dao.Get(id);
+
+            return Json(new { status }, JsonRequestBehavior.AllowGet);
+        }
+
+
         [AccessCode("CreateStatus")]
         [HttpPost]
         public ActionResult Crear(ResponsibleStatus oResponsibleStatus)
         {
-            ResponsibleStatus status = new ResponsibleStatus
+            if (oResponsibleStatus.Id > 0)
             {
-                Name = oResponsibleStatus.Name
-            };
-            status.Save();
-
+                ResponsibleStatus sta = ResponsibleStatus.Dao.Get(oResponsibleStatus.Id);
+                sta.Name = oResponsibleStatus.Name;
+                sta.Save();
+            }
+            else
+            {
+                ResponsibleStatus status = new ResponsibleStatus
+                {
+                    Name = oResponsibleStatus.Name
+                };
+                status.Save();
+            }
             return RedirectToAction("Index");
         }
 

@@ -67,6 +67,13 @@
                 </td>
 
                 <td>
+                    @if (ViewBag.CreateStatus)
+                    {
+                        <button type="button" onclick="EditarEstado(@item.Id)" class="btn btn-link text-success p-0" style="padding: 0 5px 0 5px">
+                            <i class="fa fa-lg fa-edit"></i>
+                        </button>
+                    }
+
                     @if (ViewBag.DeleteStatus)
                     {
                         <button type="button" onclick="modalEliminar(@item.Id)" class="btn btn-link p-0" style="padding: 0 5px 0 5px; color: red" data-toggle="modal" data-target="#modalEliminar">
@@ -111,11 +118,13 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="exampleModalLabel">Crear Estado</h4>
+                <h4 class="modal-title" id="titleModalLabel">Crear Estado</h4>
             </div>
             <div class="modal-body">
                 @using (Html.BeginForm("Crear", "AuditorStatus", FormMethod.Post, new { @id = "frmEstado" }))
                 {
+                    @Html.Hidden("Id", null, new { id = "idStatus" })
+
                     @Html.Label("Nombre")
                     @Html.TextBox("Name", null, new { @class = "form-control", @id = "txtNameEstado", maxlength = "50" })
                     <span class="text-danger" id="errorName" style="display:none;">* Campo obligatorio (máx. 50 caracteres)</span>
@@ -187,4 +196,28 @@
         }
         $("#frmEstado").submit();
     }
+
+    function EditarEstado(id) {
+        document.getElementById("idStatus").value = id;
+        $.ajax({
+            url: '/AuditorStatus/ObtenerEstado?id=' + id,
+            type: 'GET',
+            success: function (data) {               
+                if (data) {
+                    $('#txtNameEstado').val(data.status.Name);                    
+
+                    // Cambiamos título del modal si estás editando
+                    $('#titleModalLabel').text('Editar Estado');
+                    $('#modalCrear').modal('show');
+                } else {
+                    $('#titleModalLabel').text('Crear Estado');
+                }
+            },
+            error: function () {
+                alert('Error al obtener los datos.');
+            }
+        });
+    }
+
+
 </script>

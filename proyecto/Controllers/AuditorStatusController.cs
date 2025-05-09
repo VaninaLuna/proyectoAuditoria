@@ -23,15 +23,32 @@ namespace proyecto.Controllers
             return View(list);
         }
 
+        public JsonResult ObtenerEstado(int id)
+        {
+            AuditorStatus status = AuditorStatus.Dao.Get(id);
+
+            return Json(new { status }, JsonRequestBehavior.AllowGet);
+        }
+
         [AccessCode("CreateStatus")]
         [HttpPost]
         public ActionResult Crear(AuditorStatus oAuditorStatus)
         {
-            AuditorStatus status = new AuditorStatus
+            if (oAuditorStatus.Id > 0)
             {
-                Name = oAuditorStatus.Name
-            };
-            status.Save();
+                AuditorStatus sta = AuditorStatus.Dao.Get(oAuditorStatus.Id);
+                sta.Name = oAuditorStatus.Name;
+                sta.Save();
+            }
+            else
+            {
+                AuditorStatus status = new AuditorStatus
+                {
+                    Name = oAuditorStatus.Name
+                };
+                status.Save();
+            }
+            
 
             return RedirectToAction("Index");
         }
