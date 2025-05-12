@@ -16,6 +16,7 @@ using System.Configuration;
 using Bcri.Core.Bussines;
 using proyecto.Areas.Bcri.Utility;
 using System.Linq;
+using proyecto.Bussines;
 
 namespace proyecto.Areas.Bcri.Controllers
 {
@@ -105,6 +106,27 @@ namespace proyecto.Areas.Bcri.Controllers
                 ViewData["error"] = "The user does not have permission to perform this action. Please communicate with the administrator.";
 
                 return View();
+            }
+
+            if (user.Profiles.Any(p => p.Id == 2))
+            {
+                var currentAuditor = Auditor.Dao.GetByUser(user.Id);
+                if (currentAuditor == null)
+                {
+                    user.LoginOut();
+                    ViewData["error"] = $"El usuario no tiene configurado un perfil 'Auditor' asociado";
+                    return View();
+                }
+            }
+            if (user.Profiles.Any(p => p.Id == 4))
+            {
+                var currentResponsible = Responsible.Dao.GetByUser(user.Id);
+                if (currentResponsible == null || currentResponsible.Department.Id < 1)
+                {
+                    user.LoginOut();
+                    ViewData["error"] = $"El usuario no tiene configurado un perfil 'Responsable' asociado";
+                    return View();
+                }
             }
 
             FormsAuthentication.SetAuthCookie(user.Name, remember);

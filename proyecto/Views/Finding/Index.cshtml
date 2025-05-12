@@ -90,6 +90,9 @@
                 Estado
             </th>
             <th>
+                Tipo
+            </th>
+            <th>
                 Departamento
             </th>
             <th>
@@ -146,6 +149,12 @@
                             <span class="estado-@hallazgo.FindingStatus.Id">@hallazgo.FindingStatus.Name</span>
                         }
 
+                    </td>
+                    <td>
+                        <strong style="color:#662ad1">
+                            @hallazgo.FindingType.Name
+                        </strong>
+                        
                     </td>
                     <td>@hallazgo.Audit.Department.Name</td>
                     <td>

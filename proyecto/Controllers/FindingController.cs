@@ -1,6 +1,5 @@
 ﻿using DNF.Security.Bussines;
 using proyecto.Bussines;
-using proyecto.Dao;
 using proyecto.DTOs;
 using System;
 using System.Collections.Generic;
@@ -65,7 +64,6 @@ namespace proyecto.Controllers
 
             ViewBag.Audits = audits;
             ViewBag.ViewDetailAudit = currentUser.HasAccess("ViewDetailAudit");
-
 
             return View(list);
         }
@@ -194,7 +192,6 @@ namespace proyecto.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "Error al guardar el hallazgo");
             }
         }
-
         public ActionResult Eliminar(int idFinding)
         {
             //hacer sp del get y delete
