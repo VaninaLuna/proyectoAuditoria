@@ -35,7 +35,7 @@ namespace proyecto.Controllers
             else if (currentUser.Profiles.Any(p => p.Id == 4))
             {
                 var currentResponsible = Responsible.Dao.GetByUser(currentUser.Id);
-                var responsibleStatus = AuditorStatus.Dao.Get(currentResponsible.ResponsibleStatus.Id);
+                var responsibleStatus = ResponsibleStatus.Dao.Get(currentResponsible.ResponsibleStatus.Id);
                 var responsibleDepartment = Department.Dao.Get(currentResponsible.Department.Id);
 
                 currentProfile.FileNumber = currentResponsible.FileNumber;
