@@ -1,4 +1,5 @@
-﻿using DNF.Security.Bussines;
+﻿using com.sun.xml.@internal.bind.v2.model.core;
+using DNF.Security.Bussines;
 using proyecto.Bussines;
 using proyecto.DTOs;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 
 namespace proyecto.Controllers
 {
@@ -112,10 +114,18 @@ namespace proyecto.Controllers
         [AccessCode("CreateEditFinding")]
         public ActionResult Create(int auditId, int findingId = 0)
         {
-
-            if (currentUser.Profiles.Any(p => p.Id == 4))
+            Audit audit = Audit.Dao.Get(auditId);
+            if (audit == null || currentUser.Profiles.Any(p => p.Id == 4))
             {
                 return RedirectToAction("Index", "Home");
+            }
+            else if (currentUser.Profiles.Any(p => p.Id == 2))
+            {
+                var currentAuditor = Auditor.Dao.GetByUser(currentUser.Id);
+                if (!audit.Auditors.Any(a => a.Id == currentAuditor.Id))
+                {
+                    return RedirectToAction("Index", "Home");
+                }
             }
 
             var estadosHallazgos = FindingStatus.Dao.GetAll();
