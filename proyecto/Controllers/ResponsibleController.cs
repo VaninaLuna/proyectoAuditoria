@@ -90,12 +90,12 @@ namespace proyecto.Controllers
         [HttpPost]
         public ActionResult Crear(ResponsibleEditDTO responsibleDTO) //crear DTO para traer los id desde el index
         {
-            if (responsibleDTO == null || string.IsNullOrEmpty(responsibleDTO.FileNumber) || responsibleDTO.StatusId == 0 || responsibleDTO.UserId == 0)
+            if (responsibleDTO == null || string.IsNullOrWhiteSpace(responsibleDTO.FileNumber) || responsibleDTO.StatusId == 0 || responsibleDTO.UserId == 0)
             {
                 return Json(new { message = "Datos invalidos" }, JsonRequestBehavior.AllowGet);
             }
 
-            if (!string.IsNullOrEmpty(responsibleDTO.FileNumber))
+            if (!string.IsNullOrWhiteSpace(responsibleDTO.FileNumber))
             {
                 var responsibleExist = Responsible.Dao.GetByFileNumber(responsibleDTO.FileNumber);
 

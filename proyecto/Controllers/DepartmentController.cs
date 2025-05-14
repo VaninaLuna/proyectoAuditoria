@@ -6,8 +6,10 @@ using proyecto.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Services.Description;
 
 namespace proyecto.Controllers
 {
@@ -40,7 +42,14 @@ namespace proyecto.Controllers
         [AccessCode("CreateDepartment")]
         [HttpPost]
         public ActionResult Crear(Department oDepartment)
-        {
+        {            
+            var dept = Department.Dao.GetByName(oDepartment.Name);
+
+            if (dept != null)
+            {
+                return Json(new { message = "Ya existe un departamento con ese nombre" }, JsonRequestBehavior.AllowGet);
+            }
+
             if (oDepartment.Id > 0)
             {
                 Department dep = Department.Dao.Get(oDepartment.Id);
@@ -58,8 +67,9 @@ namespace proyecto.Controllers
                 };
                 department.Save();
             }
-            
-            return RedirectToAction("Index");
+
+            //return RedirectToAction("Index");
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
 
         [AccessCode("ViewInactiveDepartments")]

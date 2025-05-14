@@ -76,12 +76,12 @@ namespace proyecto.Controllers
         [HttpPost]
         public ActionResult Crear(AuditorEditDTO auditorDTO) //uso el DTO para traer los id desde el index
         {
-            if (auditorDTO == null || string.IsNullOrEmpty(auditorDTO.FileNumber) || auditorDTO.StatusId == 0 || auditorDTO.UserId == 0)
+            if (auditorDTO == null || string.IsNullOrWhiteSpace(auditorDTO.FileNumber) || auditorDTO.StatusId == 0 || auditorDTO.UserId == 0)
             {
                 return Json(new { message = "Datos invalidos" }, JsonRequestBehavior.AllowGet);
             }
 
-            if (!string.IsNullOrEmpty(auditorDTO.FileNumber))
+            if (!string.IsNullOrWhiteSpace(auditorDTO.FileNumber))
             {
                 var auditorExist = Auditor.Dao.GetByFileNumber(auditorDTO.FileNumber);
 

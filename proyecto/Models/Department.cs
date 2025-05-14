@@ -60,5 +60,10 @@ namespace proyecto.Dao
             return GetScalarFromSP("Activate", new { Id = departmentId });
         }
 
+        public Department GetByName(string name)
+        {
+            return GetFirstFromSP("GetByName", new { name });
+        }
+
     }
 }

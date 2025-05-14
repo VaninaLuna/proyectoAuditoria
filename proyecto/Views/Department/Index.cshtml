@@ -194,9 +194,37 @@
     });
 
     function Agregar() {
-        Validar();
-        //var frmEstado = document.getElementById("frmEstado");
-        //frmEstado.submit();
+        if (!Validar()) return;
+
+        const departamento = {
+            id: $("#idDepartment").val(),
+            name: $('#txtNameEstado').val(),
+            description: $('#txtDescripcionEstado').val()
+        };
+        $('#spinnerCrear').show();
+
+        $.ajax({
+            url: '/Department/Crear',
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(departamento),
+            success: function (data) {
+
+                if (data.message) {
+                    alert(data.message);
+                } else {
+                    $('#modalCrear').modal('hide');
+                    location.reload(); // O actualizar la tabla sin recargar toda la página
+                }
+            },
+            error: function () {
+                alert('Error al crear el departamento.');
+            },
+            complete: function () {
+                // Ocultar spinner, mostrar contenido
+                $('#spinnerCrear').hide();
+            }
+        });
     }
 
     function Validar() {
@@ -217,12 +245,9 @@
             $("#errorDescription").hide();
         }
 
-        if (!isValid) {
-            return;
-        }
-
-        $("#frmEstado").submit();
+        return isValid;        
     }
+
 
     function EditarDepartamento(id) {
         document.getElementById("idDepartment").value = id;
