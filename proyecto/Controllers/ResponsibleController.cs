@@ -97,7 +97,7 @@ namespace proyecto.Controllers
 
             if (!string.IsNullOrWhiteSpace(responsibleDTO.FileNumber))
             {
-                var responsibleExist = Responsible.Dao.GetByFileNumber(responsibleDTO.FileNumber);
+                var responsibleExist = Responsible.Dao.GetByFileNumber(responsibleDTO.FileNumber.Trim());
 
                 if (responsibleExist != null && responsibleExist.Id != responsibleDTO.Id)
                 {

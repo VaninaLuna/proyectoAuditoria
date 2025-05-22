@@ -83,7 +83,7 @@ namespace proyecto.Controllers
 
             if (!string.IsNullOrWhiteSpace(auditorDTO.FileNumber))
             {
-                var auditorExist = Auditor.Dao.GetByFileNumber(auditorDTO.FileNumber);
+                var auditorExist = Auditor.Dao.GetByFileNumber(auditorDTO.FileNumber.Trim());
 
                 if (auditorExist != null && auditorExist.Id != auditorDTO.Id)
                 {

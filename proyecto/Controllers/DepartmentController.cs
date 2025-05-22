@@ -43,7 +43,7 @@ namespace proyecto.Controllers
         [HttpPost]
         public ActionResult Crear(Department oDepartment)
         {            
-            var dept = Department.Dao.GetByName(oDepartment.Name);
+            var dept = Department.Dao.GetByName(oDepartment.Name.Trim());
 
             if (dept != null)
             {
